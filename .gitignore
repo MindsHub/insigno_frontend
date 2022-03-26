@@ -33,6 +33,7 @@
 /build/
 **/generated_plugin_registrant.dart
 build/
+windows/
 flutter_*.png
 linked_*.ds
 unlinked.ds
