@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    serverPill = getPill();
+    serverPill = _loadPill();
   }
 
   @override
@@ -33,31 +34,36 @@ class _LoadingScreenState extends State<LoadingScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Center(
-            child: FutureBuilder<String>(
-          future: serverPill,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data!);
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            // By default, show a loading spinner.
-            return const CircularProgressIndicator();
-          },
-        )),
-        SizedBox(
-          height: 100,
+        Padding(
+          padding: const EdgeInsets.only(left:20.0, right:20.0),
+          child: FutureBuilder<String>(
+            future: serverPill,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(
+                  snapshot.data!,
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
+          )
         ),
+        const SizedBox(height: 60),
         FloatingActionButton(
-          child: Icon(Icons.navigate_next),
+          child: const Icon(Icons.navigate_next),
           onPressed: () => widget.callback(),
         ),
       ],
     );
   }
 
-  Future<String> getPill() async {
+  Future<String> _loadPill() async {
+    sleep(const Duration(seconds: 5));
+
     final response =
         await http.get(Uri.parse('http://insignio.mindshub.it/pills/random'));
 

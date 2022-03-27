@@ -31,86 +31,38 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Insignio"),
-        ),
-        body: loading
-            ? LoadingScreen(
-                callback: endLoading,
-              )
-            : const MyHomePage(title: "Insignio"),
-      ),
+      home: loading
+          ? Scaffold(body: LoadingScreen(callback: endLoading))
+          : const MyHomePage(title: "Insignio"),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  String pill = "Caricamento...";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPill();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
               Icons.person,
               color: Colors.white,
             ),
-            onPressed: () {
-              _loadPill();
-            },
+            onPressed: () {},
           ),
         ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left:20.0, right:20.0),
-              child: Text(
-                pill,
-                style: Theme.of(context).textTheme.headline4,
-                textAlign: TextAlign.center,
-              ),
-            )
-          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _loadPill,
-        tooltip: 'Reload',
-        child: const Icon(Icons.refresh),
-      ),
     );
-  }
-
-  void _loadPill() async {
-    var response = await http.get(
-      Uri.parse('http://insignio.mindshub.it/pills/random'),
-      headers: {'Accept': 'application/json'},
-    );
-
-    setState(() {
-      pill = json.decode(response.body)["text"];
-    });
   }
 }
