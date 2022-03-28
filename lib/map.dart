@@ -11,6 +11,7 @@ class MapWidget extends StatelessWidget {
       options: MapOptions(
         center: LatLng(45.75548, 11.00323),
         zoom: 15.0,
+        maxZoom: 18.45, // OSM supports at most the zoom value 19
       ),
       layers: [
         TileLayerOptions(
