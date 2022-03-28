@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import 'loading.dart';
+import 'map.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,11 +56,7 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-      ),
+      body: const MapWidget()
     );
   }
 }
