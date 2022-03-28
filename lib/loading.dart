@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class LoadingScreen extends StatefulWidget {
-  late List<String> Pills;
-  late int i;
   final Function() callback;
 
-  LoadingScreen({Key? key, required this.callback}) : super(key: key) {
-    Pills = ["Pillola 1", "Pillola 2", "Pillola 3"];
-    i = new Random().nextInt(Pills.length);
-  }
+  const LoadingScreen({Key? key, required this.callback}) : super(key: key);
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
