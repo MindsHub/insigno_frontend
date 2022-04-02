@@ -23,34 +23,36 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left:20.0, right:20.0),
-          child: FutureBuilder<String>(
-            future: serverPill,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(
-                  snapshot.data!,
-                  style: Theme.of(context).textTheme.headline5,
-                  textAlign: TextAlign.center,
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              return const CircularProgressIndicator();
-            },
-          )
-        ),
-        const SizedBox(height: 60),
-        FloatingActionButton(
-          child: const Icon(Icons.navigate_next),
-          onPressed: () => widget.callback(),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:20.0, right:20.0),
+            child: FutureBuilder<String>(
+              future: serverPill,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!,
+                    style: Theme.of(context).textTheme.headline5,
+                    textAlign: TextAlign.center,
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
+              },
+            )
+          ),
+          const SizedBox(height: 60),
+          FloatingActionButton(
+            child: const Icon(Icons.navigate_next),
+            onPressed: () => widget.callback(),
+          ),
+        ],
+      )
     );
   }
 
