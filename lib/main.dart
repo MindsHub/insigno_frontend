@@ -66,11 +66,13 @@ class MyHomePage extends StatelessWidget {
         child: const Icon(Icons.explore),
         onPressed: () async {
           mapWidget.mapController.rotate(0);
-          await Geolocator.getCurrentPosition(
-                  forceAndroidLocationManager: true,
-                  desiredAccuracy: LocationAccuracy.high,)
-              .then((value) => mapWidget.mapController
-                  .move(LatLng(value.latitude, value.longitude), 14.0));
+          Geolocator.getPositionStream(
+                  locationSettings: const LocationSettings(
+                      accuracy: LocationAccuracy.high, distanceFilter: 1))
+              .listen((Position position) {
+            mapWidget.mapController
+                .move(LatLng(position.latitude, position.longitude), 14.0);
+          });
         },
       ),
     );
