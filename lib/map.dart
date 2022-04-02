@@ -15,7 +15,11 @@ class MapWidget extends StatelessWidget {
       ),
       layers: [
         TileLayerOptions(
-          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: ['a', 'b', 'c'],
+          attributionBuilder: (_) {
+            return const Text("© OpenStreetMap contributors");
+          },
         ),
         MarkerLayerOptions(
           markers: [
