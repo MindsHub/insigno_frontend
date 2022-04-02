@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'loading.dart';
 import 'map.dart';
@@ -18,8 +20,8 @@ class _MyAppState extends State<MyApp> {
   bool loading = true;
 
   endLoading() => setState(() {
-    loading = false;
-  });
+        loading = false;
+      });
 
   // This widget is the root of your application.
   @override
@@ -62,7 +64,14 @@ class MyHomePage extends StatelessWidget {
       body: mapWidget,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.explore),
-        onPressed: () => mapWidget.mapController.rotate(0),
+        onPressed: () async {
+          mapWidget.mapController.rotate(0);
+          await Geolocator.getCurrentPosition(
+                  forceAndroidLocationManager: true,
+                  desiredAccuracy: LocationAccuracy.high,)
+              .then((value) => mapWidget.mapController
+                  .move(LatLng(value.latitude, value.longitude), 14.0));
+        },
       ),
     );
   }
