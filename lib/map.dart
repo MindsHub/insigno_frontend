@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-class MapWidget extends StatelessWidget {
+class MapWidget extends StatefulWidget {
+  const MapWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MapWidget> createState() => MapWidgetState();
+}
+
+class MapWidgetState extends State<MapWidget> {
   final MapController mapController = MapController();
 
-  MapWidget({Key? key}) : super(key: key);
+  Position? position;
+
+  void setPosition(Position? position) {
+    setState(() {
+      this.position = position;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +40,15 @@ class MapWidget extends StatelessWidget {
           },
         ),
         MarkerLayerOptions(
-          markers: [
+          markers: position == null ? [
+
+          ] : [
             Marker(
-              width: 50.0,
-              height: 50.0,
-              point: LatLng(45.75548, 11.00323),
-              builder: (ctx) => const Icon(
-                Icons.ac_unit,
-                color: Colors.pink,
+              width: 30.0,
+              height: 30.0,
+              point: LatLng(position!.latitude, position!.longitude),
+              builder: (ctx) => SvgPicture.asset(
+                  "assets/icons/current_location.svg"
               ),
             ),
           ],

@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomePage extends StatelessWidget {
   double rotation = 0.0;
-  final MapWidget mapWidget = MapWidget();
+  final GlobalKey<MapWidgetState> mapState = GlobalKey<MapWidgetState>();
 
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -61,17 +61,16 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: mapWidget,
+      body: MapWidget(key: mapState),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.explore),
         onPressed: () async {
-          mapWidget.mapController.rotate(0);
+          mapState.currentState?.mapController.rotate(0);
           Geolocator.getPositionStream(
                   locationSettings: const LocationSettings(
                       accuracy: LocationAccuracy.high, distanceFilter: 1))
               .listen((Position position) {
-            mapWidget.mapController
-                .move(LatLng(position.latitude, position.longitude), 14.0);
+            mapState.currentState?.setPosition(position);
           });
         },
       ),
