@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -56,8 +55,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<String> _loadPill() async {
-    sleep(const Duration(seconds: 5));
-
     final response =
         await http.get(Uri.parse('http://insignio.mindshub.it/pills/random'));
 
