@@ -31,13 +31,16 @@ class _MyAppState extends State<MyApp> {
       ),
       home: loading
           ? Scaffold(body: LoadingScreen(callback: endLoading))
-          : const MyHomePage(title: "Insignio"),
+          : MyHomePage(title: "Insignio"),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  double rotation = 0.0;
+  final MapWidget mapWidget = MapWidget();
+
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -56,7 +59,11 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const MapWidget()
+      body: mapWidget,
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.explore),
+        onPressed: () => mapWidget.mapController.rotate(0),
+      ),
     );
   }
 }
