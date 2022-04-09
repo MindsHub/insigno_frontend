@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 import 'map.dart';
 
@@ -38,7 +41,17 @@ class HomePage extends StatelessWidget {
                 Icons.person,
                 color: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                final response = await http.post(
+                  Uri.parse('http://insignio.mindshub.it/auth-token/'),
+                  body: "{\"username\":\"admin\", \"password\":\"\"}",
+                  headers: {
+                    "content-type": "application/json",
+                    "accept": "application/json",
+                  },
+                );
+                print(jsonDecode(response.body)["token"]);
+              },
             ),
           ],
         ),
