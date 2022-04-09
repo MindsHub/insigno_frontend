@@ -41,7 +41,6 @@ class MapWidgetState extends State<MapWidget> {
         ),
         MarkerLayerOptions(
           markers: position == null ? [
-
           ] : [
             Marker(
               width: 30.0,
