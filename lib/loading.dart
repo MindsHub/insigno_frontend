@@ -37,7 +37,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   return Text(
                     snapshot.data!,
                     style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.center,
                   );
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');

@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 
+import 'login.dart';
 import 'map.dart';
 
 class HomePage extends StatelessWidget {
@@ -42,15 +40,10 @@ class HomePage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () async {
-                final response = await http.post(
-                  Uri.parse('http://insignio.mindshub.it/auth-token/'),
-                  body: "{\"username\":\"admin\", \"password\":\"\"}",
-                  headers: {
-                    "content-type": "application/json",
-                    "accept": "application/json",
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
                 );
-                print(jsonDecode(response.body)["token"]);
               },
             ),
           ],
