@@ -10,19 +10,21 @@ class HomePage extends StatelessWidget {
 
   final String title;
 
-  void startListeningForLocation() {
-    Geolocator.requestPermission().then((value) => {
-          if (value == LocationPermission.always ||
-              value == LocationPermission.whileInUse)
-            {
-              Geolocator.getPositionStream(
-                      locationSettings: const LocationSettings(
-                          accuracy: LocationAccuracy.high, distanceFilter: 1))
-                  .listen((Position position) {
-                mapState.currentState?.setPosition(position);
-              })
-            }
+  void startListeningForLocation() async {
+    var value = await Geolocator.requestPermission();
+    if (value == LocationPermission.always ||
+        value == LocationPermission.whileInUse) {
+      if (await Geolocator.isLocationServiceEnabled()) {
+        Geolocator.getPositionStream(
+                locationSettings: const LocationSettings(
+                    accuracy: LocationAccuracy.high, distanceFilter: 1))
+            .listen((Position position) {
+          mapState.currentState?.setPosition(position);
         });
+      } else {
+        Geolocator.openLocationSettings();
+      }
+    }
   }
 
   @override
@@ -41,9 +43,8 @@ class HomePage extends StatelessWidget {
           ],
         ),
         body: MapWidget(key: mapState),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-            children: [
+        floatingActionButton:
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           FloatingActionButton(
             child: const Icon(Icons.explore),
             onPressed: () async {
