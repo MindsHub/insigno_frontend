@@ -3,12 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+
+  const Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   String? username;
   String? password;
-  final formKey = GlobalKey<FormState>();
 
-  Login({Key? key}) : super(key: key);
+  final formKey = GlobalKey<FormState>();
 
   void performLogin() async {
     final response = await http.post(
