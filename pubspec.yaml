@@ -33,6 +33,7 @@ dependencies:
   flutter_map: any
   geolocator: any
   flutter_svg: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:
