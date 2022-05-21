@@ -56,12 +56,14 @@ class HomePage extends StatelessWidget {
             onPressed: () async {
               mapState.currentState?.mapController.rotate(0);
             },
+            heroTag: "fab1",
           ),
           FloatingActionButton(
             child: const Icon(Icons.location_on),
             onPressed: () async {
               startListeningForLocation();
             },
+            heroTag: "fab2",
           ),
         ]));
   }
