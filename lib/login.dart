@@ -1,13 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'preferences_keys.dart';
+import 'package:insignio_frontend/authentication.dart';
 
 class Login extends StatefulWidget {
-
   const Login({Key? key}) : super(key: key);
 
   @override
@@ -17,27 +11,21 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String? username;
   String? password;
+  bool loginFailed = false;
 
   final formKey = GlobalKey<FormState>();
 
   void performLogin() async {
-    final response = await http.post(
-      Uri.parse('http://insignio.mindshub.it/auth-token/'),
-      body: jsonEncode({"username": username, "password": password}),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    );
+    setState(() => loginFailed = false);
 
-    final authToken = jsonDecode(response.body)["token"];
-    if (authToken == null) {
-      //
-    } else {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(AUTH_TOKEN, jsonDecode(response.body)["token"]);
-      Navigator.pop(context);
-    }
+    tryToLogin(username, password).then((value) {
+      if (value) {
+        Navigator.pop(context);
+      }
+      else {
+        setState(() => loginFailed = true);
+      }
+    });
   }
 
   @override
@@ -54,25 +42,33 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         "Login to Insignio!",
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline5,
                       ),
                       const SizedBox(height: 60),
                       TextFormField(
                         initialValue: "john",
                         decoration:
-                            const InputDecoration(labelText: "Username"),
+                        const InputDecoration(labelText: "Username"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
                         initialValue: "NiceDoggo",
                         decoration:
-                            const InputDecoration(labelText: "Password"),
+                        const InputDecoration(labelText: "Password"),
                         onSaved: (value) => password = value,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
                       ),
-                      const SizedBox(height: 60),
+                      const SizedBox(height: 30),
+                      Text(
+                        loginFailed ? "Wrong user or password" : "",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 30),
                       FloatingActionButton(
                         onPressed: () {
                           formKey.currentState?.save();
