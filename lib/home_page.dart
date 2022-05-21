@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insignio_frontend/authentication.dart';
 
 import 'login.dart';
 import 'map.dart';
@@ -60,10 +61,16 @@ class HomePage extends StatelessWidget {
           ),
           FloatingActionButton(
             child: const Icon(Icons.location_on),
-            onPressed: () async {
-              startListeningForLocation();
-            },
+            onPressed: () async => startListeningForLocation(),
             heroTag: "fab2",
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.bug_report),
+            onPressed: () async {
+              print(await fetchJsonAuthenticated(
+                  Uri.parse("http://insignio.mindshub.it/map/hello")));
+            },
+            heroTag: "fab3",
           ),
         ]));
   }
