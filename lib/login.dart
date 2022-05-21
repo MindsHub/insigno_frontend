@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'preferences_keys.dart';
 
 class Login extends StatefulWidget {
 
@@ -27,7 +30,14 @@ class _LoginState extends State<Login> {
       },
     );
 
-    print(jsonDecode(response.body)["token"]);
+    final authToken = jsonDecode(response.body)["token"];
+    if (authToken == null) {
+      //
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(AUTH_TOKEN, jsonDecode(response.body)["token"]);
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -48,14 +58,14 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 60),
                       TextFormField(
-                        initialValue: "admin",
+                        initialValue: "john",
                         decoration:
                             const InputDecoration(labelText: "Username"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
-                        initialValue: "admin",
+                        initialValue: "NiceDoggo",
                         decoration:
                             const InputDecoration(labelText: "Password"),
                         onSaved: (value) => password = value,
@@ -69,6 +79,7 @@ class _LoginState extends State<Login> {
                           performLogin();
                         },
                         child: const Icon(Icons.login),
+                        heroTag: "test",
                       )
                     ],
                   ),
