@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:insignio_frontend/authentication.dart';
 
 import 'login.dart';
-import 'map.dart';
+import 'map/map.dart';
 
 class HomePage extends StatelessWidget {
   final GlobalKey<MapWidgetState> mapState = GlobalKey<MapWidgetState>();
@@ -66,10 +65,7 @@ class HomePage extends StatelessWidget {
           ),
           FloatingActionButton(
             child: const Icon(Icons.bug_report),
-            onPressed: () async {
-              print(await fetchJsonAuthenticated(
-                  Uri.parse("http://insignio.mindshub.it/map/hello")));
-            },
+            onPressed: () async => mapState.currentState?.loadMarkers(),
             heroTag: "fab3",
           ),
         ]));
