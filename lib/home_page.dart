@@ -57,16 +57,19 @@ class HomePage extends StatelessWidget {
               mapState.currentState?.mapController.rotate(0);
             },
             heroTag: "fab1",
+            tooltip: "orienta a Nord",
           ),
           FloatingActionButton(
             child: const Icon(Icons.location_on),
             onPressed: () async => startListeningForLocation(),
             heroTag: "fab2",
+            tooltip: "rileva posizione",
           ),
           FloatingActionButton(
             child: const Icon(Icons.bug_report),
             onPressed: () async => mapState.currentState?.loadMarkers(),
             heroTag: "fab3",
+            tooltip: "mostra oggetti",
           ),
         ]));
   }

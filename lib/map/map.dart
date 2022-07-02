@@ -70,11 +70,64 @@ class MapWidgetState extends State<MapWidget> {
                     ]) +
               markers
                   .map((e) => Marker(
-                      point: LatLng(e.latitude, e.longitude),
-                      builder: (ctx) => Icon(e.type.icon, color: e.type.color)))
+                        point: LatLng(e.latitude, e.longitude),
+                        builder: (ctx) => IconButton(
+                          icon: Icon(e.type.icon, color: e.type.color),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => Details(
+                              title: e.type.name,
+                              content: "some garbage description",
+                              icon: Icon(e.type.icon, color: e.type.color),
+                            ),
+                          ),
+                        ),
+                      ))
                   .toList(),
         ),
       ],
+    );
+  }
+}
+
+class Details extends StatelessWidget {
+  final String title;
+  final String content;
+  final Icon icon;
+
+  const Details({
+    required this.title,
+    required this.content,
+    required this.icon,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        children: [
+          this.icon,
+          SizedBox(width: 10),
+          Text(
+            this.title,
+            //style: Theme.of(context).textTheme.title,
+          ),
+        ],
+      ),
+      actions: [
+        MaterialButton(
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+      content: Text(
+        this.content,
+        //style: Theme.of(context).textTheme.body1,
+      ),
+      backgroundColor: Colors.cyanAccent,
     );
   }
 }
