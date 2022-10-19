@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'login.dart';
-import 'map.dart';
+import 'map/map.dart';
 
 class HomePage extends StatelessWidget {
   final GlobalKey<MapWidgetState> mapState = GlobalKey<MapWidgetState>();
@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
               onPressed: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) => const Login()),
                 );
               },
             ),
@@ -56,12 +56,20 @@ class HomePage extends StatelessWidget {
             onPressed: () async {
               mapState.currentState?.mapController.rotate(0);
             },
+            heroTag: "fab1",
+            tooltip: "orienta a Nord",
           ),
           FloatingActionButton(
             child: const Icon(Icons.location_on),
-            onPressed: () async {
-              startListeningForLocation();
-            },
+            onPressed: () async => startListeningForLocation(),
+            heroTag: "fab2",
+            tooltip: "rileva posizione",
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.bug_report),
+            onPressed: () async => mapState.currentState?.loadMarkers(),
+            heroTag: "fab3",
+            tooltip: "mostra oggetti",
           ),
         ]));
   }
