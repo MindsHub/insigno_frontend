@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -48,14 +47,6 @@ class MapWidgetState extends State<MapWidget> {
         center: LatLng(45.75548, 11.00323),
         zoom: 15.0,
         maxZoom: 18.45, // OSM supports at most the zoom value 19
-        onLongPress: (pos, coords) async {
-          MarkerType t = await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddObject()),
-          );
-          setState(() {
-            markers.add(MapMarker(0, coords.latitude, coords.longitude, t));
-          });
-        },
       ),
       layers: [
         TileLayerOptions(
@@ -137,86 +128,6 @@ class Details extends StatelessWidget {
         //style: Theme.of(context).textTheme.body1,
       ),
       backgroundColor: Colors.cyanAccent,
-    );
-  }
-}
-
-class AddObject extends StatefulWidget {
-  const AddObject({Key? key}) : super(key: key);
-
-  @override
-  State<AddObject> createState() => _AddObjectState();
-}
-
-class _AddObjectState extends State<AddObject> {
-  late String _description;
-  late MarkerType _t = MarkerType.unknown;
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Aggiungi un nuovo oggetto'),
-        leading: CloseButton(),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                DropdownButtonFormField<MarkerType>(
-                  decoration: new InputDecoration(labelText: "Tipo"),
-                  value: _t,
-                  onChanged: (value) => setState(() {
-                    _t = value!;
-                  }),
-                  items: MarkerType.values
-                      .map((e) => DropdownMenuItem<MarkerType>(
-                            value: e,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: ListTile(
-                                leading: Icon(e.icon),
-                                title: Text(e.name),
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                ),
-                TextFormField(
-                  decoration: new InputDecoration(labelText: "Descrizione"),
-                  maxLines: 3,
-                  inputFormatters: [LengthLimitingTextInputFormatter(300)],
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Inserire una descrizione";
-                    }
-                    return null;
-                  },
-                  onSaved: (desc) {
-                    _description = desc!;
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      final item = _t;
-                      Navigator.of(context).pop(item);
-                    }
-                  },
-                  child: Icon(Icons.save),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
