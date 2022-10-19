@@ -48,15 +48,17 @@ class MapWidgetState extends State<MapWidget> {
         zoom: 15.0,
         maxZoom: 18.45, // OSM supports at most the zoom value 19
       ),
-      layers: [
-        TileLayerOptions(
+      nonRotatedChildren: [
+        AttributionWidget(attributionBuilder: (_) {
+          return const Text("© OpenStreetMap contributors");
+        })
+      ],
+      children: [
+        TileLayer(
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
-          attributionBuilder: (_) {
-            return const Text("© OpenStreetMap contributors");
-          },
+          subdomains: const ['a', 'b', 'c'],
         ),
-        MarkerLayerOptions(
+        MarkerLayer(
           markers: (position == null
                   ? <Marker>[]
                   : [
@@ -107,24 +109,24 @@ class Details extends StatelessWidget {
     return AlertDialog(
       title: Row(
         children: [
-          this.icon,
-          SizedBox(width: 10),
+          icon,
+          const SizedBox(width: 10),
           Text(
-            this.title,
+            title,
             //style: Theme.of(context).textTheme.title,
           ),
         ],
       ),
       actions: [
         MaterialButton(
-          child: Text('Ok'),
+          child: const Text('Ok'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ],
       content: Text(
-        this.content,
+        content,
         //style: Theme.of(context).textTheme.body1,
       ),
       backgroundColor: Colors.cyanAccent,

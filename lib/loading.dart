@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'networking/const.dart';
 class LoadingScreen extends StatefulWidget {
   final Function() callback;
 
@@ -57,7 +58,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<String> _loadPill() async {
     final response =
-        await http.get(Uri.parse('http://insignio.mindshub.it/pills/random'));
+        await http.get(Uri.parse(insigno_server+'/pills/random'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> m = jsonDecode(response.body);
