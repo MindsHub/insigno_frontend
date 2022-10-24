@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +7,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:insignio_frontend/map/marker_type.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../networking/const.dart';
 import 'marker.dart';
+import 'package:http/http.dart' as http;
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -26,17 +30,32 @@ class MapWidgetState extends State<MapWidget> {
     });
   }
 
+  Future<String> _loadPill() async {
+    final response =
+    await http.get(Uri.parse(insigno_server+'/pills/random'));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> m = jsonDecode(response.body);
+      return m['text'];
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
   void loadMarkers() async {
-    final newMarkers = [
-      MapMarker(0, 45.75548, 11.00323, MarkerType.electronics),
-      MapMarker(0, 45.75559, 11.00323, MarkerType.compost),
-      MapMarker(0, 45.75537, 11.00323, MarkerType.glass),
-      MapMarker(0, 45.75548, 11.00312, MarkerType.paper),
-      MapMarker(0, 45.75548, 11.00334, MarkerType.plastic),
-    ];
-    setState(() {
-      markers = newMarkers;
-    });
+    final response = await http.get(Uri.parse(insigno_server+'/map/getNearMarkers/'+position!.latitude.toString()+'_'+position!.longitude.toString()));
+
+    if (response.statusCode == 200) {
+      var array = List.from(jsonDecode(response.body));
+       List<MapMarker> newMarkers = <MapMarker>[];
+       for(var cur in array){
+          newMarkers.add(MapMarker(0, cur['y'] as double, cur['x'] as double, MarkerType.values.byName(cur['type'] as String)));
+       }
+       setState(() {
+         markers = newMarkers;
+       });
+    }
+
   }
 
   @override
