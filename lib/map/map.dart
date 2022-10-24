@@ -30,18 +30,6 @@ class MapWidgetState extends State<MapWidget> {
     });
   }
 
-  Future<String> _loadPill() async {
-    final response =
-    await http.get(Uri.parse(insigno_server+'/pills/random'));
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> m = jsonDecode(response.body);
-      return m['text'];
-    } else {
-      throw Exception('Failed to load');
-    }
-  }
-
   void loadMarkers() async {
     final response = await http.get(Uri.parse(insigno_server+'/map/getNearMarkers/'+position!.latitude.toString()+'_'+position!.longitude.toString()));
 
