@@ -8,8 +8,10 @@ import 'package:insignio_frontend/map/marker_type.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../networking/const.dart';
+import 'location.dart';
 import 'marker.dart';
 import 'package:http/http.dart' as http;
+import 'package:insignio_frontend/camera/camera.dart';
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -24,10 +26,13 @@ class MapWidgetState extends State<MapWidget> {
   Position? position;
   List<MapMarker> markers = List.empty();
 
-  void setPosition(Position? position) {
+  void moveCenter(){
     setState(() {
-      this.position = position;
+      position = CustomLocation().getPosition();
     });
+    if(position!=null){
+      mapController.move(LatLng(position!.latitude, position!.longitude), 18.45);
+    }
   }
 
   void loadMarkers() async {

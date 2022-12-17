@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'networking/const.dart';
+
 class LoadingScreen extends StatefulWidget {
   final Function() callback;
 
@@ -25,12 +26,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left:20.0, right:20.0),
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: FutureBuilder<String>(
               future: serverPill,
               builder: (context, snapshot) {
@@ -44,21 +45,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 }
                 return const CircularProgressIndicator();
               },
-            )
-          ),
-          const SizedBox(height: 60),
-          FloatingActionButton(
-            child: const Icon(Icons.navigate_next),
-            onPressed: () => widget.callback(),
-          ),
-        ],
-      )
-    );
+            )),
+        const SizedBox(height: 60),
+        FloatingActionButton(
+          child: const Icon(Icons.navigate_next),
+          onPressed: () => widget.callback(),
+        ),
+      ],
+    ));
   }
 
   Future<String> _loadPill() async {
     final response =
-        await http.get(Uri.parse(insigno_server+'/pills/random'));
+        await http.get(Uri.parse(insigno_server + '/pills/random'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> m = jsonDecode(response.body);

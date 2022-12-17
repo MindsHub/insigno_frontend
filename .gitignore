@@ -40,7 +40,6 @@ unlinked.ds
 unlinked_spec.ds
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols

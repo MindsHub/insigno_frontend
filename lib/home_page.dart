@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'login.dart';
+import 'login_page.dart';
 import 'map/map.dart';
+import 'add_trash_page.dart';
 
 class HomePage extends StatelessWidget {
   final GlobalKey<MapWidgetState> mapState = GlobalKey<MapWidgetState>();
@@ -10,23 +11,6 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  void startListeningForLocation() async {
-    var value = await Geolocator.requestPermission();
-    if (value == LocationPermission.always ||
-        value == LocationPermission.whileInUse) {
-      if (await Geolocator.isLocationServiceEnabled()) {
-        Geolocator.getPositionStream(
-                locationSettings: const LocationSettings(
-                    accuracy: LocationAccuracy.high, distanceFilter: 1))
-            .listen((Position position) {
-          mapState.currentState?.setPosition(position);
-        });
-      } else {
-        Geolocator.openLocationSettings();
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +45,7 @@ class HomePage extends StatelessWidget {
           ),
           FloatingActionButton(
             child: const Icon(Icons.location_on),
-            onPressed: () async => startListeningForLocation(),
+            onPressed: () async => mapState.currentState?.moveCenter(),
             heroTag: "fab2",
             tooltip: "rileva posizione",
           ),
@@ -70,6 +54,17 @@ class HomePage extends StatelessWidget {
             onPressed: () async => mapState.currentState?.loadMarkers(),
             heroTag: "fab3",
             tooltip: "mostra oggetti",
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddTrashScreen()),
+              );
+            },
+            heroTag: "fab4",
+            tooltip: "aggiungi immondizia",
           ),
         ]));
   }

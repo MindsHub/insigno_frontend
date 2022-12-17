@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
-import 'loading.dart';
-
+import 'loading_page.dart';
+import 'map/location.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool loading = true;
-
+  var tmp = CustomLocation();
   endLoading() => setState(() {
         loading = false;
       });
