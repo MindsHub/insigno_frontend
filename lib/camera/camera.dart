@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io' as io;
 
 import 'package:dio/dio.dart';
@@ -11,9 +12,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:insignio_frontend/map/location.dart';
 
-
 import '../map/marker_type.dart';
 import '../networking/const.dart';
+
 Future<XFile?> getPictureFromSource() async {
   final ImagePicker _picker = ImagePicker();
   final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
@@ -26,9 +27,9 @@ Future<XFile?> getPictureFromCamera() async {
   return photo;
 }
 
-Future<bool> addTrash(io.File? img, String? path) async{
-  Position? coor= CustomLocation().getPosition();
-  if(coor==null||img==null){
+Future<bool> addTrash(io.File? img, String? path) async {
+  Position? coor = CustomLocation().getPosition();
+  if (coor == null || img == null) {
     return false;
   }
   var dio = Dio();

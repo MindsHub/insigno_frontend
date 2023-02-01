@@ -26,29 +26,34 @@ class MapWidgetState extends State<MapWidget> {
   Position? position;
   List<MapMarker> markers = List.empty();
 
-  void moveCenter(){
+  void moveCenter() {
     setState(() {
       position = CustomLocation().getPosition();
     });
-    if(position!=null){
-      mapController.move(LatLng(position!.latitude, position!.longitude), 18.45);
+    if (position != null) {
+      mapController.move(
+          LatLng(position!.latitude, position!.longitude), 18.45);
     }
   }
 
   void loadMarkers() async {
-    final response = await http.get(Uri.parse(insigno_server+'/map/getNearMarkers/'+position!.latitude.toString()+'_'+position!.longitude.toString()));
+    final response = await http.get(Uri.parse(insigno_server +
+        '/map/getNearMarkers/' +
+        position!.latitude.toString() +
+        '_' +
+        position!.longitude.toString()));
 
     if (response.statusCode == 200) {
       var array = List.from(jsonDecode(response.body));
-       List<MapMarker> newMarkers = <MapMarker>[];
-       for(var cur in array){
-          newMarkers.add(MapMarker(0, cur['y'] as double, cur['x'] as double, MarkerType.values.byName(cur['type'] as String)));
-       }
-       setState(() {
-         markers = newMarkers;
-       });
+      List<MapMarker> newMarkers = <MapMarker>[];
+      for (var cur in array) {
+        newMarkers.add(MapMarker(0, cur['y'] as double, cur['x'] as double,
+            MarkerType.values.byName(cur['type'] as String)));
+      }
+      setState(() {
+        markers = newMarkers;
+      });
     }
-
   }
 
   @override

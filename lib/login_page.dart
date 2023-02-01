@@ -21,8 +21,7 @@ class _LoginState extends State<Login> {
     tryToLogin(username, password).then((value) {
       if (value) {
         Navigator.pop(context);
-      }
-      else {
+      } else {
         setState(() => loginFailed = true);
       }
     });
@@ -42,23 +41,20 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         "Login to Insignio!",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5,
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                       const SizedBox(height: 60),
                       TextFormField(
                         initialValue: "john",
                         decoration:
-                        const InputDecoration(labelText: "Username"),
+                            const InputDecoration(labelText: "Username"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
                         initialValue: "NiceDoggo",
                         decoration:
-                        const InputDecoration(labelText: "Password"),
+                            const InputDecoration(labelText: "Password"),
                         onSaved: (value) => password = value,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,

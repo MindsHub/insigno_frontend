@@ -82,16 +82,15 @@ class AddTrashScreenState extends State<AddTrashScreen> {
                   content: const Text('Non è stato possibile segnalare!'),
                   action: SnackBarAction(
                     label: 'Nuu',
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                   ),
                 );
 
                 // Find the ScaffoldMessenger in the widget tree
                 // and use it to show a SnackBar.
-                if(!await addTrash(image, imagePath)){
+                if (!await addTrash(image, imagePath)) {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }else{
+                } else {
                   Navigator.pop(context);
                 }
               },
@@ -99,7 +98,6 @@ class AddTrashScreenState extends State<AddTrashScreen> {
             ElevatedButton(
               child: const Text('Esci'),
               onPressed: () {
-
                 Navigator.pop(context);
               },
             ),
