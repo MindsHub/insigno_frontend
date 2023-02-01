@@ -1,15 +1,12 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io' as io;
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:insignio_frontend/map/location.dart';
 
 import '../map/marker_type.dart';
@@ -27,11 +24,12 @@ Future<XFile?> getPictureFromCamera() async {
   return photo;
 }
 
-Future<bool> addTrash(io.File? img, String? path) async {
+Future<bool> addTrash(Uint8List image) async {
   Position? coor = CustomLocation().getPosition();
-  if (coor == null || img == null) {
+  if (coor == null) {
     return false;
   }
+
   var dio = Dio();
   // Set default configs
   dio.options.baseUrl = insigno_server;
@@ -39,16 +37,24 @@ Future<bool> addTrash(io.File? img, String? path) async {
   dio.options.receiveTimeout = 3000;
 
   var formData = FormData.fromMap({
-    'x': coor!.latitude.toString(),
-    'y': coor!.longitude.toString(),
+    'x': coor.latitude.toString(),
+    'y': coor.longitude.toString(),
     'type': MarkerType.unknown.toString(),
-    /*await pickedFile.readAsBytes(),
-        filename: pickedFile.path.split('/').last,*/
-    'image': img!.toString(),
+    'image': http.MultipartFile.fromBytes("image", image)
   });
-  var response = await dio.post(insigno_server+"/addMarkers", data: formData);
-  return response.statusCode==200;
 
+  try {
+    var response =
+        await dio.post(insigno_server + "/addMarkers", data: formData);
+    return response.statusCode == 200;
+  } catch (e) {
+    if (e.runtimeType == DioError) {
+      var dioException = e as DioError;
+
+      print(dioException.response); // Do something with response
+    }
+
+    print(e);
+    return false;
+  }
 }
-
-

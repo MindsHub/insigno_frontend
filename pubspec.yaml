@@ -38,7 +38,9 @@ dependencies:
   flutter_svg: any
   shared_preferences: any
   html: any
-  dio: 4.0.6
+  dio: ^4.0.6
+  file_picker: ^5.2.5
+  os_detect: ^2.0.1
 
 dev_dependencies:
   flutter_test:

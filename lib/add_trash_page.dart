@@ -1,22 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
-
+import "package:os_detect/os_detect.dart" as Platform;
 import 'camera/camera.dart';
-import 'networking/const.dart';
-/*
-class MapWidget extends StatefulWidget {
-  const MapWidget({Key? key}) : super(key: key);
-
-  @override
-  State<MapWidget> createState() => MapWidgetState();
-}
-
-class MapWidgetState extends State<MapWidget>*/
 
 class AddTrashScreen extends StatefulWidget {
   const AddTrashScreen({Key? key}) : super(key: key);
@@ -26,8 +14,8 @@ class AddTrashScreen extends StatefulWidget {
 }
 
 class AddTrashScreenState extends State<AddTrashScreen> {
-  File? image;
-  String? imagePath;
+  Uint8List? image;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,65 +24,64 @@ class AddTrashScreenState extends State<AddTrashScreen> {
         ),
         body: Column(children: [
           Row(children: [
-            image != null
-                ? kIsWeb
-                    ? Image.network(
-                        image!.path,
-                        height: 60.0,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.file(
-                        image!,
-                        height: 60.0,
-                        fit: BoxFit.cover,
-                      )
-                : const Icon(Icons.image, size: 60),
+            if (image == null)
+              const Icon(Icons.image, size: 60)
+            else
+              Image.memory(
+                image!,
+                height: 60.0,
+                fit: BoxFit.cover,
+              ),
             ElevatedButton(
               child: const Text('Carica da file'),
               onPressed: () {
-                getPictureFromSource().then((value) {
-                  setState(() {
-                    image = File(value!.path);
-                    imagePath = value!.path;
-                  });
-                });
+                FilePicker.platform.pickFiles(withData: true)
+                    .then((value) {
+                      var bytes = value?.files.single.bytes;
+                      if (bytes != null) {
+                        setState(() => image = bytes);
+                      }
+                    });
               },
             ),
-            !kIsWeb
-                ? ElevatedButton(
-                    child: const Text('Scatta con la camera'),
-                    onPressed: () {
-                      getPictureFromCamera().then((value) {
-                        setState(() {
-                          image = File(value!.path);
-                          imagePath = value!.path;
-                        });
-                      });
-                    },
-                  )
-                : Container(),
+            if (Platform.isAndroid || Platform.isIOS)
+              ElevatedButton(
+                  child: const Text('Scatta con la camera'),
+                  onPressed: () {
+                    getPictureFromCamera().then((value) async {
+                      if (value != null) {
+                        return await File(value.path).readAsBytes();
+                      } else {
+                        return null;
+                      }
+                    }).then((value) {
+                      if (value != null) {
+                        setState(() => image = value);
+                      }
+                    });
+                  })
           ]),
           Row(children: [
-            ElevatedButton(
-              child: const Text('Invia'),
-              onPressed: () async {
-                final snackBar = SnackBar(
-                  content: const Text('Non è stato possibile segnalare!'),
-                  action: SnackBarAction(
-                    label: 'Nuu',
-                    onPressed: () {},
-                  ),
-                );
-
-                // Find the ScaffoldMessenger in the widget tree
-                // and use it to show a SnackBar.
-                if (!await addTrash(image, imagePath)) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-            ),
+            if (image != null)
+              ElevatedButton(
+                child: const Text('Invia'),
+                onPressed: () async {
+                  if (!await addTrash(image!)) {
+                    final snackBar = SnackBar(
+                      content: const Text('Non è stato possibile segnalare!'),
+                      action: SnackBarAction(
+                        label: 'Nuu',
+                        onPressed: () {},
+                      ),
+                    );
+                    // Find the ScaffoldMessenger in the widget tree
+                    // and use it to show a SnackBar.
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ElevatedButton(
               child: const Text('Esci'),
               onPressed: () {
