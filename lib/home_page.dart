@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'dart:math';
 
 import 'login_page.dart';
 import 'map/map_page.dart';
@@ -36,7 +36,10 @@ class HomePage extends StatelessWidget {
         floatingActionButton:
             Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           FloatingActionButton(
-            child: const Icon(Icons.explore),
+            child: Transform.rotate(
+                angle: -pi / 4,
+                child: const Icon(Icons.explore)
+            ),
             onPressed: () async {
               mapState.currentState?.mapController.rotate(0);
             },
