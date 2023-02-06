@@ -1,4 +1,4 @@
-import 'marker_type.dart';
+import '../marker/marker_type.dart';
 
 class MapMarker {
   final int id;

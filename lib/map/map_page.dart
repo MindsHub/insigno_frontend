@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:insignio_frontend/map/marker_type.dart';
+import 'package:insignio_frontend/marker/marker_page.dart';
+import 'package:insignio_frontend/marker/marker_type.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../networking/const.dart';
 import 'location.dart';
-import 'marker.dart';
+import 'map_marker.dart';
 import 'package:http/http.dart' as http;
-import 'package:insignio_frontend/camera/camera.dart';
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -77,31 +77,32 @@ class MapWidgetState extends State<MapWidget> {
         ),
         MarkerLayer(
           markers: (position == null
-                  ? <Marker>[]
-                  : [
-                      Marker(
-                        width: 30.0,
-                        height: 30.0,
-                        point: LatLng(position!.latitude, position!.longitude),
-                        builder: (ctx) => SvgPicture.asset(
-                            "assets/icons/current_location.svg"),
-                      ),
-                    ]) +
+              ? <Marker>[]
+              : [
+            Marker(
+              width: 30.0,
+              height: 30.0,
+              point: LatLng(position!.latitude, position!.longitude),
+              builder: (ctx) =>
+                  SvgPicture.asset(
+                      "assets/icons/current_location.svg"),
+            ),
+          ]) +
               markers
-                  .map((e) => Marker(
-                        point: LatLng(e.latitude, e.longitude),
-                        builder: (ctx) => IconButton(
+                  .map((e) =>
+                  Marker(
+                    point: LatLng(e.latitude, e.longitude),
+                    builder: (ctx) =>
+                        IconButton(
                           icon: Icon(e.type.icon, color: e.type.color),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => Details(
-                              title: e.type.name,
-                              content: "some garbage description",
-                              icon: Icon(e.type.icon, color: e.type.color),
-                            ),
-                          ),
+                          onPressed: () =>
+                              Navigator.pushNamed(
+                                context,
+                                MarkerWidget.routeName,
+                                arguments: MarkerWidgetArgs(e)
+                              ),
                         ),
-                      ))
+                  ))
                   .toList(),
         ),
       ],

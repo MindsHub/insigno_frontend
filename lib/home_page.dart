@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'login_page.dart';
-import 'map/map.dart';
+import 'map/map_page.dart';
 import 'add_trash_page.dart';
 
 class HomePage extends StatelessWidget {

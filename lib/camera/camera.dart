@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:insignio_frontend/map/location.dart';
 
-import '../map/marker_type.dart';
+import '../marker/marker_type.dart';
 import '../networking/const.dart';
 
 Future<XFile?> getPictureFromSource() async {

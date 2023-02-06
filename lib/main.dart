@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insignio_frontend/marker/marker_page.dart';
 
 import 'home_page.dart';
 import 'loading_page.dart';
@@ -33,6 +34,9 @@ class _MyAppState extends State<MyApp> {
       home: loading
           ? Scaffold(body: LoadingScreen(callback: endLoading))
           : HomePage(title: "Insignio"),
+      routes: {
+        MarkerWidget.routeName: (context) => const MarkerWidget()
+      },
     );
   }
 }
