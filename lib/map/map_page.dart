@@ -39,9 +39,9 @@ class MapWidgetState extends State<MapWidget> {
   void loadMarkers() async {
     final response = await http.get(Uri.parse(insigno_server +
         '/map/getNearMarkers/' +
-        position!.latitude.toString() +
+        mapController.center.latitude.toString() +
         '_' +
-        position!.longitude.toString()));
+        mapController.center.longitude.toString()));
 
     if (response.statusCode == 200) {
       var array = List.from(jsonDecode(response.body));
