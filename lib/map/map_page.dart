@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/marker/marker_type.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rxdart/transformers.dart';
 
 import '../networking/const.dart';
 import 'location.dart';
@@ -21,10 +22,33 @@ class MapWidget extends StatefulWidget {
 }
 
 class MapWidgetState extends State<MapWidget> {
+  static final LatLng initialCoordinates = LatLng(45.75548, 11.00323);
+
+  final Distance distance = const Distance();
   final MapController mapController = MapController();
+  LatLng? lastLoadMarkersPos;
 
   Position? position;
-  List<MapMarker> markers = List.empty();
+  List<MapMarker> markers = [];
+
+  MapWidgetState() {
+    mapController.mapEventStream
+        .where((event) => event.zoom >= 15.0 && (lastLoadMarkersPos == null
+              || distance.distance(lastLoadMarkersPos!, event.center) > 5000))
+        .forEach((event) {
+          lastLoadMarkersPos = event.center;
+          loadMarkers(event.center);
+        });
+
+    mapController.mapEventStream
+        .where((event) => event.zoom < 15.0)
+        .forEach((element) {
+          lastLoadMarkersPos = null;
+          setState(() { markers = []; });
+        });
+
+    loadMarkers(initialCoordinates);
+  }
 
   void moveCenter() {
     setState(() {
@@ -36,12 +60,9 @@ class MapWidgetState extends State<MapWidget> {
     }
   }
 
-  void loadMarkers() async {
-    final response = await http.get(Uri.parse(insigno_server +
-        '/map/getNearMarkers/' +
-        mapController.center.latitude.toString() +
-        '_' +
-        mapController.center.longitude.toString()));
+  void loadMarkers(final LatLng latLng) async {
+    final response = await http.get(Uri.parse(
+        "$insigno_server/map/getNearMarkers/${latLng.latitude}_${latLng.longitude}"));
 
     if (response.statusCode == 200) {
       var array = List.from(jsonDecode(response.body));
@@ -61,7 +82,7 @@ class MapWidgetState extends State<MapWidget> {
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
-        center: LatLng(45.75548, 11.00323),
+        center: initialCoordinates,
         zoom: 15.0,
         maxZoom: 18.45, // OSM supports at most the zoom value 19
       ),
@@ -97,9 +118,9 @@ class MapWidgetState extends State<MapWidget> {
                           icon: Icon(e.type.icon, color: e.type.color),
                           onPressed: () =>
                               Navigator.pushNamed(
-                                context,
-                                MarkerWidget.routeName,
-                                arguments: MarkerWidgetArgs(e)
+                                  context,
+                                  MarkerWidget.routeName,
+                                  arguments: MarkerWidgetArgs(e)
                               ),
                         ),
                   ))

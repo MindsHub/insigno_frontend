@@ -54,9 +54,9 @@ class HomePage extends StatelessWidget {
           ),
           FloatingActionButton(
             child: const Icon(Icons.bug_report),
-            onPressed: () async => mapState.currentState?.loadMarkers(),
+            onPressed: () async {},
             heroTag: "fab3",
-            tooltip: "mostra oggetti",
+            tooltip: "non fa niente",
           ),
           FloatingActionButton(
             child: const Icon(Icons.add),
