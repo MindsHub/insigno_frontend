@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
                       TextFormField(
                         initialValue: "john",
                         decoration:
-                            const InputDecoration(labelText: "Username"),
+                            const InputDecoration(labelText: "Email"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),

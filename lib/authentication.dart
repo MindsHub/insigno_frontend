@@ -10,7 +10,7 @@ String? token;
 
 Future<bool> tryToLogin(String? username, String? password) async {
   final response = await http.post(
-    Uri.parse(insigno_server + '/auth-token/'),
+    Uri.parse(insignio_server + '/auth-token/'),
     body: jsonEncode({"username": username, "password": password}),
     headers: {
       "content-type": "application/json",

@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/marker/marker_type.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:rxdart/transformers.dart';
 
 import '../networking/const.dart';
 import 'location.dart';
@@ -62,14 +61,15 @@ class MapWidgetState extends State<MapWidget> {
 
   void loadMarkers(final LatLng latLng) async {
     final response = await http.get(Uri.parse(
-        "$insigno_server/map/getNearMarkers/${latLng.latitude}_${latLng.longitude}"));
+        "$insignio_server/map/get_near?y=${latLng.latitude}&x=${latLng.longitude}"));
 
     if (response.statusCode == 200) {
       var array = List.from(jsonDecode(response.body));
       List<MapMarker> newMarkers = <MapMarker>[];
       for (var cur in array) {
-        newMarkers.add(MapMarker(0, cur['y'] as double, cur['x'] as double,
-            MarkerType.values.byName(cur['type'] as String)));
+        var point = cur["point"];
+        newMarkers.add(MapMarker(0, point['y'] as double, point['x'] as double,
+            MarkerType.values.first));
       }
       setState(() {
         markers = newMarkers;

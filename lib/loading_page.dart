@@ -57,7 +57,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<String> _loadPill() async {
     final response =
-        await http.get(Uri.parse(insigno_server + '/pills/random'));
+        await http.get(Uri.parse(insignio_server + '/pills/random'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> m = jsonDecode(response.body);

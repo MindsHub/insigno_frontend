@@ -32,7 +32,7 @@ Future<bool> addTrash(Uint8List image) async {
 
   var dio = Dio();
   // Set default configs
-  dio.options.baseUrl = insigno_server;
+  dio.options.baseUrl = insignio_server;
   dio.options.connectTimeout = 5000; //5s
   dio.options.receiveTimeout = 3000;
 
@@ -45,7 +45,7 @@ Future<bool> addTrash(Uint8List image) async {
 
   try {
     var response =
-        await dio.post(insigno_server + "/addMarkers", data: formData);
+        await dio.post(insignio_server + "/addMarkers", data: formData);
     return response.statusCode == 200;
   } catch (e) {
     if (e.runtimeType == DioError) {
