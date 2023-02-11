@@ -45,14 +45,14 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 60),
                       TextFormField(
-                        initialValue: "john",
+                        initialValue: "john@gmail.com",
                         decoration:
                             const InputDecoration(labelText: "Email"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
-                        initialValue: "NiceDoggo",
+                        initialValue: "NiceDoggo1",
                         decoration:
                             const InputDecoration(labelText: "Password"),
                         onSaved: (value) => password = value,

@@ -2,48 +2,45 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 import 'preferences_keys.dart';
 import 'networking/const.dart';
 
-String? token;
+String? cookie;
 
-Future<bool> tryToLogin(String? username, String? password) async {
+Future<bool> tryToLogin(String? email, String? password) async {
   final response = await http.post(
-    Uri.parse(insignio_server + '/auth-token/'),
-    body: jsonEncode({"username": username, "password": password}),
+    Uri.parse(insignio_server + '/login/'),
+    body: jsonEncode({"email": email, "password": password}),
     headers: {
       "content-type": "application/json",
       "accept": "application/json",
     },
   );
 
-  final authToken = jsonDecode(response.body)["token"];
-  if (authToken == null) {
+  final authCookie = response.headers["set-cookie"]?.split("; ")[0];
+  if (authCookie == null) {
     return false;
   }
 
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setString(AUTH_TOKEN, authToken);
-  token = authToken;
+  await prefs.setString(AUTH_COOKIE, authCookie);
+  cookie = authCookie;
   return true;
 }
 
-Future<String> getToken() async {
-  if (token == null) {
+Future<String> getCookie() async {
+  if (cookie == null) {
     final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString(AUTH_TOKEN);
+    cookie = prefs.getString(AUTH_COOKIE);
   }
 
-  if (token == null) {
+  if (cookie == null) {
     return "";
   } else {
-    return token!;
+    return cookie!;
   }
-}
-
-Future<String> getAuthorizationHeader() async {
-  return "Token " + await getToken();
 }
 
 Future<dynamic> fetchJsonAuthenticated(Uri uri) async {
@@ -52,7 +49,7 @@ Future<dynamic> fetchJsonAuthenticated(Uri uri) async {
     headers: {
       "content-type": "application/json",
       "accept": "application/json",
-      "Authorization": await getAuthorizationHeader(),
+      "Cookie": await getCookie(),
     },
   );
 

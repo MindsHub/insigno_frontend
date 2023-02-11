@@ -1,1 +1,1 @@
-const String AUTH_TOKEN = 'auth_token';
+const String AUTH_COOKIE = 'auth_cookie';
