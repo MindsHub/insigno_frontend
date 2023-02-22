@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insignio_frontend/authentication.dart';
+import 'authentication.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);

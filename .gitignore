@@ -31,7 +31,7 @@
 .pub-cache/
 .pub/
 /build/
-**/generated_plugin_registrant.dart
+lib/old/generated_plugin_registrant.dart
 build/
 windows/
 flutter_*.png

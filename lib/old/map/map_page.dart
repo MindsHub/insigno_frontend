@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:insignio_frontend/marker/marker_page.dart';
-import 'package:insignio_frontend/marker/marker_type.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
 
 import '../networking/const.dart';
 import 'location.dart';
 import 'map_marker.dart';
-import 'package:http/http.dart' as http;
+import '../marker/marker_page.dart';
+import '../marker/marker_type.dart';
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);

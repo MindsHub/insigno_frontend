@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insignio_frontend/marker/marker_page.dart';
 
-import 'home_page.dart';
-import 'loading_page.dart';
-import 'map/location.dart';
+import 'old/home_page.dart';
+import 'old/loading_page.dart';
+import 'old/map/location.dart';
+import 'old/marker/marker_page.dart';
 
 void main() {
   runApp(const MyApp());

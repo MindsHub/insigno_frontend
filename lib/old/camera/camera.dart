@@ -1,4 +1,3 @@
-import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -6,12 +5,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:insignio_frontend/authentication.dart';
-
-import 'package:insignio_frontend/map/location.dart';
-
+import '../map/location.dart';
 import '../marker/marker_type.dart';
 import '../networking/const.dart';
+import '../authentication.dart';
 
 Future<XFile?> getPictureFromSource() async {
   final ImagePicker _picker = ImagePicker();
