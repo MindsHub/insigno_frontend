@@ -29,6 +29,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences:
+
+  # dependency injection TODO choose versions
+  get_it:
+  get_it_mixin:
+  injectable:
+
+  # utils
+
   http: ^0.13.4
   universal_io: ^2.0.4
   flutter_map: any
@@ -36,7 +45,6 @@ dependencies:
   image_picker: ^0.8.6
   image_picker_for_web: 2.1.10 #endorsed package DO NOT REMOVE
   flutter_svg: any
-  shared_preferences: any
   html: any
   dio: ^4.0.6
   file_picker: ^5.2.5
@@ -54,6 +62,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
+  # needed for Injectable
+  injectable_generator:
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
