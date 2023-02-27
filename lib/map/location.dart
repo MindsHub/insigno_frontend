@@ -14,15 +14,21 @@ class LocationProvider {
 
   StreamSubscription<LocationPermission>? _permissionStatusSub;
   StreamSubscription<ServiceStatus>? _serviceStatusSub;
+  StreamSubscription<bool>? _initialServiceStatusSub;
   StreamSubscription<Position>? _positionSub;
 
   final LocationInfo _lastLocationInfo = LocationInfo(null, true, true);
   final StreamController<LocationInfo> _streamController = StreamController.broadcast();
 
   LocationProvider() {
+    _initialServiceStatusSub =
+        Geolocator.isLocationServiceEnabled().asStream().listen((enabled) async {
+      await _handleServicesEnabled(enabled, true);
+    });
+
     _permissionStatusSub = Geolocator.checkPermission()
-      .asStream()
-      .listen((permission) async => await _handlePermission(permission, true));
+        .asStream()
+        .listen((permission) async => await _handlePermission(permission, true));
 
     _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
       print(status.toString() + "##########");
@@ -32,7 +38,7 @@ class LocationProvider {
         print("Exception " + e.toString());
       }
       print(status.toString() + "##########");
-      _handleMetadata(servicesEnabled: status == ServiceStatus.enabled);
+      await _handleServicesEnabled(status == ServiceStatus.enabled, false);
     });
     _createNewPositionStream();
   }
@@ -47,7 +53,7 @@ class LocationProvider {
 
   void _createNewPositionStream() {
     _positionSub = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-            (position) => _handlePosition(position),
+        (position) => _handlePosition(position),
         onError: (error) => print(error.toString()));
   }
 
@@ -64,7 +70,7 @@ class LocationProvider {
     switch (permission) {
       case LocationPermission.unableToDetermine:
       case LocationPermission.denied:
-        _handleMetadata(permissionGranted: false);
+        await _handlePermissionGranted(false);
         if (initialCheck) {
           LocationPermission newPermission = await Geolocator.requestPermission();
           await _handlePermission(newPermission, false);
@@ -72,11 +78,11 @@ class LocationProvider {
         break;
       case LocationPermission.deniedForever:
         await _positionSub?.cancel();
-        _handleMetadata(permissionGranted: false);
+        await _handlePermissionGranted(false);
         break;
       case LocationPermission.whileInUse:
       case LocationPermission.always:
-        _handleMetadata(permissionGranted: true);
+        await _handlePermissionGranted(true);
         if (!initialCheck) {
           // reopen the position stream only if the permission was not granted at the beginning but
           // then, upon asked for permission with requestPermission, the user granted the permission
@@ -87,16 +93,21 @@ class LocationProvider {
     }
   }
 
-  void _handleMetadata({bool? servicesEnabled, bool? permissionGranted}) {
-    if (servicesEnabled != null) {
-      _lastLocationInfo.servicesEnabled = servicesEnabled;
-      if (!servicesEnabled) {
-        _lastLocationInfo.position = null;
+  Future<void> _handleServicesEnabled(bool enabled, bool initialCheck) async {
+    if (enabled) {
+      if (!initialCheck) {
+        _createNewPositionStream();
       }
+    } else {
+      await _positionSub?.cancel();
+      _lastLocationInfo.position = null;
     }
-    if (permissionGranted != null) {
-      _lastLocationInfo.permissionGranted = permissionGranted;
-    }
+    _lastLocationInfo.servicesEnabled = enabled;
+    _streamController.add(_lastLocationInfo);
+  }
+
+  Future<void> _handlePermissionGranted(bool permissionGranted) async {
+    _lastLocationInfo.permissionGranted = permissionGranted;
     _streamController.add(_lastLocationInfo);
   }
 
@@ -105,6 +116,7 @@ class LocationProvider {
     await Future.wait([
       _permissionStatusSub?.cancel() ?? Future.value(null),
       _serviceStatusSub?.cancel() ?? Future.value(null),
+      _initialServiceStatusSub?.cancel() ?? Future.value(null),
       _positionSub?.cancel() ?? Future.value(null),
       _streamController.close()
     ]);

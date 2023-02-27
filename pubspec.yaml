@@ -42,6 +42,12 @@ dependencies:
 
   # utils
   geolocator:
+
+  #  git:
+  #    url: https://github.com/Stypox/flutter-geolocator.git
+  #    path: geolocator
+  #    ref: forked-version
+  #  #path: '../flutter-geolocator/geolocator'
   flutter_svg:
   http:
 
@@ -54,6 +60,13 @@ dependencies:
   os_detect: ^2.0.1
   rxdart: ^0.27.7
   http_parser: ^4.0.2
+
+dependency_overrides:
+  geolocator_android:
+    git:
+      url: https://github.com/Stypox/flutter-geolocator.git
+      path: geolocator_android
+      ref: avoid-fused-on-legacy-android
 
 dev_dependencies:
   flutter_test:
