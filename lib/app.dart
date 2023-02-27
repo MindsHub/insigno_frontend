@@ -9,6 +9,7 @@ class InsignioApp extends StatelessWidget {
     return MaterialApp(
       title: "Insignio",
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
       home: MapPage(),
