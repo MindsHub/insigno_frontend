@@ -21,25 +21,22 @@ class LocationProvider {
   final StreamController<LocationInfo> _streamController = StreamController.broadcast();
 
   LocationProvider() {
-    _initialServiceStatusSub =
-        Geolocator.isLocationServiceEnabled().asStream().listen((enabled) async {
-      await _handleServicesEnabled(enabled, true);
-    });
-
     _permissionStatusSub = Geolocator.checkPermission()
         .asStream()
         .listen((permission) async => await _handlePermission(permission, true));
 
-    _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
-      print(status.toString() + "##########");
-      try {
-        print(status.toString() + " - " + (await Geolocator.getCurrentPosition()).toString());
-      } catch (e) {
-        print("Exception " + e.toString());
-      }
-      print(status.toString() + "##########");
-      await _handleServicesEnabled(status == ServiceStatus.enabled, false);
-    });
+    try {
+      _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
+        await _handleServicesEnabled(status == ServiceStatus.enabled, false);
+      });
+      _initialServiceStatusSub =
+          Geolocator.isLocationServiceEnabled().asStream().listen((enabled) async {
+            await _handleServicesEnabled(enabled, true);
+          });
+    } catch(e) {
+      // service status is not available on the web
+    }
+
     _createNewPositionStream();
   }
 
