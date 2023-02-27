@@ -13,6 +13,7 @@ class LocationProvider {
   StreamSubscription<LocationPermission>? _permissionStatusSub;
   StreamSubscription<ServiceStatus>? _serviceStatusSub;
   StreamSubscription<Position>? _positionSub;
+
   final LocationInfo _lastLocationInfo = LocationInfo(null, true, true);
   final StreamController<LocationInfo> _streamController = StreamController.broadcast();
 
