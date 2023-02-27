@@ -17,7 +17,7 @@ class LocationProvider {
           );
 
   StreamSubscription<Position>? positionStreamSubscription;
-  StreamController<OptionalPosition> streamController = StreamController();
+  StreamController<OptionalPosition> streamController = StreamController.broadcast();
 
   LocationProvider() {
     positionStreamSubscription = Geolocator.getPositionStream(locationSettings: locationSettings)

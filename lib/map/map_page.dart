@@ -3,6 +3,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
+import '../di/location.dart';
 import '../networking/data/pill.dart';
 
 class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -28,31 +29,37 @@ class _MapPageState extends State<MapPage>
       curve: Curves.linear,
     );
     loadRandomPill().then((value) => setState(() {
-      pill = value;
-      pillAnimationController.forward();
-    }));
+          pill = value;
+          pillAnimationController.forward();
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
+    final position = watchStream(
+            (LocationProvider location) => location.getPositionStream(), OptionalPosition(null))
+        .data
+        ?.position;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Insignio")),
-      body: Column(
-        children: [
-          Expanded(child: MapWidget()),
-          SizeTransition(
-              sizeFactor: pillAnimation,
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                          child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
-                  IconButton(
-                      onPressed: () => pillAnimationController.reverse(), icon: const Icon(Icons.close))
-                ],
-              ))
-        ],
+      body: MapWidget(),
+      bottomNavigationBar: SizeTransition(
+          sizeFactor: pillAnimation,
+          child: Row(
+            children: [
+              Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                      child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
+              IconButton(
+                  onPressed: () => pillAnimationController.reverse(),
+                  icon: const Icon(Icons.close))
+            ],
+          )),
+      floatingActionButton: (position == null) ? null : FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
