@@ -38,6 +38,7 @@ dependencies:
 
   # ui
   flutter_map:
+  dynamic_color:
 
   # utils
   geolocator:
