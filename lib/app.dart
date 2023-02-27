@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insignio_frontend/map/map_page.dart';
+import 'package:insignio_frontend/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 
 class InsignioApp extends StatelessWidget {
@@ -18,7 +18,7 @@ class InsignioApp extends StatelessWidget {
             useMaterial3: true,
             colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark)
         ),
-        home: MapPage(),
+        home: HomePage(),
       );
     });
   }
