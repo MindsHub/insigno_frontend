@@ -24,9 +24,7 @@ class LocationProvider {
     _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) {
       _handleMetadata(servicesEnabled: status == ServiceStatus.enabled);
     });
-    _positionSub = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-        (position) => _handlePosition(position),
-        onError: (error) {});
+    _createNewPositionStream();
   }
 
   Stream<LocationInfo> getLocationStream() {
@@ -35,6 +33,12 @@ class LocationProvider {
 
   LocationInfo lastLocationInfo() {
     return _lastLocationInfo;
+  }
+
+  void _createNewPositionStream() {
+    _positionSub = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+            (position) => _handlePosition(position),
+        onError: (error) => print(error.toString()));
   }
 
   void _handlePosition(Position? position) {
@@ -46,22 +50,29 @@ class LocationProvider {
     _streamController.add(_lastLocationInfo);
   }
 
-  Future<void> _handlePermission(LocationPermission permission, bool requestIfDenied) async {
+  Future<void> _handlePermission(LocationPermission permission, bool initialCheck) async {
     switch (permission) {
       case LocationPermission.unableToDetermine:
       case LocationPermission.denied:
         _handleMetadata(permissionGranted: false);
-        if (requestIfDenied) {
+        if (initialCheck) {
           LocationPermission newPermission = await Geolocator.requestPermission();
           await _handlePermission(newPermission, false);
         }
         break;
       case LocationPermission.deniedForever:
+        await _positionSub?.cancel();
         _handleMetadata(permissionGranted: false);
         break;
       case LocationPermission.whileInUse:
       case LocationPermission.always:
         _handleMetadata(permissionGranted: true);
+        if (!initialCheck) {
+          // reopen the position stream only if the permission was not granted at the beginning but
+          // then, upon asked for permission with requestPermission, the user granted the permission
+          await _positionSub?.cancel();
+          _createNewPositionStream();
+        }
         break;
     }
   }

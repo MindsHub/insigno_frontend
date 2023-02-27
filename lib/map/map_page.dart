@@ -39,8 +39,10 @@ class _MapPageState extends State<MapPage>
   Widget build(BuildContext context) {
     final position = watchStream(
             (LocationProvider location) => location.getLocationStream(), LocationInfo.initial())
-        .data
-        ?.position;
+        .data;
+    print((position?.position.toString() ?? "null") + " "
+        + (position?.servicesEnabled.toString() ?? "boh") + " "
+        + (position?.permissionGranted.toString() ?? "boh"));
 
     return Scaffold(
       appBar: AppBar(title: const Text("Insignio")),
@@ -58,7 +60,7 @@ class _MapPageState extends State<MapPage>
                   icon: const Icon(Icons.close))
             ],
           )),
-      floatingActionButton: (position == null) ? null : FloatingActionButton(
+      floatingActionButton: (position?.position == null) ? null : FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),
       ),
