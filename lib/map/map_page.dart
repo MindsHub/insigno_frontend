@@ -40,6 +40,11 @@ class _MapPageState extends State<MapPage>
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             getIt<LocationProvider>().lastLocationInfo())
         .data;
+    print((position?.position.toString() ?? "null") +
+        " " +
+        (position?.servicesEnabled.toString() ?? "boh") +
+        " " +
+        (position?.permissionGranted.toString() ?? "boh"));
 
     return Scaffold(
       appBar: AppBar(title: const Text("Insignio")),

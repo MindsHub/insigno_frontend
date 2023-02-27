@@ -6,9 +6,11 @@ import 'package:insignio_frontend/map/location_info.dart';
 
 @lazySingleton
 class LocationProvider {
-  static const locationSettings =
-      LocationSettings(accuracy: LocationAccuracy.bestForNavigation, distanceFilter: 1 // meters
-          );
+  static var locationSettings = AndroidSettings(
+    accuracy: LocationAccuracy.best,
+    distanceFilter: 1, // meters
+    forceLocationManager: true,
+  );
 
   StreamSubscription<LocationPermission>? _permissionStatusSub;
   StreamSubscription<ServiceStatus>? _serviceStatusSub;
@@ -22,7 +24,14 @@ class LocationProvider {
       .asStream()
       .listen((permission) async => await _handlePermission(permission, true));
 
-    _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) {
+    _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
+      print(status.toString() + "##########");
+      try {
+        print(status.toString() + " - " + (await Geolocator.getCurrentPosition()).toString());
+      } catch (e) {
+        print("Exception " + e.toString());
+      }
+      print(status.toString() + "##########");
       _handleMetadata(servicesEnabled: status == ServiceStatus.enabled);
     });
     _createNewPositionStream();
@@ -45,10 +54,10 @@ class LocationProvider {
   void _handlePosition(Position? position) {
     if (position != null) {
       _lastLocationInfo.position = position;
+      _lastLocationInfo.servicesEnabled = true;
+      _lastLocationInfo.permissionGranted = true;
+      _streamController.add(_lastLocationInfo);
     }
-    _lastLocationInfo.servicesEnabled = true;
-    _lastLocationInfo.permissionGranted = true;
-    _streamController.add(_lastLocationInfo);
   }
 
   Future<void> _handlePermission(LocationPermission permission, bool initialCheck) async {
