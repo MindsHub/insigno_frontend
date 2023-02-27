@@ -36,15 +36,17 @@ dependencies:
   get_it_mixin:
   injectable:
 
-  # utils
+  # ui
+  flutter_map:
 
-  http: ^0.13.4
+  # utils
+  geolocator:
+  flutter_svg:
+  http:
+
   universal_io: ^2.0.4
-  flutter_map: any
-  geolocator: any
   image_picker: ^0.8.6
   image_picker_for_web: 2.1.10 #endorsed package DO NOT REMOVE
-  flutter_svg: any
   html: any
   dio: ^4.0.6
   file_picker: ^5.2.5

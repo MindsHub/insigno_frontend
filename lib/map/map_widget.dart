@@ -15,10 +15,10 @@ class MapWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   MapWidget({super.key});
 
   @override
-  State<StatefulWidget> createState() => MapWidgetState();
+  State<StatefulWidget> createState() => _MapWidgetState();
 }
 
-class MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
+class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
   static final LatLng initialCoordinates = LatLng(45.75548, 11.00323);
 
   final Distance distance = const Distance();
@@ -27,7 +27,7 @@ class MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
 
   List<MapMarker> markers = [];
 
-  MapWidgetState() {
+  _MapWidgetState() {
     mapController.mapEventStream
         .where((event) =>
             event.zoom >= 15.0 &&
