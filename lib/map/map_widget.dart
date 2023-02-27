@@ -89,7 +89,10 @@ class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
       ),
       nonRotatedChildren: [
         AttributionWidget(attributionBuilder: (_) {
-          return const Text("© OpenStreetMap contributors");
+          return const Text(
+            "© OpenStreetMap contributors",
+            style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
+          );
         })
       ],
       children: [
