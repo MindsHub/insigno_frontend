@@ -12,11 +12,11 @@ class InsignioApp extends StatelessWidget {
         title: "Insignio",
         theme: ThemeData(
             useMaterial3: true,
-            colorScheme: lightDynamic ?? const ColorScheme.light()
+            colorScheme: lightDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.light)
         ),
         darkTheme: ThemeData(
             useMaterial3: true,
-            colorScheme: darkDynamic ?? const ColorScheme.dark()
+            colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark)
         ),
         home: MapPage(),
       );
