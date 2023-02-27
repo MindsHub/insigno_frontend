@@ -15,37 +15,37 @@ class LocationProvider {
       LocationSettings(accuracy: LocationAccuracy.bestForNavigation, distanceFilter: 1 // meters
           );
 
-  StreamSubscription<ServiceStatus>? serviceStatusSub;
-  StreamSubscription<Position>? positionSub;
-  StreamController<OptionalPosition> streamController = StreamController.broadcast();
+  StreamSubscription<ServiceStatus>? _serviceStatusSub;
+  StreamSubscription<Position>? _positionSub;
+  final StreamController<OptionalPosition> _streamController = StreamController.broadcast();
 
   LocationProvider() {
-    serviceStatusSub = Geolocator.getServiceStatusStream()
+    _serviceStatusSub = Geolocator.getServiceStatusStream()
         .listen((status) {
           switch (status) {
             case ServiceStatus.disabled:
-              streamController.add(OptionalPosition(null));
+              _streamController.add(OptionalPosition(null));
               break;
             case ServiceStatus.enabled:
               break;
           }
     });
-    positionSub = Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((position) => streamController.add(OptionalPosition(position)),
+    _positionSub = Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((position) => _streamController.add(OptionalPosition(position)),
         onError: (error) {});
   }
 
   Stream<OptionalPosition> getPositionStream() {
-    return streamController.stream;
+    return _streamController.stream;
   }
 
   @disposeMethod
   void dispose() async {
     await Future.wait([
-      serviceStatusSub?.cancel() ?? Future.value(null),
-      positionSub?.cancel() ?? Future.value(null),
-      streamController.close()
+      _serviceStatusSub?.cancel() ?? Future.value(null),
+      _positionSub?.cancel() ?? Future.value(null),
+      _streamController.close()
     ]);
-    positionSub = null;
+    _positionSub = null;
   }
 }
