@@ -6,8 +6,4 @@ class LocationInfo {
   bool permissionGranted;
 
   LocationInfo(this.position, this.servicesEnabled, this.permissionGranted);
-  
-  static LocationInfo initial() {
-    return LocationInfo(null, true, true);
-  }
 }

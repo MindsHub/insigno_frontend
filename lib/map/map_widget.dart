@@ -3,13 +3,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insignio_frontend/di/setup.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'location.dart';
 import '../networking/data/map_marker.dart';
 import '../old/marker/marker_page.dart';
-import 'location_info.dart';
 
 class MapWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   MapWidget({super.key});
@@ -75,8 +75,8 @@ class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final position = watchStream(
-            (LocationProvider location) => location.getLocationStream(), LocationInfo.initial())
+    final position = watchStream((LocationProvider location) => location.getLocationStream(),
+            getIt<LocationProvider>().lastLocationInfo())
         .data
         ?.position;
 

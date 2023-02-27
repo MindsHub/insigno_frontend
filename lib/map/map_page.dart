@@ -3,9 +3,9 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
+import '../di/setup.dart';
 import 'location.dart';
 import '../networking/data/pill.dart';
-import 'location_info.dart';
 
 class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPage({super.key});
@@ -37,12 +37,9 @@ class _MapPageState extends State<MapPage>
 
   @override
   Widget build(BuildContext context) {
-    final position = watchStream(
-            (LocationProvider location) => location.getLocationStream(), LocationInfo.initial())
+    final position = watchStream((LocationProvider location) => location.getLocationStream(),
+            getIt<LocationProvider>().lastLocationInfo())
         .data;
-    print((position?.position.toString() ?? "null") + " "
-        + (position?.servicesEnabled.toString() ?? "boh") + " "
-        + (position?.permissionGranted.toString() ?? "boh"));
 
     return Scaffold(
       appBar: AppBar(title: const Text("Insignio")),
@@ -56,14 +53,15 @@ class _MapPageState extends State<MapPage>
                       padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
                       child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
               IconButton(
-                  onPressed: () => pillAnimationController.reverse(),
-                  icon: const Icon(Icons.close))
+                  onPressed: () => pillAnimationController.reverse(), icon: const Icon(Icons.close))
             ],
           )),
-      floatingActionButton: (position?.position == null) ? null : FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: (position?.position == null)
+          ? null
+          : FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }
