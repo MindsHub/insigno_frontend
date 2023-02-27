@@ -6,8 +6,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../map/location.dart';
-import '../marker/marker_type.dart';
-import '../networking/const.dart';
+import '../../networking/data/marker_type.dart';
+import '../../networking/const.dart';
 import '../authentication.dart';
 
 Future<XFile?> getPictureFromSource() async {
@@ -30,7 +30,7 @@ Future<bool> addTrash(Uint8List image) async {
 
   var dio = Dio(BaseOptions(headers: {"Cookie": await getCookie()}));
   // Set default configs
-  dio.options.baseUrl = insignio_server;
+  dio.options.baseUrl = insignioServer;
   dio.options.connectTimeout = 5000; //5s
   dio.options.receiveTimeout = 3000;
 
@@ -43,7 +43,7 @@ Future<bool> addTrash(Uint8List image) async {
   var id;
   try {
         var response = await dio.post(
-            insignio_server + "/map/add",
+            insignioServer + "/map/add",
             data: formData
         );
         id = response.data;
@@ -60,7 +60,7 @@ Future<bool> addTrash(Uint8List image) async {
 
   try {
     var response = await dio.post(
-        insignio_server + "/map/image/add",
+        insignioServer + "/map/image/add",
         data: FormData.fromMap({
           'image': MultipartFile.fromBytes(image, contentType: MediaType.parse("image/png")),
           'refers_to_id': id

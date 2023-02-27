@@ -5,13 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
 import 'preferences_keys.dart';
-import 'networking/const.dart';
+import '../networking/const.dart';
 
 String? cookie;
 
 Future<bool> tryToLogin(String? email, String? password) async {
   final response = await http.post(
-    Uri.parse(insignio_server + '/login/'),
+    Uri.parse(insignioServer + '/login/'),
     body: jsonEncode({"email": email, "password": password}),
     headers: {
       "content-type": "application/json",

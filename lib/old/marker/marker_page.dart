@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../map/map_marker.dart';
+import '../../networking/data/map_marker.dart';
 
 class MarkerWidget extends StatefulWidget {
   const MarkerWidget({Key? key}) : super(key: key);

@@ -7,11 +7,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 
-import '../networking/const.dart';
+import '../../networking/const.dart';
 import 'location.dart';
-import 'map_marker.dart';
+import '../../networking/data/map_marker.dart';
 import '../marker/marker_page.dart';
-import '../marker/marker_type.dart';
+import '../../networking/data/marker_type.dart';
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -61,7 +61,7 @@ class MapWidgetState extends State<MapWidget> {
 
   void loadMarkers(final LatLng latLng) async {
     final response = await http.get(Uri.parse(
-        "$insignio_server/map/get_near?y=${latLng.latitude}&x=${latLng.longitude}"));
+        "$insignioServer/map/get_near?y=${latLng.latitude}&x=${latLng.longitude}"));
 
     if (response.statusCode == 200) {
       var array = List.from(jsonDecode(response.body));

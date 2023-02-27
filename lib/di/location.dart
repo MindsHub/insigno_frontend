@@ -5,9 +5,9 @@ import 'package:injectable/injectable.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 class OptionalPosition {
-  Position? p;
+  Position? position;
 
-  OptionalPosition(this.p);
+  OptionalPosition(this.position);
 }
 
 @lazySingleton
