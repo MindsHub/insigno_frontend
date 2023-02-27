@@ -3,8 +3,9 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
-import '../di/location.dart';
+import 'location.dart';
 import '../networking/data/pill.dart';
+import 'location_info.dart';
 
 class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPage({super.key});
@@ -37,7 +38,7 @@ class _MapPageState extends State<MapPage>
   @override
   Widget build(BuildContext context) {
     final position = watchStream(
-            (LocationProvider location) => location.getPositionStream(), OptionalPosition(null))
+            (LocationProvider location) => location.getLocationStream(), LocationInfo.initial())
         .data
         ?.position;
 
