@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
-import 'package:stream_transform/stream_transform.dart';
 
 class OptionalPosition {
   Position? position;
@@ -16,13 +15,24 @@ class LocationProvider {
       LocationSettings(accuracy: LocationAccuracy.bestForNavigation, distanceFilter: 1 // meters
           );
 
-  StreamSubscription<Position>? positionStreamSubscription;
+  StreamSubscription<ServiceStatus>? serviceStatusSub;
+  StreamSubscription<Position>? positionSub;
   StreamController<OptionalPosition> streamController = StreamController.broadcast();
 
   LocationProvider() {
-    positionStreamSubscription = Geolocator.getPositionStream(locationSettings: locationSettings)
+    serviceStatusSub = Geolocator.getServiceStatusStream()
+        .listen((status) {
+          switch (status) {
+            case ServiceStatus.disabled:
+              streamController.add(OptionalPosition(null));
+              break;
+            case ServiceStatus.enabled:
+              break;
+          }
+    });
+    positionSub = Geolocator.getPositionStream(locationSettings: locationSettings)
         .listen((position) => streamController.add(OptionalPosition(position)),
-        onError: (error) => streamController.add(OptionalPosition(null)));
+        onError: (error) {});
   }
 
   Stream<OptionalPosition> getPositionStream() {
@@ -32,9 +42,10 @@ class LocationProvider {
   @disposeMethod
   void dispose() async {
     await Future.wait([
-      positionStreamSubscription?.cancel() ?? Future.value(null),
+      serviceStatusSub?.cancel() ?? Future.value(null),
+      positionSub?.cancel() ?? Future.value(null),
       streamController.close()
     ]);
-    positionStreamSubscription = null;
+    positionSub = null;
   }
 }
