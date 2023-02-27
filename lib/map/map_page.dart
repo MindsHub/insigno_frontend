@@ -3,6 +3,8 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
+import '../networking/data/pill.dart';
+
 class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPage({super.key});
 
@@ -12,7 +14,7 @@ class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _MapPageState extends State<MapPage>
     with GetItStateMixin<MapPage>, SingleTickerProviderStateMixin {
-  String? pill;
+  Pill? pill;
   late AnimationController pillAnimationController;
   late Animation<double> pillAnimation;
 
@@ -44,8 +46,8 @@ class _MapPageState extends State<MapPage>
                 children: [
                   Expanded(
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 16.0),
-                          child: Text(pill ?? "", textAlign: TextAlign.center))),
+                          padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                          child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
                   IconButton(
                       onPressed: () => pillAnimationController.reverse(), icon: const Icon(Icons.close))
                 ],
