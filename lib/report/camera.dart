@@ -5,10 +5,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../map/location.dart';
-import '../../networking/data/marker_type.dart';
-import '../../networking/const.dart';
-import '../authentication.dart';
+import '../old/map/location.dart';
+import '../networking/data/marker_type.dart';
+import '../networking/const.dart';
+import '../old/authentication.dart';
 
 Future<XFile?> getPictureFromSource() async {
   final ImagePicker _picker = ImagePicker();

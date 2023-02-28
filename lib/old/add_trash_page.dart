@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:os_detect/os_detect.dart" as Platform;
-import 'camera/camera.dart';
+import '../report/camera.dart';
 
 class AddTrashScreen extends StatefulWidget {
   const AddTrashScreen({Key? key}) : super(key: key);

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import "package:os_detect/os_detect.dart" as platform;
 import '../auth/authentication.dart';
 import '../di/setup.dart';
 import '../map/location.dart';
+import 'camera.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
   ReportPage({super.key});
@@ -75,7 +78,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                     ElevatedButton(
                         child: const Text("Scatta"),
                         onPressed: () {
-                          /*getPictureFromCamera().then((value) async {
+                          getPictureFromCamera().then((value) async {
                                 if (value != null) {
                                   return await File(value.path).readAsBytes();
                                 } else {
@@ -85,7 +88,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                                 if (value != null) {
                                   setState(() => image = value);
                                 }
-                              });*/
+                              });
                         })
                 ],
               ),
