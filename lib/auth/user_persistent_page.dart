@@ -26,7 +26,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
     return isLoggedIn
         ? Scaffold(
             body: Center(
-              child: TextButton(
+              child: ElevatedButton(
                 onPressed: () {
                   getIt<Authentication>().logout();
                 },
