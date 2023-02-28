@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insignio_frontend/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:insignio_frontend/report/report_page.dart';
 
 class InsignioApp extends StatelessWidget {
   const InsignioApp({super.key});
@@ -19,6 +20,9 @@ class InsignioApp extends StatelessWidget {
             colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark)
         ),
         home: HomePage(),
+        routes: {
+          ReportPage.routeName: (context) => ReportPage()
+        }
       );
     });
   }
