@@ -6,7 +6,6 @@ import 'package:insignio_frontend/networking/extractor.dart';
 
 import 'di/setup.dart';
 import 'map/location.dart';
-import 'networking/data/pill.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   HomePage({super.key});
@@ -17,10 +16,6 @@ class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _HomePageState extends State<HomePage>
     with GetItStateMixin<HomePage>, SingleTickerProviderStateMixin {
-  Pill? pill;
-  late AnimationController pillAnimationController;
-  late Animation<double> pillAnimation;
-
   int _pageIndex = 0;
   final List<Widget> _pages = <Widget>[MapWidget(), LoginWidget()];
   final List<String> _pageNames = ["Insignio", "Login to Insignio"];
@@ -28,16 +23,10 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    pillAnimationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    pillAnimation = CurvedAnimation(
-      parent: pillAnimationController,
-      curve: Curves.linear,
-    );
-    loadRandomPill().then((value) => setState(() {
-          pill = value;
-          pillAnimationController.forward();
-        }));
+    loadRandomPill().then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(days: 36500), showCloseIcon: true, content: Text(value.text)));
+    });
   }
 
   @override
@@ -54,35 +43,14 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       appBar: AppBar(title: Text(_pageNames[_pageIndex])),
       body: _pages[_pageIndex],
-      bottomNavigationBar: Material(
-          elevation: 8,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizeTransition(
-                  sizeFactor: pillAnimation,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Padding(
-                              padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                              child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
-                      IconButton(
-                          onPressed: () => pillAnimationController.reverse(),
-                          icon: const Icon(Icons.close))
-                    ],
-                  )),
-              BottomNavigationBar(
-                items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-                  BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
-                ],
-                currentIndex: _pageIndex,
-                onTap: (i) => setState(() => _pageIndex = i),
-                elevation: 0,
-              )
-            ],
-          )),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
+        ],
+        currentIndex: _pageIndex,
+        onTap: (i) => setState(() => _pageIndex = i),
+      ),
       floatingActionButton: (_pageIndex != 0 || position?.position == null)
           ? null
           : FloatingActionButton(
