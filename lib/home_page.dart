@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/login_widget.dart';
+import 'package:insignio_frontend/auth/user_persistent_page.dart';
 import 'package:insignio_frontend/map/map_persistent_page.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage>
           pillAnimationController.forward();
         }));
 
-    _pages = <Widget>[MapPersistentPage(), LoginWidget()];
+    _pages = <Widget>[MapPersistentPage(), UserPersistentPage()];
     _pageController = PageController(initialPage: _pageIndex);
   }
 

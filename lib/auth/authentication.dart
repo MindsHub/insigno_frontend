@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
@@ -11,8 +12,11 @@ import '../networking/const.dart';
 class Authentication {
   String? _cookie;
   final SharedPreferences _preferences;
+  final StreamController<bool> _streamController = StreamController.broadcast();
 
-  Authentication(this._preferences) : _cookie = _preferences.getString(authCookieKey);
+  Authentication(this._preferences) : _cookie = _preferences.getString(authCookieKey) {
+    _streamController.add(isLoggedIn());
+  }
 
   Future<bool> tryToLogin(String? email, String? password) async {
     final response = await http.post(
@@ -31,7 +35,22 @@ class Authentication {
 
     _cookie = authCookie;
     await _preferences.setString(authCookieKey, authCookie);
+    _streamController.add(true);
     return true;
+  }
+
+  Future<void> logout() async {
+    _streamController.add(false);
+    _cookie = null;
+    await _preferences.remove(authCookieKey);
+  }
+
+  bool isLoggedIn() {
+    return _cookie != null;
+  }
+
+  Stream<bool> getIsLoggedInStream() {
+    return _streamController.stream;
   }
 
   String? maybeCookie() {
