@@ -11,18 +11,25 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String? username;
   String? password;
+  bool loading = false;
   bool loginFailed = false;
 
   final formKey = GlobalKey<FormState>();
 
   void performLogin() async {
-    setState(() => loginFailed = false);
+    setState(() {
+      loginFailed = false;
+      loading = true;
+    });
 
     tryToLogin(username, password).then((value) {
       if (value) {
         Navigator.pop(context);
       } else {
-        setState(() => loginFailed = true);
+        setState(() {
+          loginFailed = true;
+          loading = false;
+        });
       }
     });
   }
@@ -41,20 +48,18 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         "Login to Insignio!",
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 60),
                       TextFormField(
                         initialValue: "john@gmail.com",
-                        decoration:
-                            const InputDecoration(labelText: "Email"),
+                        decoration: const InputDecoration(labelText: "Email"),
                         onSaved: (value) => username = value,
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
                         initialValue: "NiceDoggo1",
-                        decoration:
-                            const InputDecoration(labelText: "Password"),
+                        decoration: const InputDecoration(labelText: "Password"),
                         onSaved: (value) => password = value,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
@@ -65,13 +70,15 @@ class _LoginState extends State<Login> {
                         style: const TextStyle(color: Colors.red),
                       ),
                       const SizedBox(height: 30),
-                      FloatingActionButton(
-                        onPressed: () {
-                          formKey.currentState?.save();
-                          performLogin();
-                        },
-                        child: const Icon(Icons.login),
-                      )
+                      loading
+                          ? const CircularProgressIndicator()
+                          : FloatingActionButton(
+                              onPressed: () {
+                                formKey.currentState?.save();
+                                performLogin();
+                              },
+                              child: const Icon(Icons.login),
+                            )
                     ],
                   ),
                 ))));

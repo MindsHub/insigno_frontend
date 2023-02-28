@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
-import 'preferences_keys.dart';
+import '../pref/preferences_keys.dart';
 import '../networking/const.dart';
 
 String? cookie;
@@ -25,7 +25,7 @@ Future<bool> tryToLogin(String? email, String? password) async {
   }
 
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setString(AUTH_COOKIE, authCookie);
+  await prefs.setString(authCookie, authCookie);
   cookie = authCookie;
   return true;
 }
@@ -33,7 +33,7 @@ Future<bool> tryToLogin(String? email, String? password) async {
 Future<String> getCookie() async {
   if (cookie == null) {
     final prefs = await SharedPreferences.getInstance();
-    cookie = prefs.getString(AUTH_COOKIE);
+    cookie = prefs.getString(authCookieKey);
   }
 
   if (cookie == null) {
