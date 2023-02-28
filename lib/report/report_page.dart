@@ -57,13 +57,13 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(16)),
                 ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
-                    child: const Text('Carica da file'),
+                    child: const Text("Load from file"),
                     onPressed: () {
                       FilePicker.platform.pickFiles(withData: true).then((value) {
                         var bytes = value?.files.single.bytes;
@@ -76,7 +76,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                   if (platform.isAndroid || platform.isIOS) const SizedBox(width: 16),
                   if (platform.isAndroid || platform.isIOS)
                     ElevatedButton(
-                        child: const Text("Scatta"),
+                        child: const Text("Shoot"),
                         onPressed: () {
                           getPictureFromCamera().then((value) async {
                                 if (value != null) {
@@ -92,6 +92,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                         })
                 ],
               ),
+              const SizedBox(height: 12),
               if (!isLoggedIn)
                 const Text("You must log in in order to report")
               else if (position?.permissionGranted == false)
@@ -101,7 +102,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               else if (position?.position == null)
                 const Text("Location is loading, please wait...")
               else
-                ElevatedButton(onPressed: () {}, child: const Text("Invia"))
+                ElevatedButton(onPressed: () {}, child: const Text("Send"))
             ],
           ),
         )));
