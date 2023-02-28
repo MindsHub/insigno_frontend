@@ -47,6 +47,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text(
+                    "Login to Insignio!",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     initialValue: "john@gmail.com",
                     decoration: const InputDecoration(labelText: "Email"),
@@ -61,10 +66,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                     obscureText: true,
                   ),
                   const SizedBox(height: 16),
-                  if (loginFailed) const Text(
-                    "Wrong user or password",
-                    style: TextStyle(color: Colors.red),
-                  ),
+                  if (loginFailed)
+                    const Text(
+                      "Wrong user or password",
+                      style: TextStyle(color: Colors.red),
+                    ),
                   const SizedBox(height: 16),
                   loading
                       ? const CircularProgressIndicator()

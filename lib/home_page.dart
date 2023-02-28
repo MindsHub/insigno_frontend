@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/login_widget.dart';
 import 'package:insignio_frontend/map/map_persistent_page.dart';
-import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
 import 'di/setup.dart';
@@ -24,7 +23,6 @@ class _HomePageState extends State<HomePage>
 
   int _pageIndex = 0;
   late final List<Widget> _pages;
-  late final List<String> _pageNames;
   late final PageController _pageController;
 
   @override
@@ -42,7 +40,6 @@ class _HomePageState extends State<HomePage>
         }));
 
     _pages = <Widget>[MapPersistentPage(), LoginWidget()];
-    _pageNames = ["Insignio", "Login to Insignio"];
     _pageController = PageController(initialPage: _pageIndex);
   }
 
@@ -58,7 +55,6 @@ class _HomePageState extends State<HomePage>
         (position?.permissionGranted.toString() ?? "boh"));
 
     return Scaffold(
-      appBar: AppBar(title: Text(_pageNames[_pageIndex])),
       body: PageView(
         controller: _pageController,
         children: _pages,
