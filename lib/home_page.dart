@@ -54,31 +54,34 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       appBar: AppBar(title: Text(_pageNames[_pageIndex])),
       body: _pages[_pageIndex],
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizeTransition(
-              sizeFactor: pillAnimation,
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                          child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
-                  IconButton(
-                      onPressed: () => pillAnimationController.reverse(),
-                      icon: const Icon(Icons.close))
+      bottomNavigationBar: Material(
+          elevation: 8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizeTransition(
+                  sizeFactor: pillAnimation,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                              padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                              child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
+                      IconButton(
+                          onPressed: () => pillAnimationController.reverse(),
+                          icon: const Icon(Icons.close))
+                    ],
+                  )),
+              BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+                  BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
                 ],
-              )),
-          BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
+                onTap: (i) => setState(() => _pageIndex = i),
+                elevation: 0,
+              )
             ],
-            onTap: (i) => setState(() => _pageIndex = i),
-          )
-        ],
-      ),
+          )),
       floatingActionButton: (_pageIndex != 0 || position?.position == null)
           ? null
           : FloatingActionButton(
