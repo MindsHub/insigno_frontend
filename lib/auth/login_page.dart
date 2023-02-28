@@ -47,11 +47,6 @@ class _LoginPageState extends State<LoginPage> with GetItStateMixin<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "Login to Insignio!",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 12),
                   TextFormField(
                     initialValue: "john@gmail.com",
                     decoration: const InputDecoration(labelText: "Email"),

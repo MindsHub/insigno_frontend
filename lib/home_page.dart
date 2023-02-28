@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage>
 
   int _pageIndex = 0;
   final List<Widget> _pages = <Widget>[MapWidget(), LoginPage()];
+  final List<String> _pageNames = ["Insignio", "Login to Insignio"];
 
   @override
   void initState() {
@@ -51,8 +52,8 @@ class _HomePageState extends State<HomePage>
         (position?.permissionGranted.toString() ?? "boh"));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Insignio")),
-      body: _pages.elementAt(_pageIndex),
+      appBar: AppBar(title: Text(_pageNames[_pageIndex])),
+      body: _pages[_pageIndex],
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
