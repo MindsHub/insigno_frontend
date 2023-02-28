@@ -36,7 +36,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               onPressed: () {},
               child: const Icon(Icons.add),
             ),
-      // TODO share floatingActionButtonAnimator across pages
     );
   }
 
