@@ -30,7 +30,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
                 onPressed: () {
                   getIt<Authentication>().logout();
                 },
-                child: const Text("Logout"),
+                child: Text("Logout".toUpperCase()),
               ),
             ),
           )
