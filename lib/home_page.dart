@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/login_widget.dart';
+import 'package:insignio_frontend/map/map_persistent_page.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
@@ -22,8 +23,9 @@ class _HomePageState extends State<HomePage>
   late Animation<double> pillAnimation;
 
   int _pageIndex = 0;
-  final List<Widget> _pages = <Widget>[MapWidget(), LoginWidget()];
-  final List<String> _pageNames = ["Insignio", "Login to Insignio"];
+  late final List<Widget> _pages;
+  late final List<String> _pageNames;
+  late final PageController _pageController;
 
   @override
   void initState() {
@@ -38,6 +40,10 @@ class _HomePageState extends State<HomePage>
           pill = value;
           pillAnimationController.forward();
         }));
+
+    _pages = <Widget>[MapPersistentPage(), LoginWidget()];
+    _pageNames = ["Insignio", "Login to Insignio"];
+    _pageController = PageController(initialPage: _pageIndex);
   }
 
   @override
@@ -53,7 +59,10 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
       appBar: AppBar(title: Text(_pageNames[_pageIndex])),
-      body: _pages[_pageIndex],
+      body: PageView(
+        controller: _pageController,
+        children: _pages,
+      ),
       bottomNavigationBar: Material(
           elevation: 8,
           child: Column(
@@ -78,7 +87,10 @@ class _HomePageState extends State<HomePage>
                   BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
                 ],
                 currentIndex: _pageIndex,
-                onTap: (i) => setState(() => _pageIndex = i),
+                onTap: (i) => setState(() {
+                  _pageController.jumpToPage(i);
+                  _pageIndex = i;
+                }),
                 elevation: 0,
               )
             ],
