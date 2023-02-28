@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/auth/login_widget.dart';
 import 'package:insignio_frontend/auth/user_persistent_page.dart';
 import 'package:insignio_frontend/map/map_persistent_page.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
-import 'di/setup.dart';
-import 'map/location.dart';
 import 'networking/data/pill.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -17,14 +14,13 @@ class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _HomePageState extends State<HomePage>
-    with GetItStateMixin<HomePage>, SingleTickerProviderStateMixin {
+    with GetItStateMixin<HomePage>, TickerProviderStateMixin {
   Pill? pill;
   late AnimationController pillAnimationController;
   late Animation<double> pillAnimation;
 
-  int _pageIndex = 0;
-  late final List<Widget> _pages;
-  late final PageController _pageController;
+  late final List<Widget> _tabs;
+  late final TabController _tabController;
 
   @override
   void initState() {
@@ -40,16 +36,17 @@ class _HomePageState extends State<HomePage>
           pillAnimationController.forward();
         }));
 
-    _pages = <Widget>[MapPersistentPage(), UserPersistentPage()];
-    _pageController = PageController(initialPage: _pageIndex);
+    _tabs = <Widget>[MapPersistentPage(), UserPersistentPage()];
+    _tabController = TabController(initialIndex: 0, length: _tabs.length, vsync: this);
+    _tabController.addListener(() => setState(() {})); // <- notify when
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: _pages,
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabs,
       ),
       bottomNavigationBar: Material(
           elevation: 8,
@@ -70,15 +67,12 @@ class _HomePageState extends State<HomePage>
                     ],
                   )),
               BottomNavigationBar(
-                items: const [
+                  items: const [
                   BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
                   BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
                 ],
-                currentIndex: _pageIndex,
-                onTap: (i) => setState(() {
-                  _pageController.jumpToPage(i);
-                  _pageIndex = i;
-                }),
+                currentIndex: _tabController.index,
+                onTap: (i) => _tabController.animateTo(i),
                 elevation: 0,
               )
             ],
