@@ -1,5 +1,8 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import "package:os_detect/os_detect.dart" as platform;
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
@@ -15,7 +18,7 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
-  final formKey = GlobalKey<FormState>();
+  Uint8List? image;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,52 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              if (image == null)
+                const Icon(Icons.image, size: 128)
+              else
+                ClipRRect(
+                  child: Image.memory(
+                    image!,
+                    height: 128,
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    child: const Text('Carica da file'),
+                    onPressed: () {
+                      FilePicker.platform.pickFiles(withData: true).then((value) {
+                        var bytes = value?.files.single.bytes;
+                        if (bytes != null) {
+                          setState(() => image = bytes);
+                        }
+                      });
+                    },
+                  ),
+                  if (platform.isAndroid || platform.isIOS) const SizedBox(width: 16),
+                  if (platform.isAndroid || platform.isIOS)
+                    ElevatedButton(
+                        child: const Text("Scatta"),
+                        onPressed: () {
+                          /*getPictureFromCamera().then((value) async {
+                                if (value != null) {
+                                  return await File(value.path).readAsBytes();
+                                } else {
+                                  return null;
+                                }
+                              }).then((value) {
+                                if (value != null) {
+                                  setState(() => image = value);
+                                }
+                              });*/
+                        })
+                ],
+              ),
               if (!isLoggedIn)
                 const Text("You must log in in order to report")
               else if (position?.permissionGranted == false)
@@ -47,7 +96,9 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               else if (position?.servicesEnabled == false)
                 const Text("Enable location services in order to report")
               else if (position?.position == null)
-                const Text("Location is loading, please wait..."),
+                const Text("Location is loading, please wait...")
+              else
+                ElevatedButton(onPressed: () {}, child: const Text("Invia"))
             ],
           ),
         )));
