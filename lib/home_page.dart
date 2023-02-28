@@ -45,15 +45,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
-        .data;
-    print((position?.position.toString() ?? "null") +
-        " " +
-        (position?.servicesEnabled.toString() ?? "boh") +
-        " " +
-        (position?.permissionGranted.toString() ?? "boh"));
-
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -91,12 +82,6 @@ class _HomePageState extends State<HomePage>
               )
             ],
           )),
-      floatingActionButton: (_pageIndex != 0 || position?.position == null)
-          ? null
-          : FloatingActionButton(
-              onPressed: () {},
-              child: const Icon(Icons.add),
-            ),
     );
   }
 }
