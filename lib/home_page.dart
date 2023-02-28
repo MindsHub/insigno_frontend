@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage>
                   BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
                   BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
                 ],
+                currentIndex: _pageIndex,
                 onTap: (i) => setState(() => _pageIndex = i),
                 elevation: 0,
               )
