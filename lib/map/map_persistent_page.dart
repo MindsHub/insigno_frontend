@@ -6,6 +6,8 @@ import 'package:insignio_frontend/map/map_widget.dart';
 import '../di/setup.dart';
 
 class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
+  MapPersistentPage({super.key});
+
   @override
   State<MapPersistentPage> createState() => _MapPersistentPageState();
 }
