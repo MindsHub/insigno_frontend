@@ -3,14 +3,14 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/authentication.dart';
 import 'package:insignio_frontend/di/setup.dart';
 
-class LoginPage extends StatefulWidget with GetItStatefulWidgetMixin {
-  LoginPage({super.key});
+class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  LoginWidget({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginWidget> createState() => _LoginWidgetState();
 }
 
-class _LoginPageState extends State<LoginPage> with GetItStateMixin<LoginPage> {
+class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWidget> {
   String? username;
   String? password;
   bool loading = false;

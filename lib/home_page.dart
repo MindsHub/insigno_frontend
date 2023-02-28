@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/auth/login_page.dart';
+import 'package:insignio_frontend/auth/login_widget.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage>
   late Animation<double> pillAnimation;
 
   int _pageIndex = 0;
-  final List<Widget> _pages = <Widget>[MapWidget(), LoginPage()];
+  final List<Widget> _pages = <Widget>[MapWidget(), LoginWidget()];
   final List<String> _pageNames = ["Insignio", "Login to Insignio"];
 
   @override
