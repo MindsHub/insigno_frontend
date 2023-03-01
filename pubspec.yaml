@@ -29,7 +29,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences:
 
   # dependency injection TODO choose versions
   get_it:
@@ -40,29 +39,19 @@ dependencies:
   flutter_map:
   dynamic_color:
 
+  # core functionality
+  geolocator: # used to load location
+  file_picker: # used to select images from file
+  image_picker: # used only on Android and iOS to take pictures with the camera
+
   # utils
-  geolocator:
-
-  #  git:
-  #    url: https://github.com/Stypox/flutter-geolocator.git
-  #    path: geolocator
-  #    ref: forked-version
-  #  #path: '../flutter-geolocator/geolocator'
-  flutter_svg:
+  shared_preferences:
   http:
-
-  universal_io: ^2.0.4
-  image_picker: ^0.8.6
-  image_picker_for_web: 2.1.10 #endorsed package DO NOT REMOVE
-  html: any
-  dio: ^4.0.6
-  file_picker: ^5.2.5
-  os_detect: ^2.0.1
-  rxdart: ^0.27.7
-  http_parser: ^4.0.2
+  os_detect:
+  flutter_svg:
 
 dependency_overrides:
-  geolocator_android:
+  geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
     git:
       url: https://github.com/Stypox/flutter-geolocator.git
       path: geolocator_android
