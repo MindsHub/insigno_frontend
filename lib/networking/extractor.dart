@@ -31,7 +31,7 @@ Future<String> addMarker(
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/add"));
   request.headers["Cookie"] = cookie;
   request.fields["y"] = latitude.toString();
-  request.fields["x"] = latitude.toString();
+  request.fields["x"] = longitude.toString();
   request.fields["type_tr"] = markerType.id.toString();
 
   var response = await request.send();
