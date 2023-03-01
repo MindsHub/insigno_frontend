@@ -9,7 +9,6 @@ import 'package:latlong2/latlong.dart';
 
 import 'location.dart';
 import '../networking/data/map_marker.dart';
-import '../old/marker/marker_page.dart';
 
 class MapWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   MapWidget({super.key});
@@ -66,8 +65,7 @@ class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
               point: LatLng(e.latitude, e.longitude),
               builder: (ctx) => IconButton(
                 icon: Icon(e.type.icon, color: e.type.color),
-                onPressed: () => Navigator.pushNamed(context, MarkerWidget.routeName,
-                    arguments: MarkerWidgetArgs(e)),
+                onPressed: () => { /* TODO */ },
               ),
             )))
         .toList(growable: false);
