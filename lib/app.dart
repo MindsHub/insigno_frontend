@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:insignio_frontend/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:insignio_frontend/report/report_page.dart';
+import 'package:insignio_frontend/marker/marker_page.dart';
+import 'package:insignio_frontend/marker/report_page.dart';
 
 class InsignioApp extends StatelessWidget {
   const InsignioApp({super.key});
@@ -21,7 +22,8 @@ class InsignioApp extends StatelessWidget {
         ),
         home: HomePage(),
         routes: {
-          ReportPage.routeName: (context) => ReportPage()
+          ReportPage.routeName: (context) => ReportPage(),
+          MarkerPage.routeName: (context) => MarkerPage(),
         }
       );
     });

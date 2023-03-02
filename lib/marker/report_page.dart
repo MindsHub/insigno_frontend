@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insignio_frontend/marker/marker_page.dart';
+import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import "package:os_detect/os_detect.dart" as platform;
@@ -144,8 +146,12 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     var pos = getIt<LocationProvider>().lastLocationInfo().position;
     var cookie = getIt<Authentication>().maybeCookie();
     var img = image;
-    var mt = markerType;
-    if (pos == null || cookie == null || img == null || mt == null || mt == MarkerType.unknown) {
+    var type = markerType;
+    if (pos == null ||
+        cookie == null ||
+        img == null ||
+        type == null ||
+        type == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden
     }
 
@@ -154,15 +160,25 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       error = null;
     });
 
-    addMarker(pos.latitude, pos.longitude, mt, cookie).then(
+    addMarker(pos.latitude, pos.longitude, type, cookie).then(
       (markerId) {
         addMarkerImage(markerId, img, cookie).then(
           (_) {
-            print("Success!");
+            Navigator.popAndPushNamed(
+              context,
+              MarkerPage.routeName,
+              arguments:
+                  MarkerPageArgs(MapMarker(int.parse(markerId), pos.latitude, pos.longitude, type)),
+            );
           },
-          onError: (error) {
-            print("Error adding image: $error");
-            // TODO handle error and show marker page
+          onError: (e) {
+            Navigator.popAndPushNamed(
+              context,
+              MarkerPage.routeName,
+              arguments: MarkerPageArgs(
+                  MapMarker(int.parse(markerId), pos.latitude, pos.longitude, type),
+                  errorAddingImage: e.toString()),
+            );
           },
         );
       },
