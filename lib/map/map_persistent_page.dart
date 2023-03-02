@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/location.dart';
 import 'package:insignio_frontend/map/map_widget.dart';
-import 'package:insignio_frontend/report/report_page.dart';
+import 'package:insignio_frontend/marker/report_page.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';

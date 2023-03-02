@@ -67,34 +67,10 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(
-                    child: const Text("Load from file"),
-                    onPressed: () {
-                      FilePicker.platform.pickFiles(withData: true).then((value) {
-                        var bytes = value?.files.single.bytes;
-                        if (bytes != null) {
-                          setState(() => image = bytes);
-                        }
-                      });
-                    },
-                  ),
+                  ElevatedButton(child: const Text("Load from file"), onPressed: pickFiles),
                   if (platform.isAndroid || platform.isIOS) const SizedBox(width: 16),
                   if (platform.isAndroid || platform.isIOS)
-                    ElevatedButton(
-                        child: const Text("Shoot"),
-                        onPressed: () {
-                          ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
-                            if (value != null) {
-                              return await File(value.path).readAsBytes();
-                            } else {
-                              return null;
-                            }
-                          }).then((value) {
-                            if (value != null) {
-                              setState(() => image = value);
-                            }
-                          });
-                        })
+                    ElevatedButton(child: const Text("Shoot"), onPressed: pickImage),
                 ],
               ),
               const SizedBox(height: 12),
@@ -132,53 +108,75 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               else if (position?.position == null)
                 const Text("Location is loading, please wait..."),
               ElevatedButton(
-                  child: const Text("Send"),
-                  onPressed: (!isLoggedIn ||
-                          image == null ||
-                          markerType == null ||
-                          position?.position == null)
-                      ? null
-                      : () async {
-                          var pos = getIt<LocationProvider>().lastLocationInfo().position;
-                          var cookie = getIt<Authentication>().maybeCookie();
-                          var img = image;
-                          var mt = markerType;
-                          if (pos == null ||
-                              cookie == null ||
-                              img == null ||
-                              mt == null ||
-                              mt == MarkerType.unknown) {
-                            return; // this should be unreachable, since "Send" should be hidden
-                          }
-
-                          setState(() {
-                            loading = true;
-                            error = null;
-                          });
-
-                          addMarker(pos.latitude, pos.longitude, mt, cookie).then(
-                            (markerId) {
-                              addMarkerImage(markerId, img, cookie).then(
-                                (_) {
-                                  print("Success!");
-                                },
-                                onError: (error) {
-                                  print("Error adding image: $error");
-                                  // TODO handle error and show marker page
-                                },
-                              );
-                            },
-                            onError: (e) {
-                              setState(() {
-                                loading = false;
-                                error = e.toString();
-                              });
-                            },
-                          );
-                        }),
+                child: const Text("Send"),
+                onPressed: (!isLoggedIn ||
+                        image == null ||
+                        markerType == null ||
+                        position?.position == null)
+                    ? null
+                    : send,
+              ),
               if (error != null) Text("Error: $error"),
             ],
           ),
         )));
+  }
+
+  void pickFiles() async {
+    await FilePicker.platform.pickFiles(withData: true).then((value) {
+      var bytes = value?.files.single.bytes;
+      if (bytes != null) {
+        setState(() => image = bytes);
+      }
+    });
+  }
+
+  void pickImage() async {
+    await ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
+      if (value != null) {
+        return await File(value.path).readAsBytes();
+      } else {
+        return null;
+      }
+    }).then((value) {
+      if (value != null) {
+        setState(() => image = value);
+      }
+    });
+  }
+
+  void send() async {
+    var pos = getIt<LocationProvider>().lastLocationInfo().position;
+    var cookie = getIt<Authentication>().maybeCookie();
+    var img = image;
+    var mt = markerType;
+    if (pos == null || cookie == null || img == null || mt == null || mt == MarkerType.unknown) {
+      return; // this should be unreachable, since "Send" should be hidden
+    }
+
+    setState(() {
+      loading = true;
+      error = null;
+    });
+
+    addMarker(pos.latitude, pos.longitude, mt, cookie).then(
+      (markerId) {
+        addMarkerImage(markerId, img, cookie).then(
+          (_) {
+            print("Success!");
+          },
+          onError: (error) {
+            print("Error adding image: $error");
+            // TODO handle error and show marker page
+          },
+        );
+      },
+      onError: (e) {
+        setState(() {
+          loading = false;
+          error = e.toString();
+        });
+      },
+    );
   }
 }
