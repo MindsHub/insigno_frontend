@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:insignio_frontend/networking/data/pill.dart';
+import 'package:insignio_frontend/networking/error.dart';
 import 'package:insignio_frontend/util/future.dart';
 import 'package:collection/collection.dart';
 
@@ -19,6 +20,7 @@ Future<Pill> loadRandomPill() async {
 Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longitude) async {
   return http
       .get(Uri.parse("$insignioServer/map/get_near?y=$latitude&x=$longitude"))
+      .throwErrors()
       .mapParseJson()
       .map((markers) => markers.map<MapMarker>((marker) {
             var point = marker["point"];
@@ -39,8 +41,7 @@ Future<String> addMarker(
   request.fields["x"] = longitude.toString();
   request.fields["type_tr"] = markerType.id.toString();
 
-  var response = await request.send();
-  print(response.statusCode);
+  var response = await request.send().throwErrors();
   return await response.stream.bytesToString();
 }
 
@@ -51,7 +52,5 @@ Future<void> addMarkerImage(String markerId, Uint8List image, String cookie) asy
   request.files
       .add(http.MultipartFile.fromBytes("image", image, contentType: MediaType.parse("image/png")));
 
-  var response = await request.send();
-  print(response.statusCode);
-  print(await response.stream.bytesToString());
+  await request.send().throwErrors();
 }

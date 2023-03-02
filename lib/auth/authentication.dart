@@ -56,14 +56,4 @@ class Authentication {
   String? maybeCookie() {
     return _cookie;
   }
-
-  String getCookie() {
-    if (_cookie == null) {
-      throw NotAuthenticatedException();
-    } else {
-      return _cookie!;
-    }
-  }
 }
-
-class NotAuthenticatedException {}
