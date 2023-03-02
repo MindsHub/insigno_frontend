@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:insignio_frontend/networking/data/pill.dart';
 import 'package:insignio_frontend/util/future.dart';
+import 'package:collection/collection.dart';
 
 import 'const.dart';
 import 'data/map_marker.dart';
@@ -22,7 +23,11 @@ Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longi
       .map((markers) => markers.map<MapMarker>((marker) {
             var point = marker["point"];
             return MapMarker(
-                0, point['y'] as double, point['x'] as double, MarkerType.values.first);
+                marker["id"],
+                point["y"] as double,
+                point["x"] as double,
+                MarkerType.values.firstWhereOrNull((type) => type.id == marker["trash_type_id"]) ??
+                    MarkerType.unknown);
           }).toList());
 }
 
@@ -43,8 +48,8 @@ Future<void> addMarkerImage(String markerId, Uint8List image, String cookie) asy
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/image/add"));
   request.headers["Cookie"] = cookie;
   request.fields["refers_to_id"] = markerId;
-  request.files.add(
-      http.MultipartFile.fromBytes("image", image, contentType: MediaType.parse("image/png")));
+  request.files
+      .add(http.MultipartFile.fromBytes("image", image, contentType: MediaType.parse("image/png")));
 
   var response = await request.send();
   print(response.statusCode);
