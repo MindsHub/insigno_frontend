@@ -121,44 +121,52 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               if (!isLoggedIn)
                 const Text("You must log in in order to report")
               else if (position?.permissionGranted == false)
-                const Text("Grant permission to access location in order to report")
+                const Text("Grant permission to access location")
               else if (position?.servicesEnabled == false)
-                const Text("Enable location services in order to report")
+                const Text("Enable location services")
+              else if (image == null)
+                const Text("Select an image")
+              else if (markerType == null)
+                const Text("Select a marker type")
               else if (position?.position == null)
-                const Text("Location is loading, please wait...")
-              else
-                ElevatedButton(
-                    child: const Text("Send"),
-                    onPressed: () async {
-                      var pos = getIt<LocationProvider>().lastLocationInfo().position;
-                      var cookie = getIt<Authentication>().maybeCookie();
-                      var img = image;
-                      var mt = markerType;
-                      if (pos == null ||
-                          cookie == null ||
-                          img == null ||
-                          mt == null ||
-                          mt == MarkerType.unknown) {
-                        return; // this should be unreachable, since "Send" should be hidden
-                      }
+                const Text("Location is loading, please wait..."),
+              ElevatedButton(
+                  child: const Text("Send"),
+                  onPressed: (!isLoggedIn ||
+                          image == null ||
+                          markerType == null ||
+                          position?.position == null)
+                      ? null
+                      : () async {
+                          var pos = getIt<LocationProvider>().lastLocationInfo().position;
+                          var cookie = getIt<Authentication>().maybeCookie();
+                          var img = image;
+                          var mt = markerType;
+                          if (pos == null ||
+                              cookie == null ||
+                              img == null ||
+                              mt == null ||
+                              mt == MarkerType.unknown) {
+                            return; // this should be unreachable, since "Send" should be hidden
+                          }
 
-                      // TODO marker type
-                      addMarker(pos.latitude, pos.longitude, mt, cookie).then((markerId) {
-                        print("Marker id " + markerId);
-                        addMarkerImage(markerId, img, cookie).then((_) {
-                          print("Success!");
-                          // TODO open marker page
-                        },
-                            onError: (error) => {
-                                  print(error.toString())
-                                  // TODO handle error and show marker page
-                                });
-                      },
-                          onError: (error) => {
-                                print(error.toString())
-                                // TODO handle error
-                              });
-                    })
+                          // TODO marker type
+                          addMarker(pos.latitude, pos.longitude, mt, cookie).then((markerId) {
+                            print("Marker id " + markerId);
+                            addMarkerImage(markerId, img, cookie).then((_) {
+                              print("Success!");
+                              // TODO open marker page
+                            },
+                                onError: (error) => {
+                                      print(error.toString())
+                                      // TODO handle error and show marker page
+                                    });
+                          },
+                              onError: (error) => {
+                                    print(error.toString())
+                                    // TODO handle error
+                                  });
+                        })
             ],
           ),
         )));
