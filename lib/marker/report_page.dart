@@ -7,11 +7,11 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import "package:os_detect/os_detect.dart" as platform;
+import 'package:image_picker/image_picker.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
 import '../map/location.dart';
-import 'camera.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
   ReportPage({super.key});
@@ -83,7 +83,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                     ElevatedButton(
                         child: const Text("Shoot"),
                         onPressed: () {
-                          getPictureFromCamera().then((value) async {
+                          ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
                             if (value != null) {
                               return await File(value.path).readAsBytes();
                             } else {
@@ -161,7 +161,6 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                               addMarkerImage(markerId, img, cookie).then(
                                 (_) {
                                   print("Success!");
-                                  // TODO open marker page
                                 },
                                 onError: (error) {
                                   print("Error adding image: $error");
