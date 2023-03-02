@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 enum MarkerType {
-  unknown(1, Colors.grey, Icons.help),
-  plastic(2, Colors.indigo, Icons.polymer),
-  paper(3, Colors.yellow, Icons.auto_stories),
-  undifferentiated(4, Colors.red, Icons.broken_image),
-  glass(5, Colors.green, Icons.liquor),
-  compost(6, Colors.brown, Icons.compost),
-  electronics(7, Colors.white, Icons.local_laundry_service);
+  unknown(1, Colors.grey, Icons.help, "Unknown type"),
+  plastic(2, Colors.indigo, Icons.polymer, "Plastic"),
+  paper(3, Colors.yellow, Icons.auto_stories, "Paper"),
+  undifferentiated(4, Colors.red, Icons.broken_image, "Undifferentiated"),
+  glass(5, Colors.green, Icons.liquor, "Glass"),
+  compost(6, Colors.brown, Icons.compost, "Compost"),
+  electronics(7, Colors.white, Icons.local_laundry_service, "Electronics");
 
   final int id;
   final Color color;
   final IconData icon;
-  const MarkerType(this.id, this.color, this.icon);
+  final String name;
+  const MarkerType(this.id, this.color, this.icon, this.name);
 }

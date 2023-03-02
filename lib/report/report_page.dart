@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
   Uint8List? image;
+  MarkerType? markerType;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +97,27 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 ],
               ),
               const SizedBox(height: 12),
+              DropdownButton(
+                hint: const Text("Choose a marker type"),
+                items: MarkerType.values
+                    .where((element) => element != MarkerType.unknown)
+                    .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Row(children: [
+                          Icon(e.icon,
+                              color: HSLColor.fromColor(e.color)
+                                  .withLightness(
+                                      Theme.of(context).brightness == Brightness.dark ? 0.7 : 0.3)
+                                  .toColor()),
+                          const SizedBox(width: 12),
+                          Text(e.name)
+                        ])))
+                    .toList(growable: false),
+                onChanged: (MarkerType? newMarkerType) =>
+                    setState(() => markerType = newMarkerType),
+                value: markerType,
+              ),
+              const SizedBox(height: 12),
               if (!isLoggedIn)
                 const Text("You must log in in order to report")
               else if (position?.permissionGranted == false)
@@ -110,31 +133,31 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                       var pos = getIt<LocationProvider>().lastLocationInfo().position;
                       var cookie = getIt<Authentication>().maybeCookie();
                       var img = image;
-                      if (pos == null || cookie == null || img == null) {
+                      var mt = markerType;
+                      if (pos == null ||
+                          cookie == null ||
+                          img == null ||
+                          mt == null ||
+                          mt == MarkerType.unknown) {
                         return; // this should be unreachable, since "Send" should be hidden
                       }
 
                       // TODO marker type
-                      addMarker(pos.latitude, pos.longitude, MarkerType.unknown, cookie)
-                        .then(
-                          (markerId) {
-                            print("Marker id " + markerId);
-                            addMarkerImage(markerId, img, cookie)
-                              .then(
-                                (_) {
-                                  print("Success!");
-                                  // TODO open marker page
-                                },
-                                onError: (error) => {
+                      addMarker(pos.latitude, pos.longitude, mt, cookie).then((markerId) {
+                        print("Marker id " + markerId);
+                        addMarkerImage(markerId, img, cookie).then((_) {
+                          print("Success!");
+                          // TODO open marker page
+                        },
+                            onError: (error) => {
                                   print(error.toString())
                                   // TODO handle error and show marker page
                                 });
-                            },
+                      },
                           onError: (error) => {
-                            print(error.toString())
-                            // TODO handle error
-                          }
-                      );
+                                print(error.toString())
+                                // TODO handle error
+                              });
                     })
             ],
           ),
