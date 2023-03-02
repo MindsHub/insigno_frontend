@@ -21,10 +21,7 @@ class MarkerPageArgs {
 class _MarkerPageState extends State<MarkerPage> {
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as MarkerPageArgs;
+    final args = ModalRoute.of(context)!.settings.arguments as MarkerPageArgs;
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +32,8 @@ class _MarkerPageState extends State<MarkerPage> {
           args.mapMarker.type.getThemedIcon(context)
         ]),
       ),
-      body: Padding(
+      body: Center(
+        child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +43,9 @@ class _MarkerPageState extends State<MarkerPage> {
               if (args.errorAddingImage.isNotEmpty)
                 Text("An error occured when uploading the image: ${args.errorAddingImage}")
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
