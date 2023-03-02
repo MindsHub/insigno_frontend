@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,8 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
   Uint8List? image;
   MarkerType? markerType;
+  bool loading = false;
+  String? error;
 
   @override
   Widget build(BuildContext context) {
@@ -150,23 +151,33 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                             return; // this should be unreachable, since "Send" should be hidden
                           }
 
-                          // TODO marker type
-                          addMarker(pos.latitude, pos.longitude, mt, cookie).then((markerId) {
-                            print("Marker id " + markerId);
-                            addMarkerImage(markerId, img, cookie).then((_) {
-                              print("Success!");
-                              // TODO open marker page
+                          setState(() {
+                            loading = true;
+                            error = null;
+                          });
+
+                          addMarker(pos.latitude, pos.longitude, mt, cookie).then(
+                            (markerId) {
+                              addMarkerImage(markerId, img, cookie).then(
+                                (_) {
+                                  print("Success!");
+                                  // TODO open marker page
+                                },
+                                onError: (error) {
+                                  print("Error adding image: $error");
+                                  // TODO handle error and show marker page
+                                },
+                              );
                             },
-                                onError: (error) => {
-                                      print(error.toString())
-                                      // TODO handle error and show marker page
-                                    });
-                          },
-                              onError: (error) => {
-                                    print(error.toString())
-                                    // TODO handle error
-                                  });
-                        })
+                            onError: (e) {
+                              setState(() {
+                                loading = false;
+                                error = e.toString();
+                              });
+                            },
+                          );
+                        }),
+              if (error != null) Text("Error: $error"),
             ],
           ),
         )));
