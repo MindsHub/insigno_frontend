@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/di/setup.dart';
+import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -65,7 +66,9 @@ class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
               point: LatLng(e.latitude, e.longitude),
               builder: (ctx) => IconButton(
                 icon: Icon(e.type.icon, color: e.type.color),
-                onPressed: () => { /* TODO */ },
+                onPressed: () => {
+                  Navigator.pushNamed(context, MarkerPage.routeName, arguments: MarkerPageArgs(e))
+                },
               ),
             )))
         .toList(growable: false);
