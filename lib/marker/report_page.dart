@@ -46,7 +46,8 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
           centerTitle: true,
           title: const Text("Report"),
         ),
-        body: Padding(
+        body: Center(
+            child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +117,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               if (error != null) Text("Error: $error"),
             ],
           ),
-        ));
+        )));
   }
 
   void pickFiles() async {
