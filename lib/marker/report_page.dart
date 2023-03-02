@@ -80,11 +80,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                     .map((e) => DropdownMenuItem(
                         value: e,
                         child: Row(children: [
-                          Icon(e.icon,
-                              color: HSLColor.fromColor(e.color)
-                                  .withLightness(
-                                      Theme.of(context).brightness == Brightness.dark ? 0.7 : 0.3)
-                                  .toColor()),
+                          e.getThemedIcon(context),
                           const SizedBox(width: 12),
                           Text(e.name)
                         ])))

@@ -13,5 +13,16 @@ enum MarkerType {
   final Color color;
   final IconData icon;
   final String name;
+
   const MarkerType(this.id, this.color, this.icon, this.name);
+
+  Icon getThemedIcon(final BuildContext context) {
+    return Icon(icon,
+        color: HSLColor.fromColor(color)
+            .withLightness(
+            Theme
+                .of(context)
+                .brightness == Brightness.dark ? 0.7 : 0.3)
+            .toColor());
+  }
 }
