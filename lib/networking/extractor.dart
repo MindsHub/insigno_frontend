@@ -40,7 +40,7 @@ Future<String> addMarker(
   request.headers["Cookie"] = cookie;
   request.fields["y"] = latitude.toString();
   request.fields["x"] = longitude.toString();
-  request.fields["type_tr"] = markerType.id.toString();
+  request.fields["marker_types_id"] = markerType.id.toString();
 
   var response = await request.send().throwErrors();
   return await response.stream.bytesToString();
