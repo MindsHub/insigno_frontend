@@ -25,11 +25,12 @@ Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longi
       .map((markers) => markers.map<MapMarker>((marker) {
             var point = marker["point"];
             return MapMarker(
-                marker["id"],
-                point["y"] as double,
-                point["x"] as double,
-                MarkerType.values.firstWhereOrNull((type) => type.id == marker["trash_type_id"]) ??
-                    MarkerType.unknown);
+              marker["id"],
+              point["y"] as double,
+              point["x"] as double,
+              MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
+                  MarkerType.unknown,
+            );
           }).toList());
 }
 
