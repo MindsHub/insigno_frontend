@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import '../auth/authentication.dart';
 import '../di/setup.dart';
 import '../map/location.dart';
+import '../util/pair.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
   ReportPage({super.key});
@@ -26,6 +27,7 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
   Uint8List? image;
+  String? imageMimeType;
   MarkerType? markerType;
   bool loading = false;
   String? error;
@@ -126,7 +128,15 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     await FilePicker.platform.pickFiles(withData: true).then((value) {
       var bytes = value?.files.single.bytes;
       if (bytes != null) {
-        setState(() => image = bytes);
+        setState(() {
+          var extension = value?.files.single.extension;
+          if (extension == null) {
+            imageMimeType = null;
+          } else {
+            imageMimeType = "image/" + extension;
+          }
+          image = bytes;
+        });
       }
     });
   }
@@ -134,13 +144,16 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   void pickImage() async {
     await ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
       if (value != null) {
-        return await File(value.path).readAsBytes();
+        return Pair(value.mimeType, await File(value.path).readAsBytes());
       } else {
         return null;
       }
     }).then((value) {
       if (value != null) {
-        setState(() => image = value);
+        setState(() {
+          imageMimeType = value.first;
+          image = value.second;
+        });
       }
     });
   }
@@ -149,12 +162,13 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     var pos = getIt<LocationProvider>().lastLocationInfo().position;
     var cookie = getIt<Authentication>().maybeCookie();
     var img = image;
-    var type = markerType;
+    var mime = imageMimeType;
+    var marker = markerType;
     if (pos == null ||
         cookie == null ||
         img == null ||
-        type == null ||
-        type == MarkerType.unknown) {
+        marker == null ||
+        marker == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden
     }
 
@@ -163,15 +177,15 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       error = null;
     });
 
-    addMarker(pos.latitude, pos.longitude, type, cookie).then(
+    addMarker(pos.latitude, pos.longitude, marker, cookie).then(
       (markerId) {
-        addMarkerImage(markerId, img, cookie).then(
+        addMarkerImage(markerId, img, mime, cookie).then(
           (_) {
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
               arguments:
-                  MarkerPageArgs(MapMarker(int.parse(markerId), pos.latitude, pos.longitude, type)),
+                  MarkerPageArgs(MapMarker(int.parse(markerId), pos.latitude, pos.longitude, marker)),
             );
           },
           onError: (e) {
@@ -179,7 +193,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               context,
               MarkerPage.routeName,
               arguments: MarkerPageArgs(
-                  MapMarker(int.parse(markerId), pos.latitude, pos.longitude, type),
+                  MapMarker(int.parse(markerId), pos.latitude, pos.longitude, marker),
                   errorAddingImage: e.toString()),
             );
           },

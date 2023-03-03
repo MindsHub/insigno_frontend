@@ -45,12 +45,19 @@ Future<String> addMarker(
   return await response.stream.bytesToString();
 }
 
-Future<void> addMarkerImage(String markerId, Uint8List image, String cookie) async {
+Future<void> addMarkerImage(
+    String markerId, Uint8List image, String? mimeType, String cookie) async {
+  mimeType = null;
+
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/image/add"));
   request.headers["Cookie"] = cookie;
   request.fields["refers_to_id"] = markerId;
-  request.files
-      .add(http.MultipartFile.fromBytes("image", image, contentType: MediaType.parse("image/png")));
+
+  request.files.add(http.MultipartFile.fromBytes(
+    "image",
+    image,
+    contentType: mimeType == null ? MediaType("image", "") : MediaType.parse(mimeType),
+  ));
 
   await request.send().throwErrors();
 }
