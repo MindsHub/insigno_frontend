@@ -65,6 +65,7 @@ class _MapWidgetState extends State<MapWidget> with GetItStateMixin<MapWidget> {
         .followedBy(markers.map((e) => Marker(
               point: LatLng(e.latitude, e.longitude),
               builder: (ctx) => IconButton(
+                padding: EdgeInsets.zero,
                 icon: Icon(e.type.icon, color: e.type.color),
                 onPressed: () => {
                   Navigator.pushNamed(context, MarkerPage.routeName, arguments: MarkerPageArgs(e))
