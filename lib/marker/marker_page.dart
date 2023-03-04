@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 
-import '../networking/extractor.dart';
-
 class MarkerPage extends StatefulWidget {
-  const MarkerPage({super.key});
+  final MapMarker mapMarker;
+  final String errorAddingImage;
+
+  MarkerPage(MarkerPageArgs args, {super.key})
+      : mapMarker = args.mapMarker,
+        errorAddingImage = args.errorAddingImage;
 
   static const routeName = '/markerWidget';
 
@@ -23,15 +25,13 @@ class MarkerPageArgs {
 class _MarkerPageState extends State<MarkerPage> {
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as MarkerPageArgs;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Row(children: [
-          Text(args.mapMarker.type.name + " marker"),
+          Text(widget.mapMarker.type.name + " marker"),
           const SizedBox(width: 12),
-          args.mapMarker.type.getThemedIcon(context)
+          widget.mapMarker.type.getThemedIcon(context)
         ]),
       ),
       body: Center(
@@ -48,8 +48,8 @@ class _MarkerPageState extends State<MarkerPage> {
                 ),
               ),
               // TODO map widget
-              if (args.errorAddingImage.isNotEmpty)
-                Text("An error occured when uploading the image: ${args.errorAddingImage}")
+              if (widget.errorAddingImage.isNotEmpty)
+                Text("An error occured when uploading the image: ${widget.errorAddingImage}")
             ],
           ),
         ),

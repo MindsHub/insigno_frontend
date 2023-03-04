@@ -21,10 +21,14 @@ class InsignioApp extends StatelessWidget {
             colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark)
         ),
         home: HomePage(),
-        routes: {
-          ReportPage.routeName: (context) => ReportPage(),
-          MarkerPage.routeName: (context) => MarkerPage(),
-        }
+        onGenerateRoute: (RouteSettings settings) {
+          var routes = <String, WidgetBuilder>{
+            ReportPage.routeName: (ctx) => ReportPage(),
+            MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
+          };
+          WidgetBuilder builder = routes[settings.name]!;
+          return MaterialPageRoute(builder: (ctx) => builder(ctx));
+        },
       );
     });
   }
