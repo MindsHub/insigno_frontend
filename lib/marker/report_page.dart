@@ -125,7 +125,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   }
 
   void pickFiles() async {
-    await FilePicker.platform.pickFiles(withData: true).then((value) {
+    await FilePicker.platform.pickFiles(withData: true, type: FileType.image).then((value) {
       var bytes = value?.files.single.bytes;
       if (bytes != null) {
         setState(() {
