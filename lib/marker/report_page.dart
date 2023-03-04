@@ -8,6 +8,7 @@ import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:insignio_frontend/util/iterable.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
@@ -39,6 +40,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 getIt<Authentication>().isLoggedIn())
             .data ??
         false;
+    final ColorScheme colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -55,35 +57,61 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[const SizedBox(width: 16)]
-                    .followedBy(images.expand<Widget>((image) => [
-                          ClipRRect(
-                            child: Image.memory(
-                              image.first,
-                              height: 128,
-                              fit: BoxFit.cover,
+                    .followedBy(images.expandIndexed<Widget>((index, image) => [
+                          Stack(alignment: Alignment.topRight, children: [
+                            ClipRRect(
+                              child: Image.memory(
+                                image.first,
+                                height: 128,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
                             ),
-                            borderRadius: const BorderRadius.all(Radius.circular(16)),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Material(
+                                color: Colors.transparent,
+                                clipBehavior: Clip.hardEdge,
+                                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                child: Ink(
+                                  decoration: BoxDecoration(color: colors.primaryContainer),
+                                  child: InkWell(
+                                    onTap: () => removeImage(index),
+                                    child: SizedBox(
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 24,
+                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                      ),
+                                      width: 32,
+                                      height: 32,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]),
                           const SizedBox(width: 16),
                         ]))
                     .followedBy([
                   Ink(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      color: colors.primaryContainer,
                       borderRadius: const BorderRadius.all(Radius.circular(16)),
                     ),
                     child: InkWell(
-                        onTap: captureImage,
-                        borderRadius: const BorderRadius.all(Radius.circular(16)),
-                        child: SizedBox(
-                          child: Icon(
-                            Icons.add,
-                            size: 48,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
-                          width: 96,
-                          height: 128,
-                        )),
+                      onTap: captureImage,
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      child: SizedBox(
+                        child: Icon(
+                          Icons.add,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                        width: 96,
+                        height: 128,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 16),
                 ]).toList(growable: false),
@@ -150,15 +178,21 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     });
   }
 
+  void removeImage(int index) {
+    if (!loading) {
+      setState(() {
+        if (!loading) {
+          images.removeAt(index);
+        }
+      });
+    }
+  }
+
   void send() async {
     var pos = getIt<LocationProvider>().lastLocationInfo().position;
     var cookie = getIt<Authentication>().maybeCookie();
     var mt = markerType;
-    if (pos == null ||
-        cookie == null ||
-        images.isEmpty ||
-        mt == null ||
-        mt == MarkerType.unknown) {
+    if (pos == null || cookie == null || images.isEmpty || mt == null || mt == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden
     }
 
