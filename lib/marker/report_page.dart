@@ -7,7 +7,6 @@ import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
-import "package:os_detect/os_detect.dart" as platform;
 import 'package:image_picker/image_picker.dart';
 
 import '../auth/authentication.dart';
@@ -25,7 +24,7 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
-  Uint8List? image;
+  List<Uint8List> images = [];
   String? imageMimeType;
   MarkerType? markerType;
   bool loading = false;
@@ -48,80 +47,96 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
         title: const Text("Report"),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (image == null)
-                const Icon(Icons.image, size: 128)
-              else
-                ClipRRect(
-                  child: Image.memory(
-                    image!,
-                    height: 128,
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(16)),
-                ),
-              const SizedBox(height: 12),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (platform.isAndroid || platform.isIOS)
-                    ElevatedButton(child: const Text("Shoot"), onPressed: pickImage),
-                ],
+                children: <Widget>[const SizedBox(width: 16)]
+                    .followedBy(images
+                    .expand<Widget>((image) => [
+                          ClipRRect(
+                            child: Image.memory(
+                              image,
+                              height: 128,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          ),
+                          const SizedBox(width: 16),
+                        ]))
+                    .followedBy([
+                  Ink(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: InkWell(
+                        onTap: captureImage,
+                        borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        child: SizedBox(
+                          child: Icon(
+                            Icons.add,
+                            size: 48,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                          width: 96,
+                          height: 128,
+                        )),
+                  ),
+                  const SizedBox(width: 16),
+                ]).toList(growable: false),
               ),
-              const SizedBox(height: 12),
-              DropdownButton(
-                hint: const Text("Choose a marker type"),
-                items: MarkerType.values
-                    .where((element) => element != MarkerType.unknown)
-                    .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Row(children: [
-                          e.getThemedIcon(context),
-                          const SizedBox(width: 12),
-                          Text(e.name)
-                        ])))
-                    .toList(growable: false),
-                onChanged: (MarkerType? newMarkerType) =>
-                    setState(() => markerType = newMarkerType),
-                value: markerType,
-              ),
-              const SizedBox(height: 12),
-              if (!isLoggedIn)
-                const Text("You must log in in order to report")
-              else if (position?.permissionGranted == false)
-                const Text("Grant permission to access location")
-              else if (position?.servicesEnabled == false)
-                const Text("Enable location services")
-              else if (image == null)
-                const Text("Select an image")
-              else if (markerType == null)
-                const Text("Select a marker type")
-              else if (position?.position == null)
-                const Text("Location is loading, please wait..."),
-              ElevatedButton(
-                child: const Text("Send"),
-                onPressed: (!isLoggedIn ||
-                        image == null ||
-                        markerType == null ||
-                        position?.position == null)
-                    ? null
-                    : send,
-              ),
-              if (error != null) Text("Error: $error"),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButton(
+              hint: const Text("Choose a marker type"),
+              items: MarkerType.values
+                  .where((element) => element != MarkerType.unknown)
+                  .map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Row(children: [
+                        e.getThemedIcon(context),
+                        const SizedBox(width: 12),
+                        Text(e.name)
+                      ])))
+                  .toList(growable: false),
+              onChanged: (MarkerType? newMarkerType) => setState(() => markerType = newMarkerType),
+              value: markerType,
+            ),
+            const SizedBox(height: 12),
+            if (!isLoggedIn)
+              const Text("You must log in in order to report")
+            else if (position?.permissionGranted == false)
+              const Text("Grant permission to access location")
+            else if (position?.servicesEnabled == false)
+              const Text("Enable location services")
+            else if (images.isEmpty)
+              const Text("Select an image")
+            else if (markerType == null)
+              const Text("Select a marker type")
+            else if (position?.position == null)
+              const Text("Location is loading, please wait..."),
+            ElevatedButton(
+              child: const Text("Send"),
+              onPressed: (!isLoggedIn ||
+                      images.isEmpty ||
+                      markerType == null ||
+                      position?.position == null)
+                  ? null
+                  : send,
+            ),
+            if (error != null) Text("Error: $error"),
+          ],
         ),
       ),
     );
   }
 
-  void pickImage() async {
+  void captureImage() async {
     await ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
       if (value != null) {
         return Pair(value.mimeType, await File(value.path).readAsBytes());
@@ -132,7 +147,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       if (value != null) {
         setState(() {
           imageMimeType = value.first;
-          image = value.second;
+          images.add(value.second);
         });
       }
     });
@@ -141,7 +156,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   void send() async {
     var pos = getIt<LocationProvider>().lastLocationInfo().position;
     var cookie = getIt<Authentication>().maybeCookie();
-    var img = image;
+    var img = images[0];
     var mime = imageMimeType;
     var marker = markerType;
     if (pos == null ||
@@ -171,8 +186,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments: MarkerPageArgs(
-                  MapMarker(markerId, pos.latitude, pos.longitude, marker),
+              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, marker),
                   errorAddingImage: e.toString()),
             );
           },
