@@ -184,8 +184,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments:
-                  MarkerPageArgs(MapMarker(int.parse(markerId), pos.latitude, pos.longitude, marker)),
+              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, marker)),
             );
           },
           onError: (e) {
@@ -193,7 +192,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               context,
               MarkerPage.routeName,
               arguments: MarkerPageArgs(
-                  MapMarker(int.parse(markerId), pos.latitude, pos.longitude, marker),
+                  MapMarker(markerId, pos.latitude, pos.longitude, marker),
                   errorAddingImage: e.toString()),
             );
           },

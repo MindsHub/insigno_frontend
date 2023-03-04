@@ -34,7 +34,7 @@ Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longi
           }).toList());
 }
 
-Future<String> addMarker(
+Future<int> addMarker(
     double latitude, double longitude, MarkerType markerType, String cookie) async {
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/add"));
   request.headers["Cookie"] = cookie;
@@ -43,16 +43,16 @@ Future<String> addMarker(
   request.fields["marker_types_id"] = markerType.id.toString();
 
   var response = await request.send().throwErrors();
-  return await response.stream.bytesToString();
+  return int.parse(await response.stream.bytesToString());
 }
 
 Future<void> addMarkerImage(
-    String markerId, Uint8List image, String? mimeType, String cookie) async {
+    int markerId, Uint8List image, String? mimeType, String cookie) async {
   mimeType = null;
 
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/image/add"));
   request.headers["Cookie"] = cookie;
-  request.fields["refers_to_id"] = markerId;
+  request.fields["refers_to_id"] = markerId.toString();
 
   request.files.add(http.MultipartFile.fromBytes(
     "image",
