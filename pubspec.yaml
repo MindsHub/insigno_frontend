@@ -41,7 +41,6 @@ dependencies:
 
   # core functionality
   geolocator: # used to load location
-  file_picker: # used to select images from file
   image_picker: # used only on Android and iOS to take pictures with the camera
 
   # utils

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -71,8 +70,6 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(child: const Text("Load from file"), onPressed: pickFiles),
-                  if (platform.isAndroid || platform.isIOS) const SizedBox(width: 16),
                   if (platform.isAndroid || platform.isIOS)
                     ElevatedButton(child: const Text("Shoot"), onPressed: pickImage),
                 ],
@@ -122,23 +119,6 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
         ),
       ),
     );
-  }
-
-  void pickFiles() async {
-    await FilePicker.platform.pickFiles(withData: true, type: FileType.image).then((value) {
-      var bytes = value?.files.single.bytes;
-      if (bytes != null) {
-        setState(() {
-          var extension = value?.files.single.extension;
-          if (extension == null) {
-            imageMimeType = null;
-          } else {
-            imageMimeType = "image/" + extension;
-          }
-          image = bytes;
-        });
-      }
-    });
   }
 
   void pickImage() async {
