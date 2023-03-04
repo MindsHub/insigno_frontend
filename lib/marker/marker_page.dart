@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 
+import '../networking/extractor.dart';
+
 class MarkerPage extends StatefulWidget {
   const MarkerPage({super.key});
 
@@ -39,6 +41,12 @@ class _MarkerPageState extends State<MarkerPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [],
+                ),
+              ),
               // TODO map widget
               if (args.errorAddingImage.isNotEmpty)
                 Text("An error occured when uploading the image: ${args.errorAddingImage}")

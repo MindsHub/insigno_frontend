@@ -62,3 +62,9 @@ Future<void> addMarkerImage(
 
   await request.send().throwErrors();
 }
+
+Future<List<int>> getImagesForMarker(int markerId) {
+  return http.get(Uri.parse("$insignioServer/map/image/list/$markerId"))
+      .mapParseJson()
+      .map((i) => i);
+}
