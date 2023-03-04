@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:insignio_frontend/networking/const.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
+import 'package:insignio_frontend/util/iterable.dart';
 
 class MarkerPage extends StatefulWidget {
   final MapMarker mapMarker;
@@ -56,15 +57,18 @@ class _MarkerPageState extends State<MarkerPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: images!
-                        .map(
-                          (image) => ClipRRect(
-                            child: Image.network(
-                              "$insignioServer/map/image/$image",
-                              height: 128,
-                              fit: BoxFit.cover,
+                        .expandIndexed(
+                          (index, image) => [
+                            if (index != 0) const SizedBox(width: 16),
+                            ClipRRect(
+                              child: Image.network(
+                                "$insignioServer/map/image/$image",
+                                height: 128,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
                             ),
-                            borderRadius: const BorderRadius.all(Radius.circular(16)),
-                          ),
+                          ],
                         )
                         .toList(growable: false),
                   ),
