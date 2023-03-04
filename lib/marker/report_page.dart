@@ -24,8 +24,7 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
-  List<Uint8List> images = [];
-  String? imageMimeType;
+  List<Pair<Uint8List, String?>> images = [];
   MarkerType? markerType;
   bool loading = false;
   String? error;
@@ -56,11 +55,10 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[const SizedBox(width: 16)]
-                    .followedBy(images
-                    .expand<Widget>((image) => [
+                    .followedBy(images.expand<Widget>((image) => [
                           ClipRRect(
                             child: Image.memory(
-                              image,
+                              image.first,
                               height: 128,
                               fit: BoxFit.cover,
                             ),
@@ -139,15 +137,14 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   void captureImage() async {
     await ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
       if (value != null) {
-        return Pair(value.mimeType, await File(value.path).readAsBytes());
+        return Pair(await File(value.path).readAsBytes(), value.mimeType);
       } else {
         return null;
       }
     }).then((value) {
       if (value != null) {
         setState(() {
-          imageMimeType = value.first;
-          images.add(value.second);
+          images.add(value);
         });
       }
     });
@@ -156,14 +153,12 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   void send() async {
     var pos = getIt<LocationProvider>().lastLocationInfo().position;
     var cookie = getIt<Authentication>().maybeCookie();
-    var img = images[0];
-    var mime = imageMimeType;
-    var marker = markerType;
+    var mt = markerType;
     if (pos == null ||
         cookie == null ||
-        img == null ||
-        marker == null ||
-        marker == MarkerType.unknown) {
+        images.isEmpty ||
+        mt == null ||
+        mt == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden
     }
 
@@ -172,21 +167,21 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       error = null;
     });
 
-    addMarker(pos.latitude, pos.longitude, marker, cookie).then(
+    addMarker(pos.latitude, pos.longitude, mt, cookie).then(
       (markerId) {
-        addMarkerImage(markerId, img, mime, cookie).then(
+        Future.wait(images.map((e) => addMarkerImage(markerId, e.first, e.second, cookie))).then(
           (_) {
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, marker)),
+              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, mt)),
             );
           },
           onError: (e) {
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, marker),
+              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, mt),
                   errorAddingImage: e.toString()),
             );
           },
