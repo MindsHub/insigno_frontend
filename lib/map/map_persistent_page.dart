@@ -128,6 +128,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       body: FlutterMap(
         mapController: mapController,
         options: MapOptions(
+          interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
           center: initialCoordinates,
           zoom: initialZoom,
           maxZoom: 18.45, // OSM supports at most the zoom value 19
@@ -138,7 +139,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               "© OpenStreetMap contributors",
               style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
             );
-          })
+          }),
+
         ],
         children: [
           TileLayer(
