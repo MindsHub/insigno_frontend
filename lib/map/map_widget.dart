@@ -8,7 +8,7 @@ import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:latlong2/latlong.dart';
 
-import 'location.dart';
+import 'location_provider.dart';
 import '../networking/data/map_marker.dart';
 
 class MapWidget extends StatefulWidget with GetItStatefulWidgetMixin {

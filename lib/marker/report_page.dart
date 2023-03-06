@@ -12,7 +12,7 @@ import 'package:insignio_frontend/util/iterable.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
-import '../map/location.dart';
+import '../map/location_provider.dart';
 import '../util/pair.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
