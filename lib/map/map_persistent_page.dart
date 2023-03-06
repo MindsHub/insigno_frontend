@@ -36,6 +36,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   final Distance distance = const Distance();
   final MapController mapController = MapController();
   late final AnimationController repositionAnim;
+  late final AnimationController addMarkerAnim;
 
   late LatLng initialCoordinates;
   late double initialZoom;
@@ -49,12 +50,13 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     WidgetsBinding.instance.addObserver(this);
 
     repositionAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    addMarkerAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
 
     mapController.mapEventStream
         .where((event) =>
-    event.zoom >= markersZoomThreshold &&
-        (lastLoadMarkersPos == null ||
-            distance.distance(lastLoadMarkersPos!, event.center) > 5000))
+            event.zoom >= markersZoomThreshold &&
+            (lastLoadMarkersPos == null ||
+                distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) => loadMarkers(event.center));
 
     mapController.mapEventStream
@@ -120,97 +122,119 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.build(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-        getIt<LocationProvider>().lastLocationInfo())
-        .data;
+            getIt<LocationProvider>().lastLocationInfo())
+        .data
+        ?.position;
     final bool isLoggedIn = watchStream(
-            (Authentication authentication) => authentication.getIsLoggedInStream(),
-        getIt<Authentication>().isLoggedIn())
-        .data ??
+                (Authentication authentication) => authentication.getIsLoggedInStream(),
+                getIt<Authentication>().isLoggedIn())
+            .data ??
         false;
 
-    if (position?.position == null) {
+    if (position == null) {
       repositionAnim.reverse();
     } else {
       repositionAnim.forward();
     }
 
-    return Scaffold(
-      body: FlutterMap(
-        mapController: mapController,
-        options: MapOptions(
-          interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-          center: initialCoordinates,
-          zoom: initialZoom,
-          maxZoom: 18.45, // OSM supports at most the zoom value 19
-        ),
-        nonRotatedChildren: [
-          AttributionWidget(attributionBuilder: (_) {
-            return const Text(
-              "© OpenStreetMap contributors",
-              style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
-            );
-          }),
-          Align(
-              alignment: Alignment.bottomLeft,
-              child: SizeTransition(
-                  sizeFactor: repositionAnim,
-                  child: ScaleTransition(
-                    scale: repositionAnim,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          final p = position?.position;
-                          if (p != null) {
-                            mapController.move(LatLng(p.latitude, p.longitude), defaultInitialZoom);
-                          }
-                        },
-                        child: const Icon(Icons.filter_tilt_shift),
-                      ),
-                    ),
+    if (position == null || !isLoggedIn) {
+      addMarkerAnim.reverse();
+    } else {
+      addMarkerAnim.forward();
+    }
+
+    return FlutterMap(
+      mapController: mapController,
+      options: MapOptions(
+        interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+        center: initialCoordinates,
+        zoom: initialZoom,
+        maxZoom: 18.45, // OSM supports at most the zoom value 19
+      ),
+      nonRotatedChildren: [
+        AttributionWidget(attributionBuilder: (_) {
+          return const Text(
+            "© OpenStreetMap contributors",
+            style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
+          );
+        }),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            AnimatedBuilder(
+              animation: repositionAnim,
+              builder: (_, child) => ClipRect(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  heightFactor: repositionAnim.value,
+                  widthFactor: null,
+                  child: child,
+                ),
+              ),
+              child: ScaleTransition(
+                scale: repositionAnim,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16, right: 16),
+                  child: FloatingActionButton(
+                    onPressed: () => mapController.move(
+                        LatLng(position!.latitude, position.longitude), defaultInitialZoom),
+                    child: const Icon(Icons.filter_tilt_shift),
                   ),
-              )
-          )
-        ],
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          MarkerLayer(
-              markers: [position?.position]
-                  .whereType<Position>()
-                  .map((pos) =>
-                  Marker(
-                    rotate: true,
-                    point: LatLng(pos.latitude, pos.longitude),
-                    builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                  ))
-                  .followedBy((showMarkers ? markers : []).map((e) =>
-                  Marker(
-                    width: 44,
-                    height: 44,
-                    rotate: true,
-                    point: LatLng(e.latitude, e.longitude),
-                    builder: (ctx) =>
-                        IconButton(
-                          icon: Icon(e.type.icon, color: e.type.color, size: 28),
-                          onPressed: () =>
-                          {
-                            Navigator.pushNamed(context, MarkerPage.routeName,
-                                arguments: MarkerPageArgs(e))
-                          },
-                        ),
-                  )))
-                  .toList(growable: false)),
-        ],
-      ),
-      floatingActionButton: (position?.position == null || !isLoggedIn)
-          ? null
-          : FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
-        child: const Icon(Icons.add),
-      ),
+                ),
+              ),
+            ),
+            AnimatedBuilder(
+              animation: addMarkerAnim,
+              builder: (_, child) => ClipRect(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  heightFactor: addMarkerAnim.value,
+                  widthFactor: null,
+                  child: child,
+                ),
+              ),
+              child: ScaleTransition(
+                scale: addMarkerAnim,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16, right: 16),
+                  child: FloatingActionButton(
+                    onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
+                    child: const Icon(Icons.add),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      children: [
+        TileLayer(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: const ['a', 'b', 'c'],
+        ),
+        MarkerLayer(
+            markers: [position]
+                .whereType<Position>()
+                .map((pos) => Marker(
+                      rotate: true,
+                      point: LatLng(pos.latitude, pos.longitude),
+                      builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                    ))
+                .followedBy((showMarkers ? markers : []).map((e) => Marker(
+                      width: 44,
+                      height: 44,
+                      rotate: true,
+                      point: LatLng(e.latitude, e.longitude),
+                      builder: (ctx) => IconButton(
+                        icon: Icon(e.type.icon, color: e.type.color, size: 28),
+                        onPressed: () => {
+                          Navigator.pushNamed(context, MarkerPage.routeName,
+                              arguments: MarkerPageArgs(e))
+                        },
+                      ),
+                    )))
+                .toList(growable: false)),
+      ],
     );
   }
 
