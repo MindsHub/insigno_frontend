@@ -54,7 +54,7 @@ dependency_overrides:
     git:
       url: https://github.com/Stypox/flutter-geolocator.git
       path: geolocator_android
-      ref: avoid-fused-on-legacy-android
+      ref: force-gps
 
 dev_dependencies:
   flutter_test:
