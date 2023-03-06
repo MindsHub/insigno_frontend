@@ -4,9 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/map/location_provider.dart';
 import 'package:insignio_frontend/marker/report_page.dart';
+import 'package:insignio_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
@@ -21,18 +23,26 @@ class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _MapPersistentPageState extends State<MapPersistentPage>
-    with AutomaticKeepAliveClientMixin<MapPersistentPage>, GetItStateMixin<MapPersistentPage> {
-  static final LatLng initialCoordinates = LatLng(45.75548, 11.00323);
+    with
+        AutomaticKeepAliveClientMixin<MapPersistentPage>,
+        GetItStateMixin<MapPersistentPage>,
+        WidgetsBindingObserver {
+  static final LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
+  static const double defaultInitialZoom = 15.0;
 
+  late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
-  LatLng? lastLoadMarkersPos;
 
+  late LatLng initialCoordinates;
+  late double initialZoom;
+  LatLng? lastLoadMarkersPos;
   List<MapMarker> markers = [];
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     mapController.mapEventStream
         .where((event) =>
@@ -51,12 +61,50 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       });
     });
 
-    loadMarkers(initialCoordinates);
+    prefs = getIt<SharedPreferences>();
+    initialCoordinates = LatLng(
+      prefs.getDouble(lastMapLatitude) ?? defaultInitialCoordinates.latitude,
+      prefs.getDouble(lastMapLongitude) ?? defaultInitialCoordinates.longitude,
+    );
+    initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
+
+    if (initialZoom >= 15.0) {
+      loadMarkers(initialCoordinates);
+    }
   }
 
   void loadMarkers(final LatLng latLng) async {
     loadMapMarkers(latLng.latitude, latLng.longitude)
         .then((value) => setState(() => markers = value));
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      await saveMapPositionToPreferences();
+    }
+  }
+
+  @override
+  Future<bool> didPopRoute() async {
+    await saveMapPositionToPreferences();
+    return super.didPopRoute();
+  }
+
+  Future<void> saveMapPositionToPreferences() async {
+    await Future.wait([
+      prefs.setDouble(lastMapLatitude, mapController.center.latitude),
+      prefs.setDouble(lastMapLongitude, mapController.center.longitude),
+      prefs.setDouble(lastMapZoom, mapController.zoom),
+    ]);
   }
 
   @override
@@ -77,7 +125,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         mapController: mapController,
         options: MapOptions(
           center: initialCoordinates,
-          zoom: 15.0,
+          zoom: initialZoom,
           maxZoom: 18.45, // OSM supports at most the zoom value 19
         ),
         nonRotatedChildren: [
