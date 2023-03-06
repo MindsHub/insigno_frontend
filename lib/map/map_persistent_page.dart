@@ -31,12 +31,13 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   static const double defaultInitialZoom = 15.0;
   static const double markersZoomThreshold = 14.0;
 
-  late final SharedPreferences prefs;
+  final SharedPreferences prefs = getIt<SharedPreferences>();
   final Distance distance = const Distance();
   final MapController mapController = MapController();
 
   late LatLng initialCoordinates;
   late double initialZoom;
+  late bool showMarkers;
   LatLng? lastLoadMarkersPos;
   List<MapMarker> markers = [];
 
@@ -50,35 +51,35 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             event.zoom >= markersZoomThreshold &&
             (lastLoadMarkersPos == null ||
                 distance.distance(lastLoadMarkersPos!, event.center) > 5000))
-        .forEach((event) {
-      lastLoadMarkersPos = event.center;
-      loadMarkers(event.center);
-    });
+        .forEach((event) => loadMarkers(event.center));
 
     mapController.mapEventStream
-        .where((event) => event.zoom < markersZoomThreshold)
-        .forEach((element) {
-      lastLoadMarkersPos = null;
-      setState(() {
-        markers = [];
-      });
-    });
+        .map((event) => event.zoom >= markersZoomThreshold)
+        .distinct()
+        .forEach((element) => setState(() => showMarkers = element));
 
-    prefs = getIt<SharedPreferences>();
     initialCoordinates = LatLng(
       prefs.getDouble(lastMapLatitude) ?? defaultInitialCoordinates.latitude,
       prefs.getDouble(lastMapLongitude) ?? defaultInitialCoordinates.longitude,
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
 
-    if (initialZoom >= markersZoomThreshold) {
+    showMarkers = initialZoom >= markersZoomThreshold;
+    if (showMarkers) {
       loadMarkers(initialCoordinates);
     }
   }
 
   void loadMarkers(final LatLng latLng) async {
-    loadMapMarkers(latLng.latitude, latLng.longitude)
-        .then((value) => setState(() => markers = value));
+    lastLoadMarkersPos = latLng;
+    loadMapMarkers(latLng.latitude, latLng.longitude).then((value) {
+      if (latLng == lastLoadMarkersPos) {
+        debugPrint("Loaded markers at $latLng");
+        setState(() => markers = value);
+      } else {
+        debugPrint("Ignoring outdated loaded markers at $latLng");
+      }
+    });
   }
 
   @override
@@ -152,7 +153,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                         point: LatLng(pos.latitude, pos.longitude),
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
-                  .followedBy(markers.map((e) => Marker(
+                  .followedBy((showMarkers ? markers : []).map((e) => Marker(
                         width: 44,
                         height: 44,
                         rotate: true,
