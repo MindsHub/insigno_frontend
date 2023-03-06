@@ -153,12 +153,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         maxZoom: 18.45, // OSM supports at most the zoom value 19
       ),
       nonRotatedChildren: [
-        AttributionWidget(attributionBuilder: (_) {
-          return const Text(
-            "© OpenStreetMap contributors",
-            style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
-          );
-        }),
+        AttributionWidget(
+          alignment: Alignment.bottomLeft,
+          attributionBuilder: (_) {
+            return const Text(
+              " © OpenStreetMap contributors",
+              style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
+            );
+          },
+        ),
         Align(
           alignment: Alignment.bottomRight,
           child: Column(
