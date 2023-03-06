@@ -94,7 +94,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             subdomains: const ['a', 'b', 'c'],
           ),
           MarkerLayer(
-              markers: [position]
+              markers: [position?.position]
                   .whereType<Position>()
                   .map((pos) => Marker(
                         rotate: true,
