@@ -26,14 +26,16 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     with
         AutomaticKeepAliveClientMixin<MapPersistentPage>,
         GetItStateMixin<MapPersistentPage>,
-        WidgetsBindingObserver {
+        WidgetsBindingObserver,
+        TickerProviderStateMixin {
   static final LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
-  static const double defaultInitialZoom = 15.0;
+  static const double defaultInitialZoom = 16.0;
   static const double markersZoomThreshold = 14.0;
 
   final SharedPreferences prefs = getIt<SharedPreferences>();
   final Distance distance = const Distance();
   final MapController mapController = MapController();
+  late final AnimationController repositionAnim;
 
   late LatLng initialCoordinates;
   late double initialZoom;
@@ -46,11 +48,13 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    repositionAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+
     mapController.mapEventStream
         .where((event) =>
-            event.zoom >= markersZoomThreshold &&
-            (lastLoadMarkersPos == null ||
-                distance.distance(lastLoadMarkersPos!, event.center) > 5000))
+    event.zoom >= markersZoomThreshold &&
+        (lastLoadMarkersPos == null ||
+            distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) => loadMarkers(event.center));
 
     mapController.mapEventStream
@@ -116,13 +120,19 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.build(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
+        getIt<LocationProvider>().lastLocationInfo())
         .data;
     final bool isLoggedIn = watchStream(
-                (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
-            .data ??
+            (Authentication authentication) => authentication.getIsLoggedInStream(),
+        getIt<Authentication>().isLoggedIn())
+        .data ??
         false;
+
+    if (position?.position == null) {
+      repositionAnim.reverse();
+    } else {
+      repositionAnim.forward();
+    }
 
     return Scaffold(
       body: FlutterMap(
@@ -140,7 +150,27 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
             );
           }),
-
+          Align(
+              alignment: Alignment.bottomLeft,
+              child: SizeTransition(
+                  sizeFactor: repositionAnim,
+                  child: ScaleTransition(
+                    scale: repositionAnim,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          final p = position?.position;
+                          if (p != null) {
+                            mapController.move(LatLng(p.latitude, p.longitude), defaultInitialZoom);
+                          }
+                        },
+                        child: const Icon(Icons.filter_tilt_shift),
+                      ),
+                    ),
+                  ),
+              )
+          )
         ],
         children: [
           TileLayer(
@@ -150,33 +180,37 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           MarkerLayer(
               markers: [position?.position]
                   .whereType<Position>()
-                  .map((pos) => Marker(
-                        rotate: true,
-                        point: LatLng(pos.latitude, pos.longitude),
-                        builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                      ))
-                  .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                        width: 44,
-                        height: 44,
-                        rotate: true,
-                        point: LatLng(e.latitude, e.longitude),
-                        builder: (ctx) => IconButton(
+                  .map((pos) =>
+                  Marker(
+                    rotate: true,
+                    point: LatLng(pos.latitude, pos.longitude),
+                    builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                  ))
+                  .followedBy((showMarkers ? markers : []).map((e) =>
+                  Marker(
+                    width: 44,
+                    height: 44,
+                    rotate: true,
+                    point: LatLng(e.latitude, e.longitude),
+                    builder: (ctx) =>
+                        IconButton(
                           icon: Icon(e.type.icon, color: e.type.color, size: 28),
-                          onPressed: () => {
+                          onPressed: () =>
+                          {
                             Navigator.pushNamed(context, MarkerPage.routeName,
                                 arguments: MarkerPageArgs(e))
                           },
                         ),
-                      )))
+                  )))
                   .toList(growable: false)),
         ],
       ),
       floatingActionButton: (position?.position == null || !isLoggedIn)
           ? null
           : FloatingActionButton(
-              onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
-              child: const Icon(Icons.add),
-            ),
+        onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
