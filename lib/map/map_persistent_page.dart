@@ -31,6 +31,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   static final LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
   static const double defaultInitialZoom = 16.0;
   static const double markersZoomThreshold = 14.0;
+  static const Duration fabAnimDuration = Duration(milliseconds: 200);
 
   final SharedPreferences prefs = getIt<SharedPreferences>();
   final Distance distance = const Distance();
@@ -49,8 +50,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    repositionAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    addMarkerAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    repositionAnim = AnimationController(vsync: this, duration: fabAnimDuration);
+    addMarkerAnim = AnimationController(vsync: this, duration: fabAnimDuration);
 
     mapController.mapEventStream
         .where((event) =>
@@ -158,56 +159,59 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
           );
         }),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            // see https://stackoverflow.com/q/56315392 for why we can't use SizeTransition
-            AnimatedBuilder(
-              animation: repositionAnim,
-              builder: (_, child) => ClipRect(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  heightFactor: repositionAnim.value,
-                  widthFactor: null,
-                  child: child,
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // see https://stackoverflow.com/q/56315392 for why we can't use SizeTransition
+              AnimatedBuilder(
+                animation: repositionAnim,
+                builder: (_, child) => ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    heightFactor: repositionAnim.value,
+                    widthFactor: repositionAnim.value,
+                    child: child,
+                  ),
                 ),
-              ),
-              child: ScaleTransition(
-                scale: repositionAnim,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16, right: 16),
-                  child: FloatingActionButton(
-                    heroTag: "reposition",
-                    onPressed: () => mapController.move(
-                        LatLng(position!.latitude, position.longitude), defaultInitialZoom),
-                    child: const Icon(Icons.filter_tilt_shift),
+                child: ScaleTransition(
+                  scale: repositionAnim,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
+                    child: FloatingActionButton(
+                      heroTag: "reposition",
+                      onPressed: () => mapController.move(
+                          LatLng(position!.latitude, position.longitude), defaultInitialZoom),
+                      child: const Icon(Icons.filter_tilt_shift),
+                    ),
                   ),
                 ),
               ),
-            ),
-            AnimatedBuilder(
-              animation: addMarkerAnim,
-              builder: (_, child) => ClipRect(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  heightFactor: addMarkerAnim.value,
-                  widthFactor: null,
-                  child: child,
+              AnimatedBuilder(
+                animation: addMarkerAnim,
+                builder: (_, child) => ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    heightFactor: addMarkerAnim.value,
+                    widthFactor: repositionAnim.value,
+                    child: child,
+                  ),
                 ),
-              ),
-              child: ScaleTransition(
-                scale: addMarkerAnim,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16, right: 16),
-                  child: FloatingActionButton(
-                    heroTag: "addMarker",
-                    onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
-                    child: const Icon(Icons.add),
+                child: ScaleTransition(
+                  scale: addMarkerAnim,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
+                    child: FloatingActionButton(
+                      heroTag: "addMarker",
+                      onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
+                      child: const Icon(Icons.add),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
       children: [
