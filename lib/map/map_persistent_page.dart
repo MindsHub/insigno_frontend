@@ -161,6 +161,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            // see https://stackoverflow.com/q/56315392 for why we can't use SizeTransition
             AnimatedBuilder(
               animation: repositionAnim,
               builder: (_, child) => ClipRect(
