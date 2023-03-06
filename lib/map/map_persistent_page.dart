@@ -97,12 +97,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               markers: [position]
                   .whereType<Position>()
                   .map((pos) => Marker(
-                        width: 30.0,
-                        height: 30.0,
+                        rotate: true,
                         point: LatLng(pos.latitude, pos.longitude),
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
                   .followedBy(markers.map((e) => Marker(
+                        rotate: true,
                         point: LatLng(e.latitude, e.longitude),
                         builder: (ctx) => IconButton(
                           padding: EdgeInsets.zero,
