@@ -102,11 +102,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
                   .followedBy(markers.map((e) => Marker(
+                        width: 44,
+                        height: 44,
                         rotate: true,
                         point: LatLng(e.latitude, e.longitude),
                         builder: (ctx) => IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: Icon(e.type.icon, color: e.type.color),
+                          icon: Icon(e.type.icon, color: e.type.color, size: 28),
                           onPressed: () => {
                             Navigator.pushNamed(context, MarkerPage.routeName,
                                 arguments: MarkerPageArgs(e))
