@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:insignio_frontend/map/location_info.dart';
@@ -23,18 +24,24 @@ class LocationProvider {
   LocationProvider() {
     _permissionStatusSub = Geolocator.checkPermission()
         .asStream()
-        .listen((permission) async => await _handlePermission(permission, true));
+        .listen((permission) async {
+          debugPrint("Location permission status $permission");
+          await _handlePermission(permission, true);
+        });
 
     try {
       _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
+        debugPrint("Location status $status");
         await _handleServicesEnabled(status == ServiceStatus.enabled, false);
       });
       _initialServiceStatusSub =
           Geolocator.isLocationServiceEnabled().asStream().listen((enabled) async {
+            debugPrint("Initial location status $enabled");
             await _handleServicesEnabled(enabled, true);
           });
     } catch(e) {
       // service status is not available on the web
+      debugPrint("No service status available: $e");
     }
 
     _createNewPositionStream();
@@ -49,9 +56,10 @@ class LocationProvider {
   }
 
   void _createNewPositionStream() {
+    debugPrint("Creating new position stream");
     _positionSub = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
         (position) => _handlePosition(position),
-        onError: (error) => print(error.toString()));
+        onError: (error) => debugPrint("Position stream error: $error"));
   }
 
   void _handlePosition(Position? position) {
