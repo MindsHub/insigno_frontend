@@ -177,6 +177,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 16, right: 16),
                   child: FloatingActionButton(
+                    heroTag: "reposition",
                     onPressed: () => mapController.move(
                         LatLng(position!.latitude, position.longitude), defaultInitialZoom),
                     child: const Icon(Icons.filter_tilt_shift),
@@ -199,6 +200,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 16, right: 16),
                   child: FloatingActionButton(
+                    heroTag: "addMarker",
                     onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
                     child: const Icon(Icons.add),
                   ),
