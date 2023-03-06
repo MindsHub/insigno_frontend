@@ -29,6 +29,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         WidgetsBindingObserver {
   static final LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
   static const double defaultInitialZoom = 15.0;
+  static const double markersZoomThreshold = 14.0;
 
   late final SharedPreferences prefs;
   final Distance distance = const Distance();
@@ -46,7 +47,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
     mapController.mapEventStream
         .where((event) =>
-            event.zoom >= 15.0 &&
+            event.zoom >= markersZoomThreshold &&
             (lastLoadMarkersPos == null ||
                 distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) {
@@ -54,7 +55,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       loadMarkers(event.center);
     });
 
-    mapController.mapEventStream.where((event) => event.zoom < 15.0).forEach((element) {
+    mapController.mapEventStream
+        .where((event) => event.zoom < markersZoomThreshold)
+        .forEach((element) {
       lastLoadMarkersPos = null;
       setState(() {
         markers = [];
@@ -68,7 +71,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
 
-    if (initialZoom >= 15.0) {
+    if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
     }
   }
