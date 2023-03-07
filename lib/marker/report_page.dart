@@ -86,15 +86,18 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               const Text("Select a marker type")
             else if (position?.position == null)
               const Text("Location is loading, please wait..."),
-            ElevatedButton(
-              child: const Text("Send"),
-              onPressed: (!isLoggedIn ||
-                      images.isEmpty ||
-                      markerType == null ||
-                      position?.position == null)
-                  ? null
-                  : send,
-            ),
+            if (loading)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton(
+                child: const Text("Send"),
+                onPressed: (!isLoggedIn ||
+                    images.isEmpty ||
+                    markerType == null ||
+                    position?.position == null)
+                    ? null
+                    : send,
+              ),
             if (error != null) Text("Error: $error"),
           ],
         ),
