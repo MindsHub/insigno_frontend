@@ -51,38 +51,53 @@ class _MarkerPageState extends State<MarkerPage> {
         ]),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (images?.isNotEmpty == true)
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: images!
-                        .expandIndexed(
-                          (index, image) => [
-                            if (index != 0) const SizedBox(width: 16),
-                            ClipRRect(
-                              child: Image.network(
-                                "$insignioServer/map/image/$image",
-                                height: 128,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (images?.isNotEmpty == true)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: images!
+                      .expandIndexed(
+                        (index, image) => [
+                          if (index == 0) const SizedBox(width: 16),
+                          ClipRRect(
+                            child: Image.network(
+                              "$insignioServer/map/image/$image",
+                              height: 128,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
                             ),
-                          ],
-                        )
-                        .toList(growable: false),
-                  ),
+                            borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          ),
+                          const SizedBox(width: 16),
+                        ],
+                      )
+                      .toList(growable: false),
                 ),
-              // TODO map widget
-              if (widget.errorAddingImage.isNotEmpty)
-                Text("An error occured when uploading the image: ${widget.errorAddingImage}")
-            ],
-          ),
+              )
+            else if (images == null)
+              const SizedBox(
+                height: 128,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            if (widget.errorAddingImage.isNotEmpty)
+              Text("An error occured when uploading the image: ${widget.errorAddingImage}")
+          ],
         ),
       ),
     );
