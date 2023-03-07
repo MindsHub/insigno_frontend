@@ -74,7 +74,7 @@ class AddImagesWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
             child: InkWell(
-              onTap: captureImage,
+              onTap: addImageCallback == null ? null : captureImage,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: SizedBox(
                 child: Icon(
