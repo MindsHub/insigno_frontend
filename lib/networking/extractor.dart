@@ -15,8 +15,11 @@ import 'data/marker_type.dart';
 // TODO use a Client to make multiple requests to the same server
 
 Future<Pill> loadRandomPill() async {
-  return http.get(Uri.parse("$insignioServer/pills/random")).mapParseJson().map<Pill>(
-      (pill) => Pill(pill['id'], pill['text'], pill['author'], pill['source'], pill['accepted']));
+  return http
+      .get(Uri.parse("$insignioServer/pills/random"))
+      .throwErrors()
+      .mapParseJson()
+      .map<Pill>((p) => Pill(p['id'], p['text'], p['author'], p['source'], p['accepted']));
 }
 
 Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longitude) async {
@@ -67,12 +70,17 @@ Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType, Str
 Future<List<int>> getImagesForMarker(int markerId) {
   return http
       .get(Uri.parse("$insignioServer/map/image/list/$markerId"))
+      .throwErrors()
       .mapParseJson()
       .map((list) => list.map<int>((i) => i as int).toList());
 }
 
 Future<Marker> getMarker(int markerId) {
-  return http.get(Uri.parse("$insignioServer/map/$markerId")).mapParseJson().map((marker) {
+  return http
+      .get(Uri.parse("$insignioServer/map/$markerId"))
+      .throwErrors()
+      .mapParseJson()
+      .map((marker) {
     var point = marker["point"];
     var resolutionDate = marker["resolution_date"];
     return Marker(
@@ -89,5 +97,7 @@ Future<Marker> getMarker(int markerId) {
 }
 
 Future<void> resolveMarker(int markerId, String cookie) {
-  return http.post(Uri.parse("$insignioServer/resolve/$markerId"), headers: {"Cookie": cookie});
+  return http
+      .post(Uri.parse("$insignioServer/resolve/$markerId"), headers: {"Cookie": cookie})
+      .throwErrors();
 }
