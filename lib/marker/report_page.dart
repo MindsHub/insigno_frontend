@@ -70,7 +70,9 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                         Text(e.name)
                       ])))
                   .toList(growable: false),
-              onChanged: (MarkerType? newMarkerType) => setState(() => markerType = newMarkerType),
+              onChanged: loading
+                  ? null
+                  : (MarkerType? newMarkerType) => setState(() => markerType = newMarkerType),
               value: markerType,
             ),
             const SizedBox(height: 12),
