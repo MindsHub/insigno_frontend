@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/data/pill.dart';
 import 'package:insignio_frontend/networking/error.dart';
 import 'package:insignio_frontend/util/future.dart';
@@ -46,8 +47,7 @@ Future<int> addMarker(
   return int.parse(await response.stream.bytesToString());
 }
 
-Future<void> addMarkerImage(
-    int markerId, Uint8List image, String? mimeType, String cookie) async {
+Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType, String cookie) async {
   mimeType = null;
 
   var request = http.MultipartRequest("POST", Uri.parse(insignioServer + "/map/image/add"));
@@ -64,7 +64,25 @@ Future<void> addMarkerImage(
 }
 
 Future<List<int>> getImagesForMarker(int markerId) {
-  return http.get(Uri.parse("$insignioServer/map/image/list/$markerId"))
+  return http
+      .get(Uri.parse("$insignioServer/map/image/list/$markerId"))
       .mapParseJson()
       .map((list) => list.map<int>((i) => i as int).toList());
+}
+
+Future<Marker> getMarker(int markerId) {
+  return http.get(Uri.parse("$insignioServer/map/$markerId")).mapParseJson().map((marker) {
+    var point = marker["point"];
+    var resolutionDate = marker["resolution_date"];
+    return Marker(
+      marker["id"],
+      point["y"] as double,
+      point["x"] as double,
+      MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
+          MarkerType.unknown,
+      DateTime.parse(marker["creation_date"]),
+      resolutionDate == null ? null : DateTime.parse(resolutionDate),
+      marker["created_by"],
+    );
+  });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insignio_frontend/networking/const.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
+import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:insignio_frontend/util/iterable.dart';
 
@@ -27,22 +28,26 @@ class MarkerPageArgs {
 
 class _MarkerPageState extends State<MarkerPage> {
   List<int>? images;
+  Marker? marker;
 
   @override
   void initState() {
     super.initState();
     getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value));
+    getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value));
   }
 
   @override
   Widget build(BuildContext context) {
+    final MapMarker mapMarker = (marker ?? widget.mapMarker);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Row(children: [
-          Text(widget.mapMarker.type.name + " marker"),
+          Text(mapMarker.type.name + " marker"),
           const SizedBox(width: 12),
-          widget.mapMarker.type.getThemedIcon(context)
+          mapMarker.type.getThemedIcon(context)
         ]),
       ),
       body: Center(
