@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insignio_frontend/marker/add_images_widget.dart';
 import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
@@ -40,7 +41,6 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 getIt<Authentication>().isLoggedIn())
             .data ??
         false;
-    final ColorScheme colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,70 +52,10 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[const SizedBox(width: 16)]
-                    .followedBy(images.expandIndexed<Widget>((index, image) => [
-                          Stack(alignment: Alignment.topRight, children: [
-                            ClipRRect(
-                              child: Image.memory(
-                                image.first,
-                                height: 128,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Material(
-                                color: Colors.transparent,
-                                clipBehavior: Clip.hardEdge,
-                                borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                child: Ink(
-                                  decoration: BoxDecoration(color: colors.primaryContainer),
-                                  child: InkWell(
-                                    onTap: () => removeImage(index),
-                                    child: SizedBox(
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 24,
-                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                      ),
-                                      width: 32,
-                                      height: 32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                          const SizedBox(width: 16),
-                        ]))
-                    .followedBy([
-                  Ink(
-                    decoration: BoxDecoration(
-                      color: colors.primaryContainer,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: InkWell(
-                      onTap: captureImage,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      child: SizedBox(
-                        child: Icon(
-                          Icons.add,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                        width: 96,
-                        height: 128,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                ]).toList(growable: false),
-              ),
+            AddImagesWidget(
+              images,
+              loading ? null : (image) => setState(() => images.add(image)),
+              loading ? null : (index) => setState(() => images.removeAt(index)),
             ),
             const SizedBox(height: 12),
             DropdownButton(
@@ -160,32 +100,6 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
         ),
       ),
     );
-  }
-
-  void captureImage() async {
-    await ImagePicker().pickImage(source: ImageSource.camera).then((value) async {
-      if (value != null) {
-        return Pair(await File(value.path).readAsBytes(), value.mimeType);
-      } else {
-        return null;
-      }
-    }).then((value) {
-      if (value != null) {
-        setState(() {
-          images.add(value);
-        });
-      }
-    });
-  }
-
-  void removeImage(int index) {
-    if (!loading) {
-      setState(() {
-        if (!loading) {
-          images.removeAt(index);
-        }
-      });
-    }
   }
 
   void send() async {
