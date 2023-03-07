@@ -18,6 +18,11 @@ class AddImagesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final Color bgColor = colors.primaryContainer;
+    final Color fgColor = colors.onPrimaryContainer;
+    // see ElevatedButton lines 195 and 200 (using same colors here)
+    final Color bgDisabledColor = colors.onSurface.withOpacity(0.12);
+    final Color fgDisabledColor = colors.onSurface.withOpacity(0.38);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -41,7 +46,7 @@ class AddImagesWidget extends StatelessWidget {
                         clipBehavior: Clip.hardEdge,
                         borderRadius: const BorderRadius.all(Radius.circular(12)),
                         child: Ink(
-                          color: colors.primaryContainer,
+                          color: removeImageCallback == null ? bgDisabledColor : bgColor,
                           child: InkWell(
                             onTap: removeImageCallback == null
                                 ? null
@@ -50,7 +55,7 @@ class AddImagesWidget extends StatelessWidget {
                               child: Icon(
                                 Icons.close,
                                 size: 24,
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                color: removeImageCallback == null ? fgDisabledColor : fgColor,
                               ),
                               width: 32,
                               height: 32,
@@ -65,7 +70,7 @@ class AddImagesWidget extends StatelessWidget {
             .followedBy([
           Ink(
             decoration: BoxDecoration(
-              color: colors.primaryContainer,
+              color: addImageCallback == null ? bgDisabledColor : bgColor,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
             child: InkWell(
@@ -75,7 +80,7 @@ class AddImagesWidget extends StatelessWidget {
                 child: Icon(
                   Icons.add,
                   size: 48,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  color: addImageCallback == null ? fgDisabledColor : fgColor,
                 ),
                 width: 96,
                 height: 128,
