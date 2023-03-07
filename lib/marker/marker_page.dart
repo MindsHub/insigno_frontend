@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/networking/const.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:insignio_frontend/util/iterable.dart';
 
-class MarkerPage extends StatefulWidget {
+import '../auth/authentication.dart';
+import '../di/setup.dart';
+
+class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
   final MapMarker mapMarker;
   final String errorAddingImage;
 
@@ -26,9 +30,10 @@ class MarkerPageArgs {
   MarkerPageArgs(this.mapMarker, {this.errorAddingImage = ""});
 }
 
-class _MarkerPageState extends State<MarkerPage> {
+class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage> {
   List<int>? images;
   Marker? marker;
+  String? markerError;
 
   @override
   void initState() {
@@ -40,6 +45,11 @@ class _MarkerPageState extends State<MarkerPage> {
   @override
   Widget build(BuildContext context) {
     final MapMarker mapMarker = (marker ?? widget.mapMarker);
+    final bool isLoggedIn = watchStream(
+                (Authentication authentication) => authentication.getIsLoggedInStream(),
+                getIt<Authentication>().isLoggedIn())
+            .data ??
+        false;
 
     return Scaffold(
       appBar: AppBar(
@@ -95,11 +105,31 @@ class _MarkerPageState extends State<MarkerPage> {
                 height: 128,
                 child: Center(child: CircularProgressIndicator()),
               ),
+            if (widget.errorAddingImage.isNotEmpty) const SizedBox(height: 16),
             if (widget.errorAddingImage.isNotEmpty)
-              Text("An error occured when uploading the image: ${widget.errorAddingImage}")
+              Text("An error occured when uploading the image: ${widget.errorAddingImage}"),
+            const SizedBox(height: 16),
+            if (marker == null)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton(
+                child: Text(marker?.resolutionDate == null
+                    ? (isLoggedIn ? "Resolve" : "Log in to resolve")
+                    : "Already solved"),
+                onPressed: (marker?.resolutionDate == null && isLoggedIn) ? solve : null,
+              ),
           ],
         ),
       ),
     );
+  }
+
+  void solve() {
+    var cookie = getIt<Authentication>().maybeCookie();
+    if (marker == null || marker!.resolutionDate != null || cookie == null) {
+      return; // should be unreachable
+    }
+
+    //resolveMarker(marker!.id, cookie).then((value) => null, onError: )
   }
 }

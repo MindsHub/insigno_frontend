@@ -86,3 +86,7 @@ Future<Marker> getMarker(int markerId) {
     );
   });
 }
+
+Future<void> resolveMarker(int markerId, String cookie) {
+  return http.post(Uri.parse("$insignioServer/resolve/$markerId"), headers: {"Cookie": cookie});
+}
