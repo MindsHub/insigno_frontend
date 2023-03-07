@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -8,8 +6,6 @@ import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:insignio_frontend/util/iterable.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
