@@ -21,8 +21,10 @@ class AddImagesWidget extends StatelessWidget {
     final Color bgColor = colors.primaryContainer;
     final Color fgColor = colors.onPrimaryContainer;
     // see ElevatedButton lines 195 and 200 (using same colors here)
-    final Color bgDisabledColor = colors.onSurface.withOpacity(0.12);
-    final Color fgDisabledColor = colors.onSurface.withOpacity(0.38);
+    final Color bgDisabledColor =
+        Color.alphaBlend(colors.onSurface.withOpacity(0.12), colors.surface);
+    final Color fgDisabledColor =
+        Color.alphaBlend(colors.onSurface.withOpacity(0.38), colors.surface);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
