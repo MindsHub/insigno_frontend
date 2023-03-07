@@ -82,7 +82,7 @@ Future<Marker> getMarker(int markerId) {
       MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
           MarkerType.unknown,
       DateTime.parse(marker["creation_date"]),
-      resolutionDate?.map((date) => DateTime.parse(resolutionDate)),
+      resolutionDate?.map(DateTime.parse),
       marker["created_by"],
     );
   });
