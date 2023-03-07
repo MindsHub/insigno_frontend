@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insignio_frontend/util/iterable.dart';
+import 'package:insignio_frontend/util/nullable.dart';
 
 import '../util/pair.dart';
 
@@ -50,9 +51,7 @@ class AddImagesWidget extends StatelessWidget {
                         child: Ink(
                           color: removeImageCallback == null ? bgDisabledColor : bgColor,
                           child: InkWell(
-                            onTap: removeImageCallback == null
-                                ? null
-                                : () => removeImageCallback!(index),
+                            onTap: removeImageCallback?.map((f) => () => f(index)),
                             child: SizedBox(
                               child: Icon(
                                 Icons.close,
@@ -76,7 +75,7 @@ class AddImagesWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
             child: InkWell(
-              onTap: addImageCallback == null ? null : captureImage,
+              onTap: addImageCallback?.map((_) => captureImage),
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: SizedBox(
                 child: Icon(

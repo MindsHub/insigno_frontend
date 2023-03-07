@@ -6,6 +6,7 @@ import 'package:insignio_frontend/networking/data/pill.dart';
 import 'package:insignio_frontend/networking/error.dart';
 import 'package:insignio_frontend/util/future.dart';
 import 'package:collection/collection.dart';
+import 'package:insignio_frontend/util/nullable.dart';
 
 import 'const.dart';
 import 'data/map_marker.dart';
@@ -57,7 +58,7 @@ Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType, Str
   request.files.add(http.MultipartFile.fromBytes(
     "image",
     image,
-    contentType: mimeType == null ? MediaType("image", "") : MediaType.parse(mimeType),
+    contentType: mimeType?.map(MediaType.parse) ?? MediaType("image", ""),
   ));
 
   await request.send().throwErrors();
@@ -81,7 +82,7 @@ Future<Marker> getMarker(int markerId) {
       MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
           MarkerType.unknown,
       DateTime.parse(marker["creation_date"]),
-      resolutionDate == null ? null : DateTime.parse(resolutionDate),
+      resolutionDate?.map((date) => DateTime.parse(resolutionDate)),
       marker["created_by"],
     );
   });
