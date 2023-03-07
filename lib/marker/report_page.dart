@@ -16,9 +16,9 @@ import '../map/location_provider.dart';
 import '../util/pair.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
-  ReportPage({super.key});
-
   static const routeName = "/reportPage";
+
+  ReportPage({super.key});
 
   @override
   State<ReportPage> createState() => _ReportPageState();

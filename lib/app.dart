@@ -3,6 +3,8 @@ import 'package:insignio_frontend/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/marker/report_page.dart';
+import 'package:insignio_frontend/marker/resolve_page.dart';
+import 'package:insignio_frontend/networking/data/map_marker.dart';
 
 class InsignioApp extends StatelessWidget {
   const InsignioApp({super.key});
@@ -25,6 +27,7 @@ class InsignioApp extends StatelessWidget {
           var routes = <String, WidgetBuilder>{
             ReportPage.routeName: (ctx) => ReportPage(),
             MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
+            ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));

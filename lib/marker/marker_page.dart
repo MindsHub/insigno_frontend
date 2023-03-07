@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insignio_frontend/marker/resolve_page.dart';
 import 'package:insignio_frontend/networking/const.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker.dart';
@@ -10,14 +11,14 @@ import '../auth/authentication.dart';
 import '../di/setup.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
+  static const routeName = '/markerWidget';
+
   final MapMarker mapMarker;
   final String errorAddingImage;
 
   MarkerPage(MarkerPageArgs args, {super.key})
       : mapMarker = args.mapMarker,
         errorAddingImage = args.errorAddingImage;
-
-  static const routeName = '/markerWidget';
 
   @override
   State<MarkerPage> createState() => _MarkerPageState();
@@ -33,7 +34,6 @@ class MarkerPageArgs {
 class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage> {
   List<int>? images;
   Marker? marker;
-  String? markerError;
 
   @override
   void initState() {
@@ -116,7 +116,9 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 child: Text(marker?.resolutionDate == null
                     ? (isLoggedIn ? "Resolve" : "Log in to resolve")
                     : "Already solved"),
-                onPressed: (marker?.resolutionDate == null && isLoggedIn) ? solve : null,
+                onPressed: (marker?.resolutionDate == null && isLoggedIn)
+                    ? () => Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
+                    : null,
               ),
           ],
         ),
