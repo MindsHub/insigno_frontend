@@ -125,13 +125,4 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
       ),
     );
   }
-
-  void solve() {
-    var cookie = getIt<Authentication>().maybeCookie();
-    if (marker == null || marker!.resolutionDate != null || cookie == null) {
-      return; // should be unreachable
-    }
-
-    //resolveMarker(marker!.id, cookie).then((value) => null, onError: )
-  }
 }

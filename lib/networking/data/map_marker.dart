@@ -1,4 +1,5 @@
 import 'marker_type.dart';
+import 'package:latlong2/latlong.dart';
 
 class MapMarker {
   final int id;
@@ -7,4 +8,8 @@ class MapMarker {
   final MarkerType type;
 
   MapMarker(this.id, this.latitude, this.longitude, this.type);
+
+  LatLng getLatLng() {
+    return LatLng(latitude, longitude);
+  }
 }
