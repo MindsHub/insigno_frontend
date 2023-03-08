@@ -98,6 +98,6 @@ Future<Marker> getMarker(int markerId) {
 
 Future<void> resolveMarker(int markerId, String cookie) {
   return http
-      .post(Uri.parse("$insignioServer/resolve/$markerId"), headers: {"Cookie": cookie})
+      .post(Uri.parse("$insignioServer/map/resolve/$markerId"), headers: {"Cookie": cookie})
       .throwErrors();
 }
