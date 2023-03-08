@@ -25,12 +25,17 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+# versions available, run `flutter pub outdated`. TODO choose versions
 dependencies:
   flutter:
     sdk: flutter
 
-  # dependency injection TODO choose versions
+  # localization / i18n
+  flutter_localizations:
+    sdk: flutter
+  intl:
+
+  # dependency injection
   get_it:
   get_it_mixin:
   injectable:

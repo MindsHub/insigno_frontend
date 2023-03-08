@@ -5,6 +5,7 @@ import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/marker/report_page.dart';
 import 'package:insignio_frontend/marker/resolve_page.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class InsignioApp extends StatelessWidget {
   const InsignioApp({super.key});
@@ -32,6 +33,15 @@ class InsignioApp extends StatelessWidget {
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));
         },
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'), // English
+          Locale('it'), // Spanish
+        ],
       );
     });
   }
