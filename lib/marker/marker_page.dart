@@ -1,3 +1,4 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/marker/resolve_page.dart';
@@ -62,6 +63,24 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
+    final imageProviders = images?.map((image) => Image.network(
+          "$insignioServer/map/image/$image",
+          height: 128,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+        ));
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -80,29 +99,25 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: images!
+                  children: imageProviders!
                       .expandIndexed(
                         (index, image) => [
                           if (index == 0) const SizedBox(width: 16),
                           ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(16)),
-                            child: Image.network(
-                              "$insignioServer/map/image/$image",
-                              height: 128,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  ),
+                            child: GestureDetector(
+                              onTap: () {
+                                var imageProvider = MultiImageProvider(
+                                  imageProviders.map((e) => e.image).toList(growable: false),
+                                  initialIndex: index,
+                                );
+                                showImageViewerPager(
+                                  context,
+                                  imageProvider,
+                                  closeButtonTooltip: "Close",
                                 );
                               },
+                              child: image,
                             ),
                           ),
                           const SizedBox(width: 16),

@@ -38,6 +38,7 @@ dependencies:
   # ui
   flutter_map:
   dynamic_color:
+  easy_image_viewer:
 
   # core functionality
   geolocator: # used to load location
