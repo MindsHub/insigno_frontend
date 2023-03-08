@@ -34,6 +34,7 @@ class MarkerPageArgs {
 class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage> {
   List<int>? images;
   Marker? marker;
+  String? resolveError;
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
               ),
             if (widget.errorAddingImage.isNotEmpty) const SizedBox(height: 16),
             if (widget.errorAddingImage.isNotEmpty)
-              Text("An error occured when uploading the image: ${widget.errorAddingImage}"),
+              Text("An error occured when uploading the report images: ${widget.errorAddingImage}"),
             const SizedBox(height: 16),
             if (marker == null)
               const CircularProgressIndicator()
@@ -116,13 +117,18 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 child: Text(marker?.resolutionDate == null
                     ? (isLoggedIn ? "Resolve" : "Log in to resolve")
                     : "Already solved"),
-                onPressed: (marker?.resolutionDate == null && isLoggedIn)
-                    ? () => Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
-                    : null,
+                onPressed: (marker?.resolutionDate == null && isLoggedIn) ? openResolvePage : null,
               ),
+            if (resolveError != null)
+              Text("An error occured when uploading the resolution images: $resolveError")
           ],
         ),
       ),
     );
+  }
+
+  void openResolvePage() {
+    Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
+        .then((value) => resolveError = value as String?);
   }
 }
