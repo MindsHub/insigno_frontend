@@ -118,20 +118,22 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
 
     addMarker(pos.latitude, pos.longitude, mt, cookie).then(
       (markerId) {
+        var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt);
         Future.wait(images.map((e) => addMarkerImage(markerId, e.first, e.second, cookie))).then(
           (_) {
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, mt)),
+              arguments: MarkerPageArgs(mapMarker),
+              result: mapMarker,
             );
           },
           onError: (e) {
             Navigator.popAndPushNamed(
               context,
               MarkerPage.routeName,
-              arguments: MarkerPageArgs(MapMarker(markerId, pos.latitude, pos.longitude, mt),
-                  errorAddingImage: e.toString()),
+              arguments: MarkerPageArgs(mapMarker, errorAddingImage: e.toString()),
+              result: mapMarker,
             );
           },
         );

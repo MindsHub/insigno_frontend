@@ -48,7 +48,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
 
     repositionAnim = AnimationController(vsync: this, duration: fabAnimDuration);
     addMarkerAnim = AnimationController(vsync: this, duration: fabAnimDuration);
@@ -207,7 +207,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
                     child: FloatingActionButton(
                       heroTag: "addMarker",
-                      onPressed: () => Navigator.pushNamed(context, ReportPage.routeName),
+                      onPressed: openReportPage,
                       child: const Icon(Icons.add),
                     ),
                   ),
@@ -250,4 +250,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   @override
   bool get wantKeepAlive => true;
+
+  void openReportPage() {
+    Navigator.pushNamed(context, ReportPage.routeName).then((value) {
+      if (value is MapMarker) {
+        setState(() => markers.add(value));
+      }
+    });
+  }
 }
