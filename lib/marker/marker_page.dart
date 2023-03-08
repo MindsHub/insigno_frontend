@@ -11,7 +11,7 @@ import '../auth/authentication.dart';
 import '../di/setup.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
-  static const routeName = '/markerWidget';
+  static const routeName = '/markerPage';
 
   final MapMarker mapMarker;
   final String errorAddingImage;
