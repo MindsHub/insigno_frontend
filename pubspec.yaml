@@ -46,7 +46,10 @@ dependencies:
   # utils (os_detect may be useful, but is not needed atm)
   shared_preferences:
   http:
+  http_parser:
   flutter_svg:
+  collection:
+  latlong2:
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
