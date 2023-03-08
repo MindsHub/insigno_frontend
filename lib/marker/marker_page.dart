@@ -8,6 +8,7 @@ import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:insignio_frontend/util/iterable.dart';
 import 'package:insignio_frontend/util/nullable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';
 import '../map/location_provider.dart';
@@ -51,6 +52,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final MapMarker mapMarker = (marker ?? widget.mapMarker);
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -114,7 +117,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                                 showImageViewerPager(
                                   context,
                                   imageProvider,
-                                  closeButtonTooltip: "Close",
+                                  closeButtonTooltip: l10n.close,
                                 );
                               },
                               child: image,
@@ -139,15 +142,15 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
             if (marker == null || marker?.resolutionDate != null)
               const SizedBox() // do not show any error if the marker is already resolved
             else if (!isLoggedIn)
-              const Text("Login to resolve")
+              Text(l10n.loginToResolve)
             else if (!nearEnoughToResolve)
-              const Text("Get closer to resolve the marker"),
+              Text(l10n.getCloserToResolve),
             if (marker != null)
               ElevatedButton(
                 onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
                     ? openResolvePage
                     : null,
-                child: Text(marker?.resolutionDate == null ? "Resolve" : "Already solved"),
+                child: Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
               ),
             if (resolveError != null)
               Text("An error occured when uploading the resolution images: $resolveError")

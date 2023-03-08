@@ -97,6 +97,9 @@ flutter:
   assets:
     - assets/icons/current_location.svg
 
+  # localization files are regenerated on every hot restart
+  generate: true
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

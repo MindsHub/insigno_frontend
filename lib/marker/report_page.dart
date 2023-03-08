@@ -6,6 +6,7 @@ import 'package:insignio_frontend/marker/marker_page.dart';
 import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';
 import '../map/location_provider.dart';
@@ -28,6 +29,8 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
         .data;
@@ -40,7 +43,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Report"),
+        title: Text(l10n.report),
       ),
       body: Center(
         child: Column(
@@ -54,7 +57,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
             ),
             const SizedBox(height: 12),
             DropdownButton(
-              hint: const Text("Choose a marker type"),
+              hint: Text(l10n.markerType),
               items: MarkerType.values
                   .where((element) => element != MarkerType.unknown)
                   .map((e) => DropdownMenuItem(
@@ -72,17 +75,17 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
             ),
             const SizedBox(height: 12),
             if (!isLoggedIn)
-              const Text("You must log in in order to report")
+              Text(l10n.loginRequired)
             else if (position?.permissionGranted == false)
-              const Text("Grant permission to access location")
+              Text(l10n.grantLocationPermission)
             else if (position?.servicesEnabled == false)
-              const Text("Enable location services")
+              Text(l10n.enableLocationServices)
             else if (images.isEmpty)
-              const Text("Select an image")
+              Text(l10n.addImage)
             else if (markerType == null)
-              const Text("Select a marker type")
+              Text(l10n.selectMarkerType)
             else if (position?.position == null)
-              const Text("Location is loading, please wait..."),
+              Text(l10n.locationIsLoading),
             if (loading)
               const CircularProgressIndicator()
             else
@@ -93,7 +96,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                         position?.position == null)
                     ? null
                     : send,
-                child: const Text("Send"),
+                child: Text(l10n.send),
               ),
             if (error != null) Text("Error: $error"),
           ],

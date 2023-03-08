@@ -1,4 +1,5 @@
 import 'package:http/http.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void _throwErrors<T extends BaseResponse>(final T response) {
   if (response.statusCode < 400) {

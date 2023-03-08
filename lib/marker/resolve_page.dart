@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/util/nullable.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';
 import '../map/location_provider.dart';
@@ -31,6 +32,8 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final marker = widget.mapMarker;
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -45,7 +48,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Resolve"),
+        title: Text(l10n.resolve),
       ),
       body: Center(
         child: Column(
@@ -59,23 +62,23 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
             ),
             const SizedBox(height: 12),
             if (!isLoggedIn)
-              const Text("You must log in in order to report")
+              Text(l10n.loginRequired)
             else if (position?.permissionGranted == false)
-              const Text("Grant permission to access location")
+              Text(l10n.grantLocationPermission)
             else if (position?.servicesEnabled == false)
-              const Text("Enable location services")
+              Text(l10n.enableLocationServices)
             else if (images.isEmpty)
-              const Text("Select an image")
+              Text(l10n.addImage)
             else if (position?.position == null)
-              const Text("Location is loading, please wait...")
+              Text(l10n.locationIsLoading)
             else if (!isValidPosition)
-              const Text("You are too far to resolve the marker"),
+              Text(l10n.tooFarToResolve),
             if (loading)
               const CircularProgressIndicator()
             else
               ElevatedButton(
                 onPressed: (!isLoggedIn || images.isEmpty || !isValidPosition) ? null : resolve,
-                child: const Text("Resolve"),
+                child: Text(l10n.resolve),
               ),
             if (error != null) Text("Error: $error"),
           ],

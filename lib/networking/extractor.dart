@@ -7,6 +7,7 @@ import 'package:insignio_frontend/networking/data/pill.dart';
 import 'package:insignio_frontend/networking/error.dart';
 import 'package:insignio_frontend/util/future.dart';
 import 'package:insignio_frontend/util/nullable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'const.dart';
 import 'data/map_marker.dart';

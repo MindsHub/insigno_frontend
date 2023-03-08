@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/authentication.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   LoginWidget({super.key});
@@ -37,6 +38,8 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: Form(
@@ -45,29 +48,26 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "Login to Insignio!",
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              Text(l10n.loginToInsignio, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
               TextFormField(
                 initialValue: "john@gmail.com",
-                decoration: const InputDecoration(labelText: "Email"),
+                decoration: InputDecoration(labelText: l10n.email),
                 onSaved: (value) => username = value,
               ),
               const SizedBox(height: 8),
               TextFormField(
                 initialValue: "NiceDoggo1",
-                decoration: const InputDecoration(labelText: "Password"),
+                decoration: InputDecoration(labelText: l10n.password),
                 onSaved: (value) => password = value,
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
               const SizedBox(height: 16),
               if (loginFailed)
-                const Text(
-                  "Wrong user or password",
-                  style: TextStyle(color: Colors.red),
+                Text(
+                  l10n.wrongUserOrPassword,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               const SizedBox(height: 16),
               loading

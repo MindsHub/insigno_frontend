@@ -3,6 +3,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/user_persistent_page.dart';
 import 'package:insignio_frontend/map/map_persistent_page.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'networking/data/pill.dart';
 
@@ -43,6 +44,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: TabBarView(
         controller: _tabController,
@@ -68,9 +71,9 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-                BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
+              items: [
+                BottomNavigationBarItem(icon: const Icon(Icons.map), label: l10n.map),
+                BottomNavigationBarItem(icon: const Icon(Icons.person), label: l10n.user)
               ],
               currentIndex: _tabController.index,
               onTap: (i) => _tabController.animateTo(i),
