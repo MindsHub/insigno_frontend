@@ -6,9 +6,11 @@ import 'package:insignio_frontend/networking/data/map_marker.dart';
 import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 import 'package:insignio_frontend/util/iterable.dart';
+import 'package:insignio_frontend/util/nullable.dart';
 
 import '../auth/authentication.dart';
 import '../di/setup.dart';
+import '../map/location_provider.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
   static const routeName = '/markerPage';
@@ -50,11 +52,16 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   @override
   Widget build(BuildContext context) {
     final MapMarker mapMarker = (marker ?? widget.mapMarker);
+    final position = watchStream((LocationProvider location) => location.getLocationStream(),
+            getIt<LocationProvider>().lastLocationInfo())
+        .data;
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
                 getIt<Authentication>().isLoggedIn())
             .data ??
         false;
+    final bool nearEnoughToResolve =
+        position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -114,14 +121,19 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
             if (widget.errorAddingImage.isNotEmpty)
               Text("An error occured when uploading the report images: ${widget.errorAddingImage}"),
             const SizedBox(height: 16),
-            if (marker == null)
-              const CircularProgressIndicator()
-            else
+            if (marker == null) const CircularProgressIndicator(),
+            if (marker == null || marker?.resolutionDate != null)
+              const SizedBox() // do not show any error if the marker is already resolved
+            else if (!isLoggedIn)
+              const Text("Login to resolve")
+            else if (!nearEnoughToResolve)
+              const Text("Get closer to resolve the marker"),
+            if (marker != null)
               ElevatedButton(
-                child: Text(marker?.resolutionDate == null
-                    ? (isLoggedIn ? "Resolve" : "Log in to resolve")
-                    : "Already solved"),
-                onPressed: (marker?.resolutionDate == null && isLoggedIn) ? openResolvePage : null,
+                child: Text(marker?.resolutionDate == null ? "Resolve" : "Already solved"),
+                onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
+                    ? openResolvePage
+                    : null,
               ),
             if (resolveError != null)
               Text("An error occured when uploading the resolution images: $resolveError")
@@ -132,10 +144,9 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   }
 
   void openResolvePage() {
-    Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
-        .then((value) {
-          setState(() => resolveError = value as String?);
-          reload();
-        });
+    Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!).then((value) {
+      setState(() => resolveError = value as String?);
+      reload();
+    });
   }
 }

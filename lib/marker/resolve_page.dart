@@ -71,7 +71,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
             else if (position?.position == null)
               const Text("Location is loading, please wait...")
             else if (!isValidPosition)
-              const Text("You are too far to solve the marker"),
+              const Text("You are too far to resolve the marker"),
             if (loading)
               const CircularProgressIndicator()
             else
