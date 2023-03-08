@@ -20,7 +20,7 @@ class Authentication {
 
   Future<bool> tryToLogin(String? email, String? password) async {
     final response = await http.post(
-      Uri.parse(insignioServer + '/login/'),
+      Uri.parse('$insignioServer/login/'),
       body: jsonEncode({"email": email, "password": password}),
       headers: {
         "content-type": "application/json",

@@ -5,7 +5,7 @@ extension IterableExtension<E> on Iterable<E> {
 
 class ExpandIndexedIterable<S, T> extends Iterable<T> {
   final Iterable<S> _iterable;
-  final Iterable<T> Function(int index, S element)  _f;
+  final Iterable<T> Function(int index, S element) _f;
 
   ExpandIndexedIterable(this._iterable, this._f);
 
@@ -16,6 +16,7 @@ class ExpandIndexedIterable<S, T> extends Iterable<T> {
 class ExpandIndexedIterator<S, T> implements Iterator<T> {
   final Iterator<S> _iterator;
   final Iterable<T> Function(int index, S element) _f;
+
   // Initialize _currentExpansion to an empty iterable. A null value
   // marks the end of iteration, and we don't want to call _f before
   // the first moveNext call.
@@ -50,8 +51,10 @@ class ExpandIndexedIterator<S, T> implements Iterator<T> {
 
 class EmptyIterator<E> implements Iterator<E> {
   const EmptyIterator();
+
   @override
   bool moveNext() => false;
+
   @override
   E get current {
     throw StateError("No element");

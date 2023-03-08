@@ -22,12 +22,10 @@ class LocationProvider {
   final StreamController<LocationInfo> _streamController = StreamController.broadcast();
 
   LocationProvider() {
-    _permissionStatusSub = Geolocator.checkPermission()
-        .asStream()
-        .listen((permission) async {
-          debugPrint("Location permission status $permission");
-          await _handlePermission(permission, true);
-        });
+    _permissionStatusSub = Geolocator.checkPermission().asStream().listen((permission) async {
+      debugPrint("Location permission status $permission");
+      await _handlePermission(permission, true);
+    });
 
     try {
       _serviceStatusSub = Geolocator.getServiceStatusStream().listen((status) async {
@@ -36,10 +34,10 @@ class LocationProvider {
       });
       _initialServiceStatusSub =
           Geolocator.isLocationServiceEnabled().asStream().listen((enabled) async {
-            debugPrint("Initial location status $enabled");
-            await _handleServicesEnabled(enabled, true);
-          });
-    } catch(e) {
+        debugPrint("Initial location status $enabled");
+        await _handleServicesEnabled(enabled, true);
+      });
+    } catch (e) {
       // service status is not available on the web
       debugPrint("No service status available: $e");
     }

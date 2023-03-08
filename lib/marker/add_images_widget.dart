@@ -33,39 +33,42 @@ class AddImagesWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[const SizedBox(width: 16)]
             .followedBy(images.expandIndexed<Widget>((index, image) => [
-                  Stack(alignment: Alignment.topRight, children: [
-                    ClipRRect(
-                      child: Image.memory(
-                        image.first,
-                        height: 128,
-                        fit: BoxFit.cover,
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        child: Image.memory(
+                          image.first,
+                          height: 128,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Material(
-                        color: Colors.transparent,
-                        clipBehavior: Clip.hardEdge,
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        child: Ink(
-                          color: removeImageCallback == null ? bgDisabledColor : bgColor,
-                          child: InkWell(
-                            onTap: removeImageCallback?.map((f) => () => f(index)),
-                            child: SizedBox(
-                              child: Icon(
-                                Icons.close,
-                                size: 24,
-                                color: removeImageCallback == null ? fgDisabledColor : fgColor,
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Material(
+                          color: Colors.transparent,
+                          clipBehavior: Clip.hardEdge,
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                          child: Ink(
+                            color: removeImageCallback == null ? bgDisabledColor : bgColor,
+                            child: InkWell(
+                              onTap: removeImageCallback?.map((f) => () => f(index)),
+                              child: SizedBox(
+                                width: 32,
+                                height: 32,
+                                child: Icon(
+                                  Icons.close,
+                                  size: 24,
+                                  color: removeImageCallback == null ? fgDisabledColor : fgColor,
+                                ),
                               ),
-                              width: 32,
-                              height: 32,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                   const SizedBox(width: 16),
                 ]))
             .followedBy([
@@ -78,13 +81,13 @@ class AddImagesWidget extends StatelessWidget {
               onTap: addImageCallback?.map((_) => captureImage),
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: SizedBox(
+                width: 96,
+                height: 128,
                 child: Icon(
                   Icons.add,
                   size: 48,
                   color: addImageCallback == null ? fgDisabledColor : fgColor,
                 ),
-                width: 96,
-                height: 128,
               ),
             ),
           ),

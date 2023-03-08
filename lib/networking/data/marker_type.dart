@@ -19,10 +19,7 @@ enum MarkerType {
   Icon getThemedIcon(final BuildContext context) {
     return Icon(icon,
         color: HSLColor.fromColor(color)
-            .withLightness(
-            Theme
-                .of(context)
-                .brightness == Brightness.dark ? 0.7 : 0.3)
+            .withLightness(Theme.of(context).brightness == Brightness.dark ? 0.7 : 0.3)
             .toColor());
   }
 }

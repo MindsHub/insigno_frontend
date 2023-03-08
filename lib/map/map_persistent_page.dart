@@ -223,27 +223,28 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           subdomains: const ['a', 'b', 'c'],
         ),
         MarkerLayer(
-            markers: [position]
-                .whereType<Position>()
-                .map((pos) => Marker(
-                      rotate: true,
-                      point: LatLng(pos.latitude, pos.longitude),
-                      builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                    ))
-                .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                      width: 44,
-                      height: 44,
-                      rotate: true,
-                      point: LatLng(e.latitude, e.longitude),
-                      builder: (ctx) => IconButton(
-                        icon: Icon(e.type.icon, color: e.type.color, size: 28),
-                        onPressed: () => {
-                          Navigator.pushNamed(context, MarkerPage.routeName,
-                              arguments: MarkerPageArgs(e))
-                        },
-                      ),
-                    )))
-                .toList(growable: false)),
+          markers: [position]
+              .whereType<Position>()
+              .map((pos) => Marker(
+                    rotate: true,
+                    point: LatLng(pos.latitude, pos.longitude),
+                    builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                  ))
+              .followedBy((showMarkers ? markers : []).map((e) => Marker(
+                    width: 44,
+                    height: 44,
+                    rotate: true,
+                    point: LatLng(e.latitude, e.longitude),
+                    builder: (ctx) => IconButton(
+                      icon: Icon(e.type.icon, color: e.type.color, size: 28),
+                      onPressed: () => {
+                        Navigator.pushNamed(context, MarkerPage.routeName,
+                            arguments: MarkerPageArgs(e))
+                      },
+                    ),
+                  )))
+              .toList(growable: false),
+        ),
       ],
     );
   }

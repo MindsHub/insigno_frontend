@@ -47,13 +47,11 @@ class UnauthorizedException extends HttpException {
 }
 
 class NotFoundException extends HttpException {
-  NotFoundException(int statusCode, String? reason)
-      : super(statusCode, reason ?? "Not found");
+  NotFoundException(int statusCode, String? reason) : super(statusCode, reason ?? "Not found");
 }
 
 class BadRequestException extends HttpException {
-  BadRequestException(int statusCode, String? reason)
-      : super(statusCode, reason ?? "Bad request");
+  BadRequestException(int statusCode, String? reason) : super(statusCode, reason ?? "Bad request");
 }
 
 class InternalServerErrorException extends HttpException {

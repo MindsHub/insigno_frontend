@@ -5,5 +5,5 @@ import 'package:insignio_frontend/di/setup.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
-  runApp(InsignioApp());
+  runApp(const InsignioApp());
 }

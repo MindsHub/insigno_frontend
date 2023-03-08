@@ -87,13 +87,13 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               const CircularProgressIndicator()
             else
               ElevatedButton(
-                child: const Text("Send"),
                 onPressed: (!isLoggedIn ||
-                    images.isEmpty ||
-                    markerType == null ||
-                    position?.position == null)
+                        images.isEmpty ||
+                        markerType == null ||
+                        position?.position == null)
                     ? null
                     : send,
+                child: const Text("Send"),
               ),
             if (error != null) Text("Error: $error"),
           ],

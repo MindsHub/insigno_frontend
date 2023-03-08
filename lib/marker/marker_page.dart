@@ -66,7 +66,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
       appBar: AppBar(
         centerTitle: true,
         title: Row(children: [
-          Text(mapMarker.type.name + " marker"),
+          Text("${mapMarker.type.name} marker"),
           const SizedBox(width: 12),
           mapMarker.type.getThemedIcon(context)
         ]),
@@ -85,6 +85,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                         (index, image) => [
                           if (index == 0) const SizedBox(width: 16),
                           ClipRRect(
+                            borderRadius: const BorderRadius.all(Radius.circular(16)),
                             child: Image.network(
                               "$insignioServer/map/image/$image",
                               height: 128,
@@ -97,13 +98,12 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                                   child: CircularProgressIndicator(
                                     value: loadingProgress.expectedTotalBytes != null
                                         ? loadingProgress.cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
+                                        loadingProgress.expectedTotalBytes!
                                         : null,
                                   ),
                                 );
                               },
                             ),
-                            borderRadius: const BorderRadius.all(Radius.circular(16)),
                           ),
                           const SizedBox(width: 16),
                         ],
@@ -129,10 +129,10 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
               const Text("Get closer to resolve the marker"),
             if (marker != null)
               ElevatedButton(
-                child: Text(marker?.resolutionDate == null ? "Resolve" : "Already solved"),
                 onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
                     ? openResolvePage
                     : null,
+                child: Text(marker?.resolutionDate == null ? "Resolve" : "Already solved"),
               ),
             if (resolveError != null)
               Text("An error occured when uploading the resolution images: $resolveError")

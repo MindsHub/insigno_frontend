@@ -15,12 +15,12 @@ class InsignioApp extends StatelessWidget {
       return MaterialApp(
         title: "Insignio",
         theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: lightDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.light)
+          useMaterial3: true,
+          colorScheme: lightDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.light),
         ),
         darkTheme: ThemeData(
-            useMaterial3: true,
-            colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark)
+          useMaterial3: true,
+          colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark),
         ),
         home: HomePage(),
         onGenerateRoute: (RouteSettings settings) {

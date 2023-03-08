@@ -49,34 +49,36 @@ class _HomePageState extends State<HomePage>
         children: _tabs,
       ),
       bottomNavigationBar: Material(
-          elevation: 8,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizeTransition(
-                  sizeFactor: pillAnimation,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Padding(
-                              padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                              child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
-                      IconButton(
-                          onPressed: () => pillAnimationController.reverse(),
-                          icon: const Icon(Icons.close))
-                    ],
-                  )),
-              BottomNavigationBar(
-                  items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-                  BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
+        elevation: 8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizeTransition(
+              sizeFactor: pillAnimation,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                          child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
+                  IconButton(
+                      onPressed: () => pillAnimationController.reverse(),
+                      icon: const Icon(Icons.close))
                 ],
-                currentIndex: _tabController.index,
-                onTap: (i) => _tabController.animateTo(i),
-                elevation: 0,
-              )
-            ],
-          )),
+              ),
+            ),
+            BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: "User")
+              ],
+              currentIndex: _tabController.index,
+              onTap: (i) => _tabController.animateTo(i),
+              elevation: 0,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
