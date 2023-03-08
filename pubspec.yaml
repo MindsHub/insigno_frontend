@@ -43,10 +43,9 @@ dependencies:
   geolocator: # used to load location
   image_picker: # used only on Android and iOS to take pictures with the camera
 
-  # utils
+  # utils (os_detect may be useful, but is not needed atm)
   shared_preferences:
   http:
-  os_detect:
   flutter_svg:
 
 dependency_overrides:
@@ -65,7 +64,10 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints:
+
+  # useful to check dependencies
+  dependency_validator:
 
   # needed for Injectable
   injectable_generator:
