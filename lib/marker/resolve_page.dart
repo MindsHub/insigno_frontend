@@ -42,9 +42,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
                 getIt<Authentication>().isLoggedIn())
             .data ??
         false;
-    final bool isValidPosition =
-        position?.position?.map((pos) => distance(pos.toLatLng(), marker.getLatLng()) < 50) ??
-            false;
+    final bool isValidPosition = position?.position?.map(marker.isNearEnoughToResolve) ?? false;
 
     return Scaffold(
       appBar: AppBar(

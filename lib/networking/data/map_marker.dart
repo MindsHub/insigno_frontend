@@ -1,3 +1,5 @@
+import 'package:geolocator/geolocator.dart';
+
 import 'marker_type.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -11,5 +13,9 @@ class MapMarker {
 
   LatLng getLatLng() {
     return LatLng(latitude, longitude);
+  }
+
+  bool isNearEnoughToResolve(Position pos) {
+    return Geolocator.distanceBetween(pos.latitude, pos.longitude, latitude, longitude) < 50; // m
   }
 }
