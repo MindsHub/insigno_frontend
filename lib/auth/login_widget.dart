@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/authentication.dart';
-import 'package:insignio_frontend/di/setup.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   LoginWidget({super.key});

@@ -8,7 +8,6 @@ import 'package:insignio_frontend/networking/data/marker_type.dart';
 import 'package:insignio_frontend/networking/extractor.dart';
 
 import '../auth/authentication.dart';
-import '../di/setup.dart';
 import '../map/location_provider.dart';
 import '../util/pair.dart';
 

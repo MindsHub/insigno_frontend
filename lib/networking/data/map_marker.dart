@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'marker_type.dart';
-import 'package:latlong2/latlong.dart';
 
 class MapMarker {
   final int id;

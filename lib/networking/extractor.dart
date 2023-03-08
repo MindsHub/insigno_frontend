@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -5,7 +6,6 @@ import 'package:insignio_frontend/networking/data/marker.dart';
 import 'package:insignio_frontend/networking/data/pill.dart';
 import 'package:insignio_frontend/networking/error.dart';
 import 'package:insignio_frontend/util/future.dart';
-import 'package:collection/collection.dart';
 import 'package:insignio_frontend/util/nullable.dart';
 
 import 'const.dart';

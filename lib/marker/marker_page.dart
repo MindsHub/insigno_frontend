@@ -9,7 +9,6 @@ import 'package:insignio_frontend/util/iterable.dart';
 import 'package:insignio_frontend/util/nullable.dart';
 
 import '../auth/authentication.dart';
-import '../di/setup.dart';
 import '../map/location_provider.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {

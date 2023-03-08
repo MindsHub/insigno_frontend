@@ -2,11 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/util/nullable.dart';
-import 'package:insignio_frontend/util/position.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../auth/authentication.dart';
-import '../di/setup.dart';
 import '../map/location_provider.dart';
 import '../networking/data/map_marker.dart';
 import '../networking/extractor.dart';

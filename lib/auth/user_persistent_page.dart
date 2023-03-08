@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insignio_frontend/auth/authentication.dart';
 import 'package:insignio_frontend/auth/login_widget.dart';
-import 'package:insignio_frontend/di/setup.dart';
 
 class UserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   UserPersistentPage({super.key});
