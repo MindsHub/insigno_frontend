@@ -30,11 +30,11 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   @override
   Widget build(BuildContext context) {
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
+            get<LocationProvider>().lastLocationInfo())
         .data;
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
+                get<Authentication>().isLoggedIn())
             .data ??
         false;
 
@@ -104,8 +104,8 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
   }
 
   void send() async {
-    var pos = getIt<LocationProvider>().lastLocationInfo().position;
-    var cookie = getIt<Authentication>().maybeCookie();
+    var pos = get<LocationProvider>().lastLocationInfo().position;
+    var cookie = get<Authentication>().maybeCookie();
     var mt = markerType;
     if (pos == null || cookie == null || images.isEmpty || mt == null || mt == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden

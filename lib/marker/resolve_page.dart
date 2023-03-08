@@ -35,11 +35,11 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
   Widget build(BuildContext context) {
     final marker = widget.mapMarker;
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
+            get<LocationProvider>().lastLocationInfo())
         .data;
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
+                get<Authentication>().isLoggedIn())
             .data ??
         false;
     final bool isValidPosition = position?.position?.map(marker.isNearEnoughToResolve) ?? false;
@@ -87,7 +87,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
   }
 
   void resolve() {
-    var cookie = getIt<Authentication>().maybeCookie();
+    var cookie = get<Authentication>().maybeCookie();
     var markerId = widget.mapMarker.id;
     if (cookie == null || images.isEmpty) {
       return; // should be unreachable

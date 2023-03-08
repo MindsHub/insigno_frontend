@@ -33,7 +33,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   static const double markersZoomThreshold = 14.0;
   static const Duration fabAnimDuration = Duration(milliseconds: 200);
 
-  final SharedPreferences prefs = getIt<SharedPreferences>();
+  late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
   late final AnimationController repositionAnim;
@@ -65,6 +65,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         .distinct()
         .forEach((element) => setState(() => showMarkers = element));
 
+    prefs = get<SharedPreferences>();
     initialCoordinates = LatLng(
       prefs.getDouble(lastMapLatitude) ?? defaultInitialCoordinates.latitude,
       prefs.getDouble(lastMapLongitude) ?? defaultInitialCoordinates.longitude,
@@ -123,12 +124,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.build(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
+            get<LocationProvider>().lastLocationInfo())
         .data
         ?.position;
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
+                get<Authentication>().isLoggedIn())
             .data ??
         false;
 

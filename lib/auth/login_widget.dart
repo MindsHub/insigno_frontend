@@ -24,7 +24,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
       loading = true;
     });
 
-    getIt<Authentication>().tryToLogin(username, password).then((success) {
+    get<Authentication>().tryToLogin(username, password).then((success) {
       // if login has succeeded, whoever instantiated this widget will know about it thanks to
       // Authentication's isLoggedInStream
       if (!success) {

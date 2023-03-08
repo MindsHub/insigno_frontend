@@ -53,11 +53,11 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   Widget build(BuildContext context) {
     final MapMarker mapMarker = (marker ?? widget.mapMarker);
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            getIt<LocationProvider>().lastLocationInfo())
+            get<LocationProvider>().lastLocationInfo())
         .data;
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
+                get<Authentication>().isLoggedIn())
             .data ??
         false;
     final bool nearEnoughToResolve =

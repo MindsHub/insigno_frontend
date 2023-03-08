@@ -19,7 +19,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
 
     final bool isLoggedIn = watchStream(
                 (Authentication authentication) => authentication.getIsLoggedInStream(),
-                getIt<Authentication>().isLoggedIn())
+                get<Authentication>().isLoggedIn())
             .data ??
         false;
 
@@ -27,9 +27,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
         ? Scaffold(
             body: Center(
               child: ElevatedButton(
-                onPressed: () {
-                  getIt<Authentication>().logout();
-                },
+                onPressed: () => get<Authentication>().logout(),
                 child: Text("Logout".toUpperCase()),
               ),
             ),
