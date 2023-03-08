@@ -129,6 +129,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
   void openResolvePage() {
     Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
-        .then((value) => resolveError = value as String?);
+        .then((value) => setState(() => resolveError = value as String?));
   }
 }
