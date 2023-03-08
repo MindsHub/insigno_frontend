@@ -39,6 +39,10 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   @override
   void initState() {
     super.initState();
+    reload();
+  }
+
+  void reload() {
     getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value));
     getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value));
   }
@@ -129,6 +133,9 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
   void openResolvePage() {
     Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!)
-        .then((value) => setState(() => resolveError = value as String?));
+        .then((value) {
+          setState(() => resolveError = value as String?);
+          reload();
+        });
   }
 }
