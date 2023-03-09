@@ -8,7 +8,7 @@ enum MarkerType {
   undifferentiated(4, Colors.red, Icons.broken_image),
   glass(5, Colors.green, Icons.liquor),
   compost(6, Colors.brown, Icons.compost),
-  electronics(7, Colors.white, Icons.local_laundry_service);
+  electronics(7, Colors.purple, Icons.local_laundry_service);
 
   final int id;
   final Color color;
@@ -26,13 +26,20 @@ enum MarkerType {
   String getName(final BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     switch (this) {
-      case MarkerType.unknown: return l10n.markerTypeUnknown;
-      case MarkerType.plastic: return l10n.markerTypePlastic;
-      case MarkerType.paper: return l10n.markerTypePaper;
-      case MarkerType.undifferentiated: return l10n.markerTypeUndifferentiated;
-      case MarkerType.glass: return l10n.markerTypeGlass;
-      case MarkerType.compost: return l10n.markerTypeCompost;
-      case MarkerType.electronics: return l10n.markerTypeElectronics;
+      case MarkerType.unknown:
+        return l10n.markerTypeUnknown;
+      case MarkerType.plastic:
+        return l10n.markerTypePlastic;
+      case MarkerType.paper:
+        return l10n.markerTypePaper;
+      case MarkerType.undifferentiated:
+        return l10n.markerTypeUndifferentiated;
+      case MarkerType.glass:
+        return l10n.markerTypeGlass;
+      case MarkerType.compost:
+        return l10n.markerTypeCompost;
+      case MarkerType.electronics:
+        return l10n.markerTypeElectronics;
     }
   }
 }
