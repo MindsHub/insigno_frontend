@@ -1,5 +1,6 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/const.dart';
@@ -8,7 +9,6 @@ import 'package:insigno_frontend/networking/data/marker.dart';
 import 'package:insigno_frontend/networking/extractor.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';
 import '../map/location_provider.dart';
@@ -134,9 +134,11 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 height: 128,
                 child: Center(child: CircularProgressIndicator()),
               ),
-            if (widget.errorAddingImage.isNotEmpty) const SizedBox(height: 16),
+            if (widget.errorAddingImage.isNotEmpty || resolveError != null)
+              const SizedBox(height: 16),
             if (widget.errorAddingImage.isNotEmpty)
-              Text("An error occured when uploading the report images: ${widget.errorAddingImage}"),
+              Text(l10n.errorUploadingReportImages(widget.errorAddingImage)),
+            if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
             const SizedBox(height: 16),
             if (marker == null) const CircularProgressIndicator(),
             if (marker == null || marker?.resolutionDate != null)
@@ -152,8 +154,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     : null,
                 child: Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
               ),
-            if (resolveError != null)
-              Text("An error occured when uploading the resolution images: $resolveError")
           ],
         ),
       ),

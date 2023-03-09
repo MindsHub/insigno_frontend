@@ -27,5 +27,37 @@
   "markerTypeUndifferentiated": "Undifferentiated",
   "markerTypeGlass": "Glass",
   "markerTypeCompost": "Compost",
-  "markerTypeElectronics": "Electronic material"
+  "markerTypeElectronics": "Electronic material",
+  "errorReporting": "Error when reporting: {error}",
+  "@errorReporting": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUploadingReportImages": "Error when uploading report images: {error}",
+  "@errorUploadingReportImages": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorResolving": "Error when resolving: {error}",
+  "@errorResolving": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUploadingResolveImages": "Error when uploading resolve images: {error}",
+  "@errorUploadingResolveImages": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

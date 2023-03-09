@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';
 import '../map/location_provider.dart';
@@ -80,7 +80,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
                 onPressed: (!isLoggedIn || images.isEmpty || !isValidPosition) ? null : resolve,
                 child: Text(l10n.resolve),
               ),
-            if (error != null) Text("Error: $error"),
+            if (error != null) Text(l10n.errorResolving(error!)),
           ],
         ),
       ),

@@ -27,5 +27,9 @@
   "markerTypeUndifferentiated": "Indifferenziata",
   "markerTypeGlass": "Vetro",
   "markerTypeCompost": "Umido",
-  "markerTypeElectronics": "Materiali elettronici"
+  "markerTypeElectronics": "Materiali elettronici",
+  "errorReporting": "Errore nel segnalare: {error}",
+  "errorUploadingReportImages": "Errore nel caricamento delle immagini di segnalazione: {error}",
+  "errorResolving": "Errore nel risolvere: {error}",
+  "errorUploadingResolveImages": "Errore nel caricamento delle immagini di risoluzione: {error}"
 }
