@@ -42,7 +42,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   late LatLng initialCoordinates;
   late double initialZoom;
-  late double currentZoom;
   LatLng? lastLoadMarkersPos;
   List<MapMarker> markers = [];
 
@@ -61,10 +60,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                 distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) => loadMarkers(event.center));
 
-    mapController.mapEventStream
-        .where((event) => currentZoom != event.zoom)
-        .forEach((event) => setState(() => currentZoom = event.zoom));
-
     prefs = get<SharedPreferences>();
     initialCoordinates = LatLng(
       prefs.getDouble(lastMapLatitude) ?? defaultInitialCoordinates.latitude,
@@ -72,8 +67,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
 
-    currentZoom = initialZoom;
-    if (currentZoom >= markersZoomThreshold) {
+    if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
     }
   }
@@ -144,10 +138,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     } else {
       addMarkerAnim.forward();
     }
-
-    final showMarkers = currentZoom >= markersZoomThreshold;
-    final double markerSizeMultiplier =
-        showMarkers ? sqrt(currentZoom - markersZoomThreshold) * 0.6 : 0;
 
     return FlutterMap(
       mapController: mapController,
@@ -227,22 +217,32 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: const ['a', 'b', 'c'],
         ),
-        MarkerLayer(
-          markers: [position]
-              .whereType<Position>()
-              .map((pos) => Marker(
-                    rotate: true,
-                    point: LatLng(pos.latitude, pos.longitude),
-                    builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                  ))
-              .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                    width: 36 * markerSizeMultiplier,
-                    height: 36 * markerSizeMultiplier,
-                    rotate: true,
-                    point: LatLng(e.latitude, e.longitude),
-                    builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
-                  )))
-              .toList(growable: false),
+        StreamBuilder<double>(
+          stream: mapController.mapEventStream.map((event) => event.zoom),
+          builder: (context, snapshot) {
+            final zoom = snapshot.data ?? markersZoomThreshold;
+            final showMarkers = zoom > markersZoomThreshold;
+            final double markerSizeMultiplier =
+                showMarkers ? sqrt(zoom - markersZoomThreshold) * 0.6 : 0;
+
+            return MarkerLayer(
+              markers: [position]
+                  .whereType<Position>()
+                  .map((pos) => Marker(
+                        rotate: true,
+                        point: LatLng(pos.latitude, pos.longitude),
+                        builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                      ))
+                  .followedBy((showMarkers ? markers : []).map((e) => Marker(
+                        width: 36 * markerSizeMultiplier,
+                        height: 36 * markerSizeMultiplier,
+                        rotate: true,
+                        point: LatLng(e.latitude, e.longitude),
+                        builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
+                      )))
+                  .toList(growable: false),
+            );
+          },
         ),
       ],
     );
