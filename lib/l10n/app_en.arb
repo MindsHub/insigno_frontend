@@ -1,7 +1,7 @@
 {
   "map": "Map",
   "user": "User",
-  "loginToInsignio": "Login to Insignio!",
+  "loginToInsigno": "Login to Insigno!",
   "email": "Email",
   "password": "Password",
   "wrongUserOrPassword": "Wrong user or password",

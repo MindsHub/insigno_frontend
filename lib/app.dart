@@ -1,20 +1,20 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:insignio_frontend/home_page.dart';
-import 'package:insignio_frontend/marker/marker_page.dart';
-import 'package:insignio_frontend/marker/report_page.dart';
-import 'package:insignio_frontend/marker/resolve_page.dart';
-import 'package:insignio_frontend/networking/data/map_marker.dart';
+import 'package:insigno_frontend/home_page.dart';
+import 'package:insigno_frontend/marker/marker_page.dart';
+import 'package:insigno_frontend/marker/report_page.dart';
+import 'package:insigno_frontend/marker/resolve_page.dart';
+import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class InsignioApp extends StatelessWidget {
-  const InsignioApp({super.key});
+class InsignoApp extends StatelessWidget {
+  const InsignoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
       return MaterialApp(
-        title: "Insignio",
+        title: "Insigno",
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.light),

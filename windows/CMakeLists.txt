@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(insignio_frontend LANGUAGES CXX)
+project(insigno_frontend LANGUAGES CXX)
 
-set(BINARY_NAME "insignio_frontend")
+set(BINARY_NAME "insigno_frontend")
 
 cmake_policy(SET CMP0063 NEW)
 

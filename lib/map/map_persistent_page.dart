@@ -3,10 +3,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/map/location_provider.dart';
-import 'package:insignio_frontend/marker/marker_page.dart';
-import 'package:insignio_frontend/marker/report_page.dart';
-import 'package:insignio_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/map/location_provider.dart';
+import 'package:insigno_frontend/marker/marker_page.dart';
+import 'package:insigno_frontend/marker/report_page.dart';
+import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

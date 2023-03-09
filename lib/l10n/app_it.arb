@@ -1,7 +1,7 @@
 {
   "map": "Mappa",
   "user": "Utente",
-  "loginToInsignio": "Accedi ad Insignio!",
+  "loginToInsigno": "Accedi ad Insigno!",
   "email": "Email",
   "password": "Password",
   "wrongUserOrPassword": "Utente o password errati",

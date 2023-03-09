@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/auth/authentication.dart';
+import 'package:insigno_frontend/auth/authentication.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -48,7 +48,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(l10n.loginToInsignio, style: Theme.of(context).textTheme.headlineSmall),
+              Text(l10n.loginToInsigno, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
               TextFormField(
                 initialValue: "john@gmail.com",

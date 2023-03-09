@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/auth/user_persistent_page.dart';
-import 'package:insignio_frontend/map/map_persistent_page.dart';
-import 'package:insignio_frontend/networking/extractor.dart';
+import 'package:insigno_frontend/auth/user_persistent_page.dart';
+import 'package:insigno_frontend/map/map_persistent_page.dart';
+import 'package:insigno_frontend/networking/extractor.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'networking/data/pill.dart';

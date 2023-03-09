@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:insignio_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../networking/const.dart';
@@ -20,7 +20,7 @@ class Authentication {
 
   Future<bool> tryToLogin(String? email, String? password) async {
     final response = await http.post(
-      Uri.parse('$insignioServer/login/'),
+      Uri.parse('$insignoServer/login/'),
       body: jsonEncode({"email": email, "password": password}),
       headers: {
         "content-type": "application/json",

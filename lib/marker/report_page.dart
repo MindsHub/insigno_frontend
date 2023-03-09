@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insignio_frontend/marker/add_images_widget.dart';
-import 'package:insignio_frontend/marker/marker_page.dart';
-import 'package:insignio_frontend/networking/data/map_marker.dart';
-import 'package:insignio_frontend/networking/data/marker_type.dart';
-import 'package:insignio_frontend/networking/extractor.dart';
+import 'package:insigno_frontend/marker/add_images_widget.dart';
+import 'package:insigno_frontend/marker/marker_page.dart';
+import 'package:insigno_frontend/networking/data/map_marker.dart';
+import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/networking/extractor.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../auth/authentication.dart';

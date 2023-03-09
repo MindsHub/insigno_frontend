@@ -1,6 +1,6 @@
-# insignio_frontend
+# insigno_frontend
 
-Insignio app
+Insigno app
 
 ## Dependency injection
 

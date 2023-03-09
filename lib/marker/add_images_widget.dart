@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:insignio_frontend/util/iterable.dart';
-import 'package:insignio_frontend/util/nullable.dart';
+import 'package:insigno_frontend/util/iterable.dart';
+import 'package:insigno_frontend/util/nullable.dart';
 
 import '../util/pair.dart';
 

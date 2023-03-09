@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
-import 'package:insignio_frontend/map/location_info.dart';
+import 'package:insigno_frontend/map/location_info.dart';
 
 @lazySingleton
 class LocationProvider {

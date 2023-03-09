@@ -2,11 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:insignio_frontend/networking/data/marker.dart';
-import 'package:insignio_frontend/networking/data/pill.dart';
-import 'package:insignio_frontend/networking/error.dart';
-import 'package:insignio_frontend/util/future.dart';
-import 'package:insignio_frontend/util/nullable.dart';
+import 'package:insigno_frontend/networking/data/marker.dart';
+import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/networking/error.dart';
+import 'package:insigno_frontend/util/future.dart';
+import 'package:insigno_frontend/util/nullable.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'const.dart';
@@ -17,7 +17,7 @@ import 'data/marker_type.dart';
 
 Future<Pill> loadRandomPill() async {
   return http
-      .get(Uri.parse("$insignioServer/pills/random"))
+      .get(Uri.parse("$insignoServer/pills/random"))
       .throwErrors()
       .mapParseJson()
       .map<Pill>((p) => Pill(p['id'], p['text'], p['author'], p['source'], p['accepted']));
@@ -25,7 +25,7 @@ Future<Pill> loadRandomPill() async {
 
 Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longitude) async {
   return http
-      .get(Uri.parse("$insignioServer/map/get_near?y=$latitude&x=$longitude"))
+      .get(Uri.parse("$insignoServer/map/get_near?y=$latitude&x=$longitude"))
       .throwErrors()
       .mapParseJson()
       .map((markers) => markers.map<MapMarker>((marker) {
@@ -42,7 +42,7 @@ Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longi
 
 Future<int> addMarker(
     double latitude, double longitude, MarkerType markerType, String cookie) async {
-  var request = http.MultipartRequest("POST", Uri.parse("$insignioServer/map/add"));
+  var request = http.MultipartRequest("POST", Uri.parse("$insignoServer/map/add"));
   request.headers["Cookie"] = cookie;
   request.fields["y"] = latitude.toString();
   request.fields["x"] = longitude.toString();
@@ -55,7 +55,7 @@ Future<int> addMarker(
 Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType, String cookie) async {
   mimeType = null;
 
-  var request = http.MultipartRequest("POST", Uri.parse("$insignioServer/map/image/add"));
+  var request = http.MultipartRequest("POST", Uri.parse("$insignoServer/map/image/add"));
   request.headers["Cookie"] = cookie;
   request.fields["refers_to_id"] = markerId.toString();
 
@@ -70,7 +70,7 @@ Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType, Str
 
 Future<List<int>> getImagesForMarker(int markerId) {
   return http
-      .get(Uri.parse("$insignioServer/map/image/list/$markerId"))
+      .get(Uri.parse("$insignoServer/map/image/list/$markerId"))
       .throwErrors()
       .mapParseJson()
       .map((list) => list.map<int>((i) => i as int).toList());
@@ -78,7 +78,7 @@ Future<List<int>> getImagesForMarker(int markerId) {
 
 Future<Marker> getMarker(int markerId) {
   return http
-      .get(Uri.parse("$insignioServer/map/$markerId"))
+      .get(Uri.parse("$insignoServer/map/$markerId"))
       .throwErrors()
       .mapParseJson()
       .map((marker) {
@@ -99,6 +99,6 @@ Future<Marker> getMarker(int markerId) {
 
 Future<void> resolveMarker(int markerId, String cookie) {
   return http //
-      .post(Uri.parse("$insignioServer/map/resolve/$markerId"), headers: {"Cookie": cookie}) //
+      .post(Uri.parse("$insignoServer/map/resolve/$markerId"), headers: {"Cookie": cookie}) //
       .throwErrors();
 }
