@@ -64,7 +64,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                       value: e,
                       child: Row(children: [
                         e.getThemedIcon(context),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 8),
                         Text(e.getName(context))
                       ])))
                   .toList(growable: false),
