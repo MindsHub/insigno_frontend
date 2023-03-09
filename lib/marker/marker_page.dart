@@ -118,6 +118,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                                   context,
                                   imageProvider,
                                   closeButtonTooltip: l10n.close,
+                                  doubleTapZoomable: true,
                                 );
                               },
                               child: image,
