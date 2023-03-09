@@ -22,10 +22,10 @@
   "send": "Invia",
   "tooFarToResolve": "Sei troppo lontano per risolvere",
   "markerTypeUnknown": "Tipo sconosciuto",
-  "markerTypePlastic": "Immondizia di plastica",
-  "markerTypePaper": "Immondizia di carta",
-  "markerTypeUndifferentiated": "Immondizia indifferenziata",
-  "markerTypeGlass": "Immondizia di vetro",
+  "markerTypePlastic": "Plastica",
+  "markerTypePaper": "Carta",
+  "markerTypeUndifferentiated": "Indifferenziata",
+  "markerTypeGlass": "Vetro",
   "markerTypeCompost": "Umido",
   "markerTypeElectronics": "Materiali elettronici"
 }

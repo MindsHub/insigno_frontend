@@ -22,10 +22,10 @@
   "send": "Send",
   "tooFarToResolve": "You are too far to resolve",
   "markerTypeUnknown": "Unknown type",
-  "markerTypePlastic": "Plastic trash",
-  "markerTypePaper": "Paper trash",
-  "markerTypeUndifferentiated": "Undifferentiated trash",
-  "markerTypeGlass": "Glass trash",
+  "markerTypePlastic": "Plastic",
+  "markerTypePaper": "Paper",
+  "markerTypeUndifferentiated": "Undifferentiated",
+  "markerTypeGlass": "Glass",
   "markerTypeCompost": "Compost",
   "markerTypeElectronics": "Electronic material"
 }

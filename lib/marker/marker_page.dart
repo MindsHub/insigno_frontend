@@ -88,7 +88,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
       appBar: AppBar(
         centerTitle: true,
         title: Row(children: [
-          Text("${mapMarker.type.name} marker"),
+          Text(mapMarker.type.getName(context)),
           const SizedBox(width: 12),
           mapMarker.type.getThemedIcon(context)
         ]),
