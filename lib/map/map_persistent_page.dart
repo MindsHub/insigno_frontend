@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
-import 'package:insigno_frontend/marker/marker_page.dart';
+import 'package:insigno_frontend/map/marker_widget.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
@@ -240,14 +240,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     height: 36 * markerSizeMultiplier,
                     rotate: true,
                     point: LatLng(e.latitude, e.longitude),
-                    builder: (ctx) => IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: Icon(e.type.icon, color: e.type.color, size: 36 * markerSizeMultiplier),
-                      onPressed: () => {
-                        Navigator.pushNamed(context, MarkerPage.routeName,
-                            arguments: MarkerPageArgs(e))
-                      },
-                    ),
+                    builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
                   )))
               .toList(growable: false),
         ),
