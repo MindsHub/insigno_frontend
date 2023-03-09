@@ -236,12 +236,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                   ))
               .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                    width: 44 * markerSizeMultiplier,
-                    height: 44 * markerSizeMultiplier,
+                    width: 36 * markerSizeMultiplier,
+                    height: 36 * markerSizeMultiplier,
                     rotate: true,
                     point: LatLng(e.latitude, e.longitude),
                     builder: (ctx) => IconButton(
-                      padding: EdgeInsets.all(4 * markerSizeMultiplier),
+                      padding: EdgeInsets.zero,
                       icon: Icon(e.type.icon, color: e.type.color, size: 36 * markerSizeMultiplier),
                       onPressed: () => {
                         Navigator.pushNamed(context, MarkerPage.routeName,
