@@ -84,7 +84,7 @@ class AddImagesWidget extends StatelessWidget {
                 width: 96,
                 height: 128,
                 child: Icon(
-                  Icons.add,
+                  Icons.add_a_photo,
                   size: 48,
                   color: addImageCallback == null ? fgDisabledColor : fgColor,
                 ),
