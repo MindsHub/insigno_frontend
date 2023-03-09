@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +42,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   late LatLng initialCoordinates;
   late double initialZoom;
-  late bool showMarkers;
+  late double currentZoom;
   LatLng? lastLoadMarkersPos;
   List<MapMarker> markers = [];
 
@@ -60,9 +62,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         .forEach((event) => loadMarkers(event.center));
 
     mapController.mapEventStream
-        .map((event) => event.zoom >= markersZoomThreshold)
-        .distinct()
-        .forEach((element) => setState(() => showMarkers = element));
+        .where((event) => currentZoom != event.zoom)
+        .forEach((event) => setState(() => currentZoom = event.zoom));
 
     prefs = get<SharedPreferences>();
     initialCoordinates = LatLng(
@@ -71,8 +72,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
 
-    showMarkers = initialZoom >= markersZoomThreshold;
-    if (showMarkers) {
+    currentZoom = initialZoom;
+    if (currentZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
     }
   }
@@ -143,6 +144,10 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     } else {
       addMarkerAnim.forward();
     }
+
+    final showMarkers = currentZoom >= markersZoomThreshold;
+    final double markerSizeMultiplier =
+        showMarkers ? sqrt(currentZoom - markersZoomThreshold) * 0.6 : 0;
 
     return FlutterMap(
       mapController: mapController,
@@ -231,12 +236,13 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                   ))
               .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                    width: 44,
-                    height: 44,
+                    width: 44 * markerSizeMultiplier,
+                    height: 44 * markerSizeMultiplier,
                     rotate: true,
                     point: LatLng(e.latitude, e.longitude),
                     builder: (ctx) => IconButton(
-                      icon: Icon(e.type.icon, color: e.type.color, size: 28),
+                      padding: EdgeInsets.all(4 * markerSizeMultiplier),
+                      icon: Icon(e.type.icon, color: e.type.color, size: 36 * markerSizeMultiplier),
                       onPressed: () => {
                         Navigator.pushNamed(context, MarkerPage.routeName,
                             arguments: MarkerPageArgs(e))
