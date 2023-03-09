@@ -13,7 +13,12 @@ class MarkerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       padding: EdgeInsets.zero,
-      icon: Icon(marker.type.icon, color: marker.type.color, size: size),
+      icon: Icon(
+        marker.type.icon,
+        color: marker.type.color,
+        size: size,
+        shadows: [Shadow(color: Colors.black45, blurRadius: size * 0.12)],
+      ),
       onPressed: () =>
           Navigator.pushNamed(context, MarkerPage.routeName, arguments: MarkerPageArgs(marker)),
     );
