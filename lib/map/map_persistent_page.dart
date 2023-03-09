@@ -223,7 +223,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             final zoom = snapshot.data ?? markersZoomThreshold;
             final showMarkers = zoom > markersZoomThreshold;
             final double markerSizeMultiplier =
-                showMarkers ? sqrt(zoom - markersZoomThreshold) * 0.6 : 0;
+                showMarkers ? pow(zoom - markersZoomThreshold, 0.7) * 0.5 : 0;
 
             return MarkerLayer(
               markers: [position]
