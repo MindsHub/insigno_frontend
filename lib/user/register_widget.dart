@@ -3,16 +3,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 
-class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  final Function() switchToRegisterCallback;
+class RegisterWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  final Function() switchToLoginCallback;
 
-  LoginWidget(this.switchToRegisterCallback, {super.key});
+  RegisterWidget(this.switchToLoginCallback, {super.key});
 
   @override
-  State<LoginWidget> createState() => _LoginWidgetState();
+  State<RegisterWidget> createState() => _RegisterWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWidget> {
+class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<RegisterWidget> {
   String? username;
   String? password;
   bool loading = false;
@@ -80,16 +80,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                         performLogin();
                       },
                       child: const Icon(Icons.login),
-                    ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Don't have an account?"),
-                  SizedBox(width: 4),
-                  TextButton(onPressed: widget.switchToRegisterCallback, child: Text("Register"))
-                ],
-              )
+                    )
             ],
           ),
         ));
