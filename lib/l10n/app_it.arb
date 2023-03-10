@@ -32,5 +32,9 @@
   "errorUploadingReportImages": "Errore nel caricamento delle immagini di segnalazione: {error}",
   "errorResolving": "Errore nel risolvere: {error}",
   "errorUploadingResolveImages": "Errore nel caricamento delle immagini di risoluzione: {error}",
-  "pill": "Pillola"
+  "pill": "Pillola",
+  "notHaveAccount": "Non hai un account?",
+  "alreadyHaveAccount": "Hai già un account?",
+  "login": "Accedi",
+  "register": "Registrati"
 }

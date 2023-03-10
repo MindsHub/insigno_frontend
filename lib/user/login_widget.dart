@@ -85,11 +85,14 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Don't have an account?"),
-                  SizedBox(width: 4),
-                  TextButton(onPressed: widget.switchToRegisterCallback, child: Text("Register"))
+                  Text(l10n.notHaveAccount),
+                  const SizedBox(width: 4),
+                  TextButton(
+                    onPressed: widget.switchToRegisterCallback,
+                    child: Text(l10n.register),
+                  )
                 ],
-              )
+              ),
             ],
           ),
         ));

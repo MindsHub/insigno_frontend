@@ -60,5 +60,9 @@
       }
     }
   },
-  "pill": "Pill"
+  "pill": "Pill",
+  "notHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
+  "login": "Login",
+  "register": "Register"
 }

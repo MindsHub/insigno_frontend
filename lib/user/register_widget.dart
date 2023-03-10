@@ -80,7 +80,19 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                         performLogin();
                       },
                       child: const Icon(Icons.login),
-                    )
+                    ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.alreadyHaveAccount),
+                  const SizedBox(width: 4),
+                  TextButton(
+                    onPressed: widget.switchToLoginCallback,
+                    child: Text(l10n.login),
+                  )
+                ],
+              ),
             ],
           ),
         ));
