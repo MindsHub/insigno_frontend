@@ -42,9 +42,9 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Form(
           key: formKey,
           child: Column(
