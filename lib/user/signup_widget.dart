@@ -3,27 +3,27 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 
-class RegisterWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToLoginCallback;
 
-  RegisterWidget(this.switchToLoginCallback, {super.key});
+  SignupWidget(this.switchToLoginCallback, {super.key});
 
   @override
-  State<RegisterWidget> createState() => _RegisterWidgetState();
+  State<SignupWidget> createState() => _SignupWidgetState();
 }
 
-class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<RegisterWidget> {
+class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
   String? username;
   String? password;
   bool loading = false;
-  String? registrationError;
+  String? signupError;
 
   final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  void performRegistration() async {
+  void performSignup() async {
     setState(() {
-      registrationError = null;
+      signupError = null;
       loading = true;
     });
 
@@ -32,7 +32,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
       // to Authentication's isLoggedInStream
     }, onError: (e) {
       setState(() {
-        registrationError = e.toString();
+        signupError = e.toString();
         loading = false;
       });
     });
@@ -51,7 +51,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(l10n.register, style: theme.textTheme.headlineMedium),
+              Text(l10n.signup, style: theme.textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
                 decoration: InputDecoration(labelText: l10n.email),
@@ -93,15 +93,15 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                 obscureText: true,
               ),
               const SizedBox(height: 16),
-              if (registrationError != null)
+              if (signupError != null)
                 Text(
-                  l10n.registrationFailed,
+                  l10n.signupFailed,
                   style: TextStyle(color: theme.colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
-              if (registrationError != null)
+              if (signupError != null)
                 Text(
-                  registrationError!,
+                  signupError!,
                   textAlign: TextAlign.center,
                 ),
               const SizedBox(height: 16),
@@ -111,10 +111,10 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
                           formKey.currentState?.save();
-                          performRegistration();
+                          performSignup();
                         }
                       },
-                      tooltip: l10n.register,
+                      tooltip: l10n.signup,
                       child: const Icon(Icons.login),
                     ),
               const SizedBox(height: 16),

@@ -4,9 +4,9 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  final Function() switchToRegisterCallback;
+  final Function() switchToSignupCallback;
 
-  LoginWidget(this.switchToRegisterCallback, {super.key});
+  LoginWidget(this.switchToSignupCallback, {super.key});
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -95,8 +95,8 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   Text(l10n.notHaveAccount),
                   const SizedBox(width: 4),
                   TextButton(
-                    onPressed: widget.switchToRegisterCallback,
-                    child: Text(l10n.register),
+                    onPressed: widget.switchToSignupCallback,
+                    child: Text(l10n.signup),
                   )
                 ],
               ),

@@ -36,11 +36,11 @@
   "notHaveAccount": "Non hai un account?",
   "alreadyHaveAccount": "Hai già un account?",
   "login": "Accedi",
-  "register": "Registrati",
+  "signup": "Registrati",
   "goToPosition": "Vai alla tua posizione",
   "repeatPassword": "Ripeti la password",
   "insertValidEmail": "Inserisci una email valida",
   "insertGoodPassword": "Inserisci una buona password",
   "passwordsNotMatch": "Le password non coincidono",
-  "registrationFailed": "La registrazione è fallita: verifica di aver inserito una email valida e una password di almeno 8 caratteri con maiuscole, minuscole e numeri."
+  "signupFailed": "La registrazione è fallita: verifica di aver inserito una email valida e una password di almeno 8 caratteri con maiuscole, minuscole e numeri."
 }

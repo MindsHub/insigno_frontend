@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/user/login_widget.dart';
-import 'package:insigno_frontend/user/register_widget.dart';
+import 'package:insigno_frontend/user/signup_widget.dart';
 
 class UserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   UserPersistentPage({super.key});
@@ -14,7 +14,7 @@ class UserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _UserPersistentPageState extends State<UserPersistentPage>
     with AutomaticKeepAliveClientMixin<UserPersistentPage>, GetItStateMixin<UserPersistentPage> {
-  bool loginOrRegister = true; // start with login
+  bool loginOrSignup = true; // start with login
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,10 @@ class _UserPersistentPageState extends State<UserPersistentPage>
           ),
         ),
       );
-    } else if (loginOrRegister) {
-      return LoginWidget(() => setState(() => loginOrRegister = false));
+    } else if (loginOrSignup) {
+      return LoginWidget(() => setState(() => loginOrSignup = false));
     } else {
-      return RegisterWidget(() => setState(() => loginOrRegister = true));
+      return SignupWidget(() => setState(() => loginOrSignup = true));
     }
   }
 

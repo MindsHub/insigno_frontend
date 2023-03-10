@@ -64,11 +64,11 @@
   "notHaveAccount": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
   "login": "Login",
-  "register": "Register",
+  "signup": "Signup",
   "goToPosition": "Go to your position",
   "repeatPassword": "Repeat password",
   "insertValidEmail": "Insert a valid email",
   "insertGoodPassword": "Insert a good password",
   "passwordsNotMatch": "Passwords don't match",
-  "registrationFailed": "Failed to register. Check the email and make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
+  "signupFailed": "Failed to signup. Check the email and make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
 }
