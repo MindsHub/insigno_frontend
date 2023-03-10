@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/auth/user_persistent_page.dart';
 import 'package:insigno_frontend/home/pill_page.dart';
 import 'package:insigno_frontend/map/map_persistent_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/user/user_persistent_page.dart';
 
 import '../networking/data/pill.dart';
 
