@@ -70,5 +70,5 @@
   "insertValidEmail": "Insert a valid email",
   "insertGoodPassword": "Insert a good password",
   "passwordsNotMatch": "Passwords don't match",
-  "registrationFailed": "Failed to register"
+  "registrationFailed": "Failed to register. Check the email and make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
 }

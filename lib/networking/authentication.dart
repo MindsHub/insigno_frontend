@@ -21,10 +21,10 @@ class Authentication {
     _streamController.add(isLoggedIn());
   }
 
-  Future<bool> tryToLogin(String? email, String? password) async {
+  Future<bool> _loginOrSignup(String path, Map<String, dynamic> body) async {
     final response = await _client.post(
-      Uri(scheme: insignoServerScheme, host: insignoServer, path: "/login"),
-      body: jsonEncode({"email": email, "password": password}),
+      Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
+      body: jsonEncode(body),
       headers: {
         "content-type": "application/json",
         "accept": "application/json",
@@ -40,6 +40,14 @@ class Authentication {
     await _preferences.setString(authCookieKey, authCookie);
     _streamController.add(true);
     return true;
+  }
+
+  Future<bool> tryToLogin(String? email, String? password) {
+    return _loginOrSignup("/login", {"email": email, "password": password});
+  }
+
+  Future<bool> tryToSignup(String? email, String? password) async {
+    return _loginOrSignup("/signup", {"email": email, "password": password});
   }
 
   Future<void> removeStoredCookie() async {
