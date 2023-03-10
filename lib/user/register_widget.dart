@@ -16,26 +16,25 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
   String? username;
   String? password;
   bool loading = false;
-  bool registrationFailed = false;
+  String? registrationError;
 
   final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   void performRegistration() async {
     setState(() {
-      registrationFailed = false;
+      registrationError = null;
       loading = true;
     });
 
-    get<Authentication>().tryToSignup(username, password).then((success) {
+    get<Authentication>().signup(username, password).then((_) {
       // if registration has succeeded, whoever instantiated this widget will know about it thanks
       // to Authentication's isLoggedInStream
-      if (!success) {
-        setState(() {
-          registrationFailed = true;
-          loading = false;
-        });
-      }
+    }, onError: (e) {
+      setState(() {
+        registrationError = e.toString();
+        loading = false;
+      });
     });
   }
 
@@ -94,10 +93,15 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                 obscureText: true,
               ),
               const SizedBox(height: 16),
-              if (registrationFailed)
+              if (registrationError != null)
                 Text(
                   l10n.registrationFailed,
                   style: TextStyle(color: theme.colorScheme.error),
+                  textAlign: TextAlign.center,
+                ),
+              if (registrationError != null)
+                Text(
+                  registrationError!,
                   textAlign: TextAlign.center,
                 ),
               const SizedBox(height: 16),

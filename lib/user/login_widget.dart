@@ -16,25 +16,24 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
   String? username;
   String? password;
   bool loading = false;
-  bool loginFailed = false;
+  String? loginError;
 
   final formKey = GlobalKey<FormState>();
 
   void performLogin() async {
     setState(() {
-      loginFailed = false;
+      loginError = null;
       loading = true;
     });
 
-    get<Authentication>().tryToLogin(username, password).then((success) {
+    get<Authentication>().login(username, password).then((_) {
       // if login has succeeded, whoever instantiated this widget will know about it thanks to
       // Authentication's isLoggedInStream
-      if (!success) {
-        setState(() {
-          loginFailed = true;
-          loading = false;
-        });
-      }
+    }, onError: (e) {
+      setState(() {
+        loginError = e.toString();
+        loading = false;
+      });
     });
   }
 
@@ -67,10 +66,16 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 obscureText: true,
               ),
               const SizedBox(height: 16),
-              if (loginFailed)
+              if (loginError != null)
                 Text(
                   l10n.wrongUserOrPassword,
                   style: TextStyle(color: theme.colorScheme.error),
+                  textAlign: TextAlign.center,
+                ),
+              if (loginError != null)
+                Text(
+                  loginError!,
+                  textAlign: TextAlign.center,
                 ),
               const SizedBox(height: 16),
               loading
