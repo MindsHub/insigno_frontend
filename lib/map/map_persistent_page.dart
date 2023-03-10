@@ -12,9 +12,9 @@ import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/authentication.dart';
+import '../networking/authentication.dart';
+import '../networking/backend.dart';
 import '../networking/data/map_marker.dart';
-import '../networking/extractor.dart';
 
 class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPersistentPage({super.key});
@@ -74,7 +74,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   void loadMarkers(final LatLng latLng) async {
     lastLoadMarkersPos = latLng;
-    loadMapMarkers(latLng.latitude, latLng.longitude).then((value) {
+    get<Backend>().loadMapMarkers(latLng.latitude, latLng.longitude).then((value) {
       if (latLng == lastLoadMarkersPos) {
         debugPrint("Loaded markers at $latLng");
         setState(() => markers = value);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/auth/user_persistent_page.dart';
 import 'package:insigno_frontend/map/map_persistent_page.dart';
-import 'package:insigno_frontend/networking/extractor.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 
 import 'networking/data/pill.dart';
 
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage>
       parent: pillAnimationController,
       curve: Curves.linear,
     );
-    loadRandomPill().then((value) => setState(() {
+    get<Backend>().loadRandomPill().then((value) => setState(() {
           pill = value;
           pillAnimationController.forward();
         }));

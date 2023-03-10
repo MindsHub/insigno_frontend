@@ -5,10 +5,10 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../auth/authentication.dart';
 import '../map/location_provider.dart';
+import '../networking/authentication.dart';
+import '../networking/backend.dart';
 import '../networking/data/map_marker.dart';
-import '../networking/extractor.dart';
 import '../util/pair.dart';
 import 'add_images_widget.dart';
 
@@ -99,9 +99,11 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
       error = null;
     });
 
-    resolveMarker(widget.mapMarker.id, cookie).then(
+    final backend = get<Backend>();
+    backend.resolveMarker(widget.mapMarker.id, cookie).then(
       (_) {
-        Future.wait(images.map((e) => addMarkerImage(markerId, e.first, e.second, cookie))).then(
+        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second, cookie)))
+            .then(
           (_) {
             Navigator.pop(context, null);
           },

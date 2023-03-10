@@ -6,12 +6,12 @@ import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/const.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
-import 'package:insigno_frontend/networking/extractor.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
-import '../auth/authentication.dart';
 import '../map/location_provider.dart';
+import '../networking/authentication.dart';
+import '../networking/backend.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
   static const routeName = '/markerPage';
@@ -46,8 +46,9 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   }
 
   void reload() {
-    getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value));
-    getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value));
+    final backend = get<Backend>();
+    backend.getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value));
+    backend.getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value));
   }
 
   @override
@@ -67,7 +68,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
     final imageProviders = images?.map((image) => Image.network(
-          "$insignoServer/map/image/$image",
+          "$insignoServerScheme://$insignoServer/map/image/$image",
           height: 128,
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {

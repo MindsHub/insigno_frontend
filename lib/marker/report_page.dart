@@ -4,12 +4,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/marker/add_images_widget.dart';
 import 'package:insigno_frontend/marker/marker_page.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
-import 'package:insigno_frontend/networking/extractor.dart';
 
-import '../auth/authentication.dart';
 import '../map/location_provider.dart';
+import '../networking/authentication.dart';
 import '../util/pair.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -118,10 +118,12 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       error = null;
     });
 
-    addMarker(pos.latitude, pos.longitude, mt, cookie).then(
+    final backend = get<Backend>();
+    backend.addMarker(pos.latitude, pos.longitude, mt, cookie).then(
       (markerId) {
         var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt);
-        Future.wait(images.map((e) => addMarkerImage(markerId, e.first, e.second, cookie))).then(
+        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second, cookie)))
+            .then(
           (_) {
             Navigator.popAndPushNamed(
               context,
