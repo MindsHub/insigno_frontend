@@ -65,5 +65,9 @@
   "alreadyHaveAccount": "Already have an account?",
   "login": "Login",
   "register": "Register",
-  "goToPosition": "Go to your position"
+  "goToPosition": "Go to your position",
+  "repeatPassword": "Repeat password",
+  "insertValidEmail": "Insert a valid email",
+  "insertGoodPassword": "Insert a good password",
+  "passwordsNotMatch": "Passwords don't match"
 }

@@ -37,5 +37,9 @@
   "alreadyHaveAccount": "Hai già un account?",
   "login": "Accedi",
   "register": "Registrati",
-  "goToPosition": "Vai alla tua posizione"
+  "goToPosition": "Vai alla tua posizione",
+  "repeatPassword": "Ripeti la password",
+  "insertValidEmail": "Inserisci una email valida",
+  "insertGoodPassword": "Inserisci una buona password",
+  "passwordsNotMatch": "Le password non coincidono"
 }

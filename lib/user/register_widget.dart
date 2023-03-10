@@ -16,22 +16,23 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
   String? username;
   String? password;
   bool loading = false;
-  bool loginFailed = false;
+  bool registrationFailed = false;
 
+  final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   void performLogin() async {
     setState(() {
-      loginFailed = false;
+      registrationFailed = false;
       loading = true;
     });
 
     get<Authentication>().tryToLogin(username, password).then((success) {
-      // if login has succeeded, whoever instantiated this widget will know about it thanks to
-      // Authentication's isLoggedInStream
+      // if registration has succeeded, whoever instantiated this widget will know about it thanks
+      // to Authentication's isLoggedInStream
       if (!success) {
         setState(() {
-          loginFailed = true;
+          registrationFailed = true;
           loading = false;
         });
       }
@@ -50,23 +51,49 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(l10n.loginToInsigno, style: Theme.of(context).textTheme.headlineSmall),
+              Text(l10n.register, style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
-                initialValue: "john@gmail.com",
                 decoration: InputDecoration(labelText: l10n.email),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return l10n.insertValidEmail;
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => username = value,
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: "NiceDoggo1",
+                controller: firstPasswordController,
                 decoration: InputDecoration(labelText: l10n.password),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return l10n.insertGoodPassword;
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => password = value,
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: InputDecoration(labelText: l10n.repeatPassword),
+                validator: (value) {
+                  if (value != firstPasswordController.value.text) {
+                    return l10n.passwordsNotMatch;
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
+              ),
               const SizedBox(height: 16),
-              if (loginFailed)
+              if (registrationFailed)
                 Text(
                   l10n.wrongUserOrPassword,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -76,8 +103,10 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(
                       onPressed: () {
-                        formKey.currentState?.save();
-                        performLogin();
+                        if (formKey.currentState?.validate() ?? false) {
+                          formKey.currentState?.save();
+                          performLogin();
+                        }
                       },
                       tooltip: l10n.register,
                       child: const Icon(Icons.login),
