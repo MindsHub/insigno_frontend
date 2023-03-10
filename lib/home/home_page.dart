@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/auth/user_persistent_page.dart';
+import 'package:insigno_frontend/home/pill_page.dart';
 import 'package:insigno_frontend/map/map_persistent_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 
-import 'networking/data/pill.dart';
+import '../networking/data/pill.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   HomePage({super.key});
@@ -61,12 +62,22 @@ class _HomePageState extends State<HomePage>
               child: Row(
                 children: [
                   Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        if (pill != null) {
+                          Navigator.pushNamed(context, PillPage.routeName, arguments: pill);
+                        }
+                      },
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                          child: Text(pill?.text ?? "", textAlign: TextAlign.center))),
+                        padding: const EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                        child: Text(pill?.text ?? "", textAlign: TextAlign.center),
+                      ),
+                    ),
+                  ),
                   IconButton(
-                      onPressed: () => pillAnimationController.reverse(),
-                      icon: const Icon(Icons.close))
+                    onPressed: () => pillAnimationController.reverse(),
+                    icon: const Icon(Icons.close),
+                  )
                 ],
               ),
             ),
