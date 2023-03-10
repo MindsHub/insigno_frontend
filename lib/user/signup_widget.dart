@@ -45,7 +45,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: formKey,
           child: Column(
@@ -53,9 +53,6 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 32),
-              Text(l10n.signup, style: theme.textTheme.headlineMedium),
-              const SizedBox(height: 16),
               TextFormField(
                 decoration: InputDecoration(labelText: l10n.email),
                 validator: (value) {
@@ -112,6 +109,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(
                       onPressed: () {
+                        setState(() => signupError = null);
                         if (formKey.currentState?.validate() ?? false) {
                           formKey.currentState?.save();
                           performSignup();
@@ -132,7 +130,6 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   )
                 ],
               ),
-              const SizedBox(height: 32),
             ],
           ),
         ),

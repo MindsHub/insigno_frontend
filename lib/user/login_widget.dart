@@ -44,7 +44,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: formKey,
           child: Column(
@@ -52,9 +52,6 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 32),
-              Text(l10n.loginToInsigno, style: theme.textTheme.headlineMedium),
-              const SizedBox(height: 16),
               TextFormField(
                 initialValue: "john@gmail.com",
                 decoration: InputDecoration(labelText: l10n.email),
@@ -103,7 +100,6 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   )
                 ],
               ),
-              const SizedBox(height: 32),
             ],
           ),
         ),

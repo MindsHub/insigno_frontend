@@ -27,20 +27,25 @@ class _UserPersistentPageState extends State<UserPersistentPage>
             .data ??
         false;
 
-    if (isLoggedIn) {
-      return Scaffold(
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () => get<Authentication>().logout(),
-            child: Text(l10n.logout),
-          ),
-        ),
-      );
-    } else if (loginOrSignup) {
-      return LoginWidget(() => setState(() => loginOrSignup = false));
-    } else {
-      return SignupWidget(() => setState(() => loginOrSignup = true));
-    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isLoggedIn
+            ? l10n.user
+            : loginOrSignup
+                ? l10n.loginToInsigno
+                : l10n.signup),
+      ),
+      body: Center(
+        child: isLoggedIn
+            ? ElevatedButton(
+                onPressed: () => get<Authentication>().logout(),
+                child: Text(l10n.logout),
+              )
+            : loginOrSignup
+                ? LoginWidget(() => setState(() => loginOrSignup = false))
+                : SignupWidget(() => setState(() => loginOrSignup = true)),
+      ),
+    );
   }
 
   @override
