@@ -42,6 +42,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -51,7 +52,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(l10n.register, style: Theme.of(context).textTheme.headlineMedium),
+              Text(l10n.register, style: theme.textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
                 decoration: InputDecoration(labelText: l10n.email),
@@ -95,8 +96,8 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
               const SizedBox(height: 16),
               if (registrationFailed)
                 Text(
-                  l10n.wrongUserOrPassword,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  l10n.registrationFailed,
+                  style: TextStyle(color: theme.colorScheme.error),
                 ),
               const SizedBox(height: 16),
               loading

@@ -69,5 +69,6 @@
   "repeatPassword": "Repeat password",
   "insertValidEmail": "Insert a valid email",
   "insertGoodPassword": "Insert a good password",
-  "passwordsNotMatch": "Passwords don't match"
+  "passwordsNotMatch": "Passwords don't match",
+  "registrationFailed": "Failed to register"
 }

@@ -41,6 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -50,7 +51,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(l10n.loginToInsigno, style: Theme.of(context).textTheme.headlineMedium),
+              Text(l10n.loginToInsigno, style: theme.textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
                 initialValue: "john@gmail.com",
@@ -69,7 +70,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               if (loginFailed)
                 Text(
                   l10n.wrongUserOrPassword,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  style: TextStyle(color: theme.colorScheme.error),
                 ),
               const SizedBox(height: 16),
               loading

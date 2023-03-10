@@ -41,5 +41,6 @@
   "repeatPassword": "Ripeti la password",
   "insertValidEmail": "Inserisci una email valida",
   "insertGoodPassword": "Inserisci una buona password",
-  "passwordsNotMatch": "Le password non coincidono"
+  "passwordsNotMatch": "Le password non coincidono",
+  "registrationFailed": "La registrazione è fallita"
 }
