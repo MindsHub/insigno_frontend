@@ -79,6 +79,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                         formKey.currentState?.save();
                         performLogin();
                       },
+                      tooltip: l10n.login,
                       child: const Icon(Icons.login),
                     ),
               const SizedBox(height: 16),

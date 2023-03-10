@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -116,6 +117,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final l10n = AppLocalizations.of(context)!;
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -181,6 +183,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                       heroTag: "reposition",
                       onPressed: () => mapController.move(
                           LatLng(position!.latitude, position.longitude), defaultInitialZoom),
+                      tooltip: l10n.goToPosition,
                       child: const Icon(Icons.filter_tilt_shift),
                     ),
                   ),
@@ -203,6 +206,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     child: FloatingActionButton(
                       heroTag: "addMarker",
                       onPressed: openReportPage,
+                      tooltip: l10n.report,
                       child: const Icon(Icons.add),
                     ),
                   ),

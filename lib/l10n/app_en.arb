@@ -64,5 +64,6 @@
   "notHaveAccount": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
   "login": "Login",
-  "register": "Register"
+  "register": "Register",
+  "goToPosition": "Go to your position"
 }

@@ -79,6 +79,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with GetItStateMixin<Re
                         formKey.currentState?.save();
                         performLogin();
                       },
+                      tooltip: l10n.register,
                       child: const Icon(Icons.login),
                     ),
               const SizedBox(height: 16),

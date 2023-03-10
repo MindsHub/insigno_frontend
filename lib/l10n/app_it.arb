@@ -36,5 +36,6 @@
   "notHaveAccount": "Non hai un account?",
   "alreadyHaveAccount": "Hai già un account?",
   "login": "Accedi",
-  "register": "Registrati"
+  "register": "Registrati",
+  "goToPosition": "Vai alla tua posizione"
 }
