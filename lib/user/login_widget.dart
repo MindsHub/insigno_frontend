@@ -43,13 +43,16 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
     final theme = Theme.of(context);
 
     return Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
         child: Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 32),
               Text(l10n.loginToInsigno, style: theme.textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
@@ -65,7 +68,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               if (loginError != null)
                 Text(
                   l10n.wrongUserOrPassword,
@@ -77,7 +80,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   loginError!,
                   textAlign: TextAlign.center,
                 ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               loading
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(
@@ -88,7 +91,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                       tooltip: l10n.login,
                       child: const Icon(Icons.login),
                     ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -100,8 +103,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   )
                 ],
               ),
+              const SizedBox(height: 32),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

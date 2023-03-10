@@ -44,13 +44,16 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
     final theme = Theme.of(context);
 
     return Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
         child: Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 32),
               Text(l10n.signup, style: theme.textTheme.headlineMedium),
               const SizedBox(height: 16),
               TextFormField(
@@ -104,7 +107,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   signupError!,
                   textAlign: TextAlign.center,
                 ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               loading
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(
@@ -117,7 +120,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                       tooltip: l10n.signup,
                       child: const Icon(Icons.login),
                     ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -129,8 +132,11 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   )
                 ],
               ),
+              const SizedBox(height: 32),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
