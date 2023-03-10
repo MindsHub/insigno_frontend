@@ -21,7 +21,7 @@ class Backend {
 
   Backend(this._client, this._auth);
 
-  Future<dynamic> getJson(String path, {Map<String, dynamic>? params}) {
+  Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
     return _client //
         .get(Uri(
           scheme: insignoServerScheme,
@@ -33,7 +33,7 @@ class Backend {
         .mapParseJson();
   }
 
-  Future<http.StreamedResponse> postAuthenticated(String path,
+  Future<http.StreamedResponse> _postAuthenticated(String path,
       {Map<String, String>? fields, List<http.MultipartFile>? files}) async {
     String? cookie = _auth.maybeCookie();
     if (cookie == null) {
@@ -67,12 +67,12 @@ class Backend {
   }
 
   Future<Pill> loadRandomPill() async {
-    return getJson("/pills/random")
+    return _getJson("/pills/random")
         .map<Pill>((p) => Pill(p["id"], p["text"], p["author"], p["source"], p["accepted"]));
   }
 
   Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longitude) async {
-    return getJson("/map/get_near", params: {"y": latitude.toString(), "x": longitude.toString()})
+    return _getJson("/map/get_near", params: {"y": latitude.toString(), "x": longitude.toString()})
         .map((markers) => markers.map<MapMarker>((marker) {
               var point = marker["point"];
               return MapMarker(
@@ -88,7 +88,7 @@ class Backend {
 
   Future<int> addMarker(
       double latitude, double longitude, MarkerType markerType, String cookie) async {
-    var response = await postAuthenticated("/map/add", fields: {
+    var response = await _postAuthenticated("/map/add", fields: {
       "y": latitude.toString(),
       "x": longitude.toString(),
       "marker_types_id": markerType.id.toString(),
@@ -98,7 +98,7 @@ class Backend {
 
   Future<void> addMarkerImage(
       int markerId, Uint8List image, String? mimeType, String cookie) async {
-    await postAuthenticated("/map/image/add", fields: {
+    await _postAuthenticated("/map/image/add", fields: {
       "refers_to_id": markerId.toString(),
     }, files: [
       http.MultipartFile.fromBytes(
@@ -110,12 +110,12 @@ class Backend {
   }
 
   Future<List<int>> getImagesForMarker(int markerId) {
-    return getJson("/map/image/list/$markerId")
+    return _getJson("/map/image/list/$markerId")
         .map((list) => list.map<int>((i) => i as int).toList());
   }
 
   Future<Marker> getMarker(int markerId) {
-    return getJson("/map/$markerId").map((marker) {
+    return _getJson("/map/$markerId").map((marker) {
       var point = marker["point"];
       var resolutionDate = marker["resolution_date"];
       return Marker(
@@ -132,6 +132,6 @@ class Backend {
   }
 
   Future<void> resolveMarker(int markerId, String cookie) {
-    return postAuthenticated("/map/resolve/$markerId");
+    return _postAuthenticated("/map/resolve/$markerId");
   }
 }
