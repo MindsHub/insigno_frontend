@@ -10,6 +10,7 @@ import 'package:insigno_frontend/map/location_provider.dart';
 import 'package:insigno_frontend/map/marker_widget.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/util/stream.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -222,7 +223,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           subdomains: const ['a', 'b', 'c'],
         ),
         StreamBuilder<double>(
-          stream: mapController.mapEventStream.map((event) => event.zoom),
+          stream: Stream.value(initialZoom)
+              .concatWith([mapController.mapEventStream.map((event) => event.zoom)]),
           builder: (context, snapshot) {
             final zoom = snapshot.data ?? markersZoomThreshold;
             final showMarkers = zoom > markersZoomThreshold;
