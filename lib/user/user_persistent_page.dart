@@ -29,6 +29,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(isLoggedIn
             ? l10n.user
             : loginOrSignup
