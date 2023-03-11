@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
@@ -23,14 +22,12 @@ class Authentication {
   }
 
   Future<void> _loginOrSignup(String path, Map<String, dynamic> body) async {
-    final response = await _client.post(
-      Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
-      body: jsonEncode(body),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).throwErrors();
+    final response = await _client
+        .post(
+          Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
+          body: body,
+        )
+        .throwErrors();
 
     final authCookie = response.headers["set-cookie"]?.split("; ")[0];
     if (authCookie == null) {
