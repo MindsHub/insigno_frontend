@@ -26,6 +26,10 @@ class _UserPersistentPageState extends State<UserPersistentPage>
                 get<Authentication>().isLoggedIn())
             .data ??
         false;
+    if (isLoggedIn) {
+      // make sure the screen being shown after logout will be the login
+      loginOrSignup = true;
+    }
 
     return Scaffold(
       appBar: AppBar(
