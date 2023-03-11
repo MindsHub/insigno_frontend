@@ -2,7 +2,7 @@
   "map": "Map",
   "user": "User",
   "loginToInsigno": "Login to Insigno!",
-  "email": "Email",
+  "name": "Name",
   "password": "Password",
   "wrongUserOrPassword": "Wrong user or password",
   "logout": "Logout",
@@ -67,8 +67,8 @@
   "signup": "Signup",
   "goToPosition": "Go to your position",
   "repeatPassword": "Repeat password",
-  "insertValidEmail": "Insert a valid email",
+  "insertName": "Insert a name",
   "insertGoodPassword": "Insert a good password",
   "passwordsNotMatch": "Passwords don't match",
-  "signupFailed": "Failed to signup. Check the email and make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
+  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
 }

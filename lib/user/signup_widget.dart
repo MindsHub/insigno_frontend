@@ -54,10 +54,10 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: l10n.email),
+                decoration: InputDecoration(labelText: l10n.name),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return l10n.insertValidEmail;
+                    return l10n.insertName;
                   } else {
                     return null;
                   }

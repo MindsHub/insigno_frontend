@@ -13,7 +13,7 @@ class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWidget> {
-  String? username;
+  String? name;
   String? password;
   bool loading = false;
   String? loginError;
@@ -26,7 +26,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
       loading = true;
     });
 
-    get<Authentication>().login(username, password).then((_) {
+    get<Authentication>().login(name, password).then((_) {
       // if login has succeeded, whoever instantiated this widget will know about it thanks to
       // Authentication's isLoggedInStream
     }, onError: (e) {
@@ -54,8 +54,8 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             children: [
               TextFormField(
                 initialValue: "john@gmail.com",
-                decoration: InputDecoration(labelText: l10n.email),
-                onSaved: (value) => username = value,
+                decoration: InputDecoration(labelText: l10n.name),
+                onSaved: (value) => name = value,
               ),
               const SizedBox(height: 8),
               TextFormField(

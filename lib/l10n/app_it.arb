@@ -2,7 +2,7 @@
   "map": "Mappa",
   "user": "Utente",
   "loginToInsigno": "Accedi ad Insigno!",
-  "email": "Email",
+  "name": "Nome",
   "password": "Password",
   "wrongUserOrPassword": "Utente o password errati",
   "logout": "Esci",
@@ -39,8 +39,8 @@
   "signup": "Registrati",
   "goToPosition": "Vai alla tua posizione",
   "repeatPassword": "Ripeti la password",
-  "insertValidEmail": "Inserisci una email valida",
+  "insertName": "Inserisci un nome",
   "insertGoodPassword": "Inserisci una buona password",
   "passwordsNotMatch": "Le password non coincidono",
-  "signupFailed": "La registrazione è fallita: verifica di aver inserito una email valida e una password di almeno 8 caratteri con maiuscole, minuscole e numeri."
+  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri."
 }

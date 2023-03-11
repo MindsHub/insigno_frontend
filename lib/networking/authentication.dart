@@ -39,12 +39,12 @@ class Authentication {
     _streamController.add(true);
   }
 
-  Future<void> login(String? email, String? password) {
-    return _loginOrSignup("/login", {"email": email, "password": password});
+  Future<void> login(String? name, String? password) {
+    return _loginOrSignup("/login", {"name": name, "password": password});
   }
 
-  Future<void> signup(String? email, String? password) {
-    return _loginOrSignup("/signup", {"email": email, "password": password});
+  Future<void> signup(String? name, String? password) {
+    return _loginOrSignup("/signup", {"name": name, "password": password});
   }
 
   Future<void> removeStoredCookie() async {
