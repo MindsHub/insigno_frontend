@@ -14,13 +14,22 @@ class UserWidget extends StatefulWidget {
 }
 
 class _UserWidgetState extends State<UserWidget> {
+  bool loading = true;
   AuthenticatedUser? user;
 
   @override
   void initState() {
     super.initState();
+    reload();
+  }
 
-    getIt<Backend>().getAuthenticatedUser().then((value) => setState(() => user = value));
+  void reload() {
+    getIt<Backend>() //
+        .getAuthenticatedUser()
+        .then((value) => setState(() {
+              user = value;
+              loading = false;
+            }));
   }
 
   @override
@@ -59,7 +68,23 @@ class _UserWidgetState extends State<UserWidget> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  logoutButton,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (loading)
+                        const CircularProgressIndicator()
+                      else
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() => {loading = true});
+                            reload();
+                          },
+                          child: Text(l10n.refresh),
+                        ),
+                      const SizedBox(width: 8),
+                      logoutButton,
+                    ],
+                  ),
                 ],
         ),
       ),

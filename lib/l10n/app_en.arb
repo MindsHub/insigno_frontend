@@ -79,5 +79,6 @@
         "format": "decimalPattern"
       }
     }
-  }
+  },
+  "refresh": "Refresh"
 }
