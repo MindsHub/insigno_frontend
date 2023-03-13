@@ -54,11 +54,25 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             children: [
               TextFormField(
                 decoration: InputDecoration(labelText: l10n.name),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return l10n.insertName;
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => name = value,
               ),
               const SizedBox(height: 8),
               TextFormField(
                 decoration: InputDecoration(labelText: l10n.password),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return l10n.insertPassword;
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => password = value,
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
@@ -80,8 +94,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(
                       onPressed: () {
-                        formKey.currentState?.save();
-                        performLogin();
+                        setState(() => loginError = null);
+                        if (formKey.currentState?.validate() ?? false) {
+                          formKey.currentState?.save();
+                          performLogin();
+                        }
                       },
                       tooltip: l10n.login,
                       child: const Icon(Icons.login),

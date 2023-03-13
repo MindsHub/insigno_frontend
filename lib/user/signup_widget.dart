@@ -70,7 +70,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 decoration: InputDecoration(labelText: l10n.password),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return l10n.insertGoodPassword;
+                    return l10n.insertPassword;
                   } else {
                     return null;
                   }
