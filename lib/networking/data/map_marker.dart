@@ -8,8 +8,9 @@ class MapMarker {
   final double latitude;
   final double longitude;
   final MarkerType type;
+  final bool resolved;
 
-  MapMarker(this.id, this.latitude, this.longitude, this.type);
+  MapMarker(this.id, this.latitude, this.longitude, this.type, this.resolved);
 
   LatLng getLatLng() {
     return LatLng(latitude, longitude);

@@ -7,8 +7,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
+import 'package:insigno_frontend/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/map/marker_widget.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
+import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/stream.dart';
 import 'package:latlong2/latlong.dart';
@@ -45,6 +47,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   late LatLng initialCoordinates;
   late double initialZoom;
   LatLng? lastLoadMarkersPos;
+  bool lastLoadMarkersIncludeResolved = false;
+  MarkerFilters markerFilters = MarkerFilters(Set.unmodifiable(MarkerType.values), false);
   List<MapMarker> markers = [];
 
   @override
@@ -76,7 +80,10 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   void loadMarkers(final LatLng latLng) async {
     lastLoadMarkersPos = latLng;
-    get<Backend>().loadMapMarkers(latLng.latitude, latLng.longitude).then((value) {
+    lastLoadMarkersIncludeResolved = markerFilters.includeResolved;
+    get<Backend>()
+        .loadMapMarkers(latLng.latitude, latLng.longitude, lastLoadMarkersIncludeResolved)
+        .then((value) {
       if (latLng == lastLoadMarkersPos) {
         debugPrint("Loaded markers at $latLng");
         setState(() => markers = value);
@@ -166,6 +173,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               // see https://stackoverflow.com/q/56315392 for why we can't use SizeTransition
+              Padding(
+                padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
+                child: FloatingActionButton(
+                  heroTag: "filter",
+                  onPressed: openMarkerFiltersDialog,
+                  tooltip: l10n.filterMarkers,
+                  child: const Icon(Icons.filter_alt),
+                ),
+              ),
               AnimatedBuilder(
                 animation: repositionAnim,
                 builder: (_, child) => ClipRect(
@@ -239,13 +255,17 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                         point: LatLng(pos.latitude, pos.longitude),
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
-                  .followedBy((showMarkers ? markers : []).map((e) => Marker(
-                        width: 36 * markerSizeMultiplier,
-                        height: 36 * markerSizeMultiplier,
-                        rotate: true,
-                        point: LatLng(e.latitude, e.longitude),
-                        builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
-                      )))
+                  .followedBy((showMarkers ? markers : [])
+                      .where((e) =>
+                          (markerFilters.includeResolved || !e.resolved) &&
+                          markerFilters.shownMarkers.contains(e.type))
+                      .map((e) => Marker(
+                            width: 36 * markerSizeMultiplier,
+                            height: 36 * markerSizeMultiplier,
+                            rotate: true,
+                            point: LatLng(e.latitude, e.longitude),
+                            builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
+                          )))
                   .toList(growable: false),
             );
           },
@@ -261,6 +281,21 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     Navigator.pushNamed(context, ReportPage.routeName).then((value) {
       if (value is MapMarker) {
         setState(() => markers.add(value));
+      }
+    });
+  }
+
+  void openMarkerFiltersDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => MarkerFiltersDialog(markerFilters),
+    ).then((newFilters) {
+      if (newFilters is MarkerFilters) {
+        final needToReload = newFilters.includeResolved && !lastLoadMarkersIncludeResolved;
+        setState(() => markerFilters = newFilters);
+        if (needToReload) {
+          loadMarkers(mapController.center);
+        }
       }
     });
   }

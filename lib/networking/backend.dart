@@ -95,19 +95,24 @@ class Backend {
         .map<Pill>((p) => Pill(p["id"], p["text"], p["author"], p["source"], p["accepted"]));
   }
 
-  Future<List<MapMarker>> loadMapMarkers(final double latitude, final double longitude) async {
-    return _getJson("/map/get_near", params: {"y": latitude.toString(), "x": longitude.toString()})
-        .map((markers) => markers.map<MapMarker>((marker) {
-              var point = marker["point"];
-              return MapMarker(
-                marker["id"],
-                point["y"] as double,
-                point["x"] as double,
-                MarkerType.values
-                        .firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
-                    MarkerType.unknown,
-              );
-            }).toList());
+  Future<List<MapMarker>> loadMapMarkers(
+      final double latitude, final double longitude, final bool includeResolved) async {
+    return _getJson("/map/get_near", params: {
+      "y": latitude.toString(),
+      "x": longitude.toString(),
+      "srid": "4326", // gps
+      "include_resolved": includeResolved ? "true" : "false",
+    }).map((markers) => markers.map<MapMarker>((marker) {
+          var point = marker["point"];
+          return MapMarker(
+            marker["id"],
+            point["y"] as double,
+            point["x"] as double,
+            MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
+                MarkerType.unknown,
+            marker["resolution_date"] != null,
+          );
+        }).toList());
   }
 
   Future<int> addMarker(

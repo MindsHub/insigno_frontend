@@ -80,5 +80,9 @@
       }
     }
   },
-  "refresh": "Refresh"
+  "refresh": "Refresh",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "filterMarkers": "Filter markers",
+  "includeResolved": "Include resolved"
 }

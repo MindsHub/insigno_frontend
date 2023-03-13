@@ -121,7 +121,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     final backend = get<Backend>();
     backend.addMarker(pos.latitude, pos.longitude, mt, cookie).then(
       (markerId) {
-        var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt);
+        var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt, false);
         Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second, cookie)))
             .then(
           (_) {
