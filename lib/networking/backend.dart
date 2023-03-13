@@ -4,6 +4,7 @@ import "package:http/http.dart" as http;
 import "package:http_parser/http_parser.dart";
 import "package:injectable/injectable.dart";
 import "package:insigno_frontend/networking/authentication.dart";
+import "package:insigno_frontend/networking/data/authenticated_user.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
 import "package:insigno_frontend/networking/error.dart";
@@ -21,16 +22,33 @@ class Backend {
 
   Backend(this._client, this._auth);
 
-  Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
+  Future<dynamic> _getJson(String path,
+      {Map<String, dynamic>? params, Map<String, String>? headers}) {
     return _client //
-        .get(Uri(
-          scheme: insignoServerScheme,
-          host: insignoServer,
-          path: path,
-          queryParameters: params,
-        ))
+        .get(
+          Uri(
+            scheme: insignoServerScheme,
+            host: insignoServer,
+            path: path,
+            queryParameters: params,
+          ),
+          headers: headers,
+        )
         .throwErrors()
         .mapParseJson();
+  }
+
+  Future<dynamic> _getJsonAuthenticated(String path, {Map<String, dynamic>? params}) async {
+    String? cookie = _auth.maybeCookie();
+    if (cookie == null) {
+      throw UnauthorizedException(401, "Cookie is null");
+    }
+
+    return await _getJson(
+      path,
+      params: params,
+      headers: {"Cookie": cookie},
+    );
   }
 
   Future<http.StreamedResponse> _postAuthenticated(String path,
@@ -133,5 +151,9 @@ class Backend {
 
   Future<void> resolveMarker(int markerId, String cookie) {
     return _postAuthenticated("/map/resolve/$markerId");
+  }
+
+  Future<AuthenticatedUser> getAuthenticatedUser() {
+    return _getJsonAuthenticated("/user").map((u) => AuthenticatedUser(u["name"], u["points"]));
   }
 }

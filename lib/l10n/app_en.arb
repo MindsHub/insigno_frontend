@@ -70,5 +70,13 @@
   "insertName": "Insert a name",
   "insertGoodPassword": "Insert a good password",
   "passwordsNotMatch": "Passwords don't match",
-  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers."
+  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers.",
+  "points": "{points} points",
+  "@points": {
+    "placeholders": {
+      "points": {
+        "type": "double"
+      }
+    }
+  }
 }

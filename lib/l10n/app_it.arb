@@ -42,5 +42,6 @@
   "insertName": "Inserisci un nome",
   "insertGoodPassword": "Inserisci una buona password",
   "passwordsNotMatch": "Le password non coincidono",
-  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri."
+  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri.",
+  "points": "{points} punti"
 }

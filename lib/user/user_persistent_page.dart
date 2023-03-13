@@ -4,6 +4,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/user/login_widget.dart';
 import 'package:insigno_frontend/user/signup_widget.dart';
+import 'package:insigno_frontend/user/user_widget.dart';
 
 class UserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   UserPersistentPage({super.key});
@@ -42,10 +43,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
       ),
       body: Center(
         child: isLoggedIn
-            ? ElevatedButton(
-                onPressed: () => get<Authentication>().logout(),
-                child: Text(l10n.logout),
-              )
+            ? const UserWidget()
             : loginOrSignup
                 ? LoginWidget(() => setState(() => loginOrSignup = false))
                 : SignupWidget(() => setState(() => loginOrSignup = true)),
