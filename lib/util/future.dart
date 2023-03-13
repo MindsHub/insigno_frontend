@@ -10,8 +10,14 @@ extension FutureMap<T> on Future<T> {
   }
 }
 
+extension JsonResponse on Response {
+  dynamic mapParseJson() async {
+    return jsonDecode(utf8.decode(bodyBytes));
+  }
+}
+
 extension FutureResponse on Future<Response> {
   Future<dynamic> mapParseJson() async {
-    return map((response) => jsonDecode(utf8.decode(response.bodyBytes)));
+    return map((response) => response.mapParseJson());
   }
 }

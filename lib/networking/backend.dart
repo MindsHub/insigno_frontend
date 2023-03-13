@@ -22,43 +22,49 @@ class Backend {
 
   Backend(this._client, this._auth);
 
-  Future<dynamic> _getJson(String path,
-      {Map<String, dynamic>? params, Map<String, String>? headers}) {
+  Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
     return _client //
-        .get(
-          Uri(
-            scheme: insignoServerScheme,
-            host: insignoServer,
-            path: path,
-            queryParameters: params,
-          ),
-          headers: headers,
-        )
+        .get(Uri(
+          scheme: insignoServerScheme,
+          host: insignoServer,
+          path: path,
+          queryParameters: params,
+        ))
         .throwErrors()
         .mapParseJson();
   }
 
   Future<dynamic> _getJsonAuthenticated(String path, {Map<String, dynamic>? params}) async {
-    String? cookie = _auth.maybeCookie();
+    final String? cookie = _auth.maybeCookie();
     if (cookie == null) {
       throw UnauthorizedException(401, "Cookie is null");
     }
 
-    return await _getJson(
-      path,
-      params: params,
+    final response = await _client.get(
+      Uri(
+        scheme: insignoServerScheme,
+        host: insignoServer,
+        path: path,
+        queryParameters: params,
+      ),
       headers: {"Cookie": cookie},
     );
+
+    if (response.statusCode == 401) {
+      // the authentication token is not valid anymore, so remove it and ask the user to re-login
+      _auth.removeStoredCookie();
+    }
+    return response.throwErrors().mapParseJson();
   }
 
   Future<http.StreamedResponse> _postAuthenticated(String path,
       {Map<String, String>? fields, List<http.MultipartFile>? files}) async {
-    String? cookie = _auth.maybeCookie();
+    final String? cookie = _auth.maybeCookie();
     if (cookie == null) {
       throw UnauthorizedException(401, "Cookie is null");
     }
 
-    var request = http.MultipartRequest(
+    final request = http.MultipartRequest(
         "POST",
         Uri(
           scheme: insignoServerScheme,
@@ -75,7 +81,7 @@ class Backend {
       request.files.addAll(files);
     }
 
-    http.StreamedResponse response = await _client.send(request);
+    final response = await _client.send(request);
     if (response.statusCode == 401) {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
       _auth.removeStoredCookie();
