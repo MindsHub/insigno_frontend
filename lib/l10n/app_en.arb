@@ -75,7 +75,8 @@
   "@points": {
     "placeholders": {
       "points": {
-        "type": "double"
+        "type": "double",
+        "format": "decimalPattern"
       }
     }
   }
