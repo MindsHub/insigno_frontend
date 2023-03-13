@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
 import 'package:insigno_frontend/map/marker_filters_dialog.dart';
@@ -12,6 +11,7 @@ import 'package:insigno_frontend/map/marker_widget.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:insigno_frontend/util/stream.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +51,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   MarkerFilters markerFilters = MarkerFilters(Set.unmodifiable(MarkerType.values), false);
   List<MapMarker> markers = [];
 
+  String lastErrorMessage = "";
+  late final AnimationController errorMessageAnim;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +61,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
     repositionAnim = AnimationController(vsync: this, duration: fabAnimDuration);
     addMarkerAnim = AnimationController(vsync: this, duration: fabAnimDuration);
+    errorMessageAnim = AnimationController(vsync: this, duration: fabAnimDuration);
 
     mapController.mapEventStream
         .where((event) =>
@@ -129,24 +133,30 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
-        .data
-        ?.position;
-    final bool isLoggedIn = watchStream(
-                (Authentication authentication) => authentication.getIsLoggedInStream(),
-                get<Authentication>().isLoggedIn())
-            .data ??
-        false;
+        .data;
+    final isLoggedIn = watchStream(
+            (Authentication authentication) => authentication.getIsLoggedInStream(),
+            get<Authentication>().isLoggedIn())
+        .data;
 
-    if (position == null) {
+    final String? errorMessage = getErrorMessage(l10n, isLoggedIn, position);
+    if (errorMessage == null) {
+      errorMessageAnim.reverse();
+    } else {
+      lastErrorMessage = errorMessage;
+      errorMessageAnim.forward();
+    }
+
+    if (position?.position == null) {
       repositionAnim.reverse();
     } else {
       repositionAnim.forward();
     }
 
-    if (position == null || !isLoggedIn) {
-      addMarkerAnim.reverse();
-    } else {
+    if (errorMessage == null) {
       addMarkerAnim.forward();
+    } else {
+      addMarkerAnim.reverse();
     }
 
     return FlutterMap(
@@ -198,8 +208,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                     padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
                     child: FloatingActionButton(
                       heroTag: "reposition",
-                      onPressed: () => mapController.move(
-                          LatLng(position!.latitude, position.longitude), defaultInitialZoom),
+                      onPressed: () =>
+                          mapController.move(position!.toLatLng()!, defaultInitialZoom),
                       tooltip: l10n.goToPosition,
                       child: const Icon(Icons.filter_tilt_shift),
                     ),
@@ -248,11 +258,11 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                 showMarkers ? pow(zoom - markersZoomThreshold, 0.7) * 0.5 : 0;
 
             return MarkerLayer(
-              markers: [position]
-                  .whereType<Position>()
+              markers: [position?.toLatLng()]
+                  .whereType<LatLng>()
                   .map((pos) => Marker(
                         rotate: true,
-                        point: LatLng(pos.latitude, pos.longitude),
+                        point: pos,
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
                   .followedBy((showMarkers ? markers : [])
