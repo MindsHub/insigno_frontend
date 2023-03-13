@@ -130,6 +130,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -237,6 +238,36 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                       child: const Icon(Icons.add),
                     ),
                   ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizeTransition(
+          sizeFactor: errorMessageAnim,
+          child: Wrap(
+            children: [
+              Align(
+                child: Wrap(
+                  direction: Axis.vertical,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.background,
+                        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 12,
+                        top: 8 + MediaQuery.of(context).padding.top,
+                        right: 12,
+                        bottom: 12,
+                      ),
+                      child: Text(
+                        lastErrorMessage,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
