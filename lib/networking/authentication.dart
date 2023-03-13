@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:insigno_frontend/networking/error.dart';
@@ -19,6 +20,29 @@ class Authentication {
   Authentication(this._client, this._preferences)
       : _cookie = _preferences.getString(authCookieKey) {
     _streamController.add(isLoggedIn());
+    _refreshToken(); // refresh token in the background
+  }
+
+  void _refreshToken() async {
+    final cookie = _cookie;
+    if (cookie == null) {
+      return;
+    }
+
+    try {
+      final response = await _client.post(
+        Uri(scheme: insignoServerScheme, host: insignoServer, path: "/session"),
+        headers: {"Cookie": cookie},
+      );
+      if (response.statusCode == 401) {
+        // the token was outdated, ask the user to login again
+        debugPrint("Cannot refresh outdated token");
+        await removeStoredCookie();
+      }
+    } catch (e) {
+      // ignore network errors
+      debugPrint("Error when refreshing token: $e");
+    }
   }
 
   Future<void> _loginOrSignup(String path, Map<String, dynamic> body) async {
