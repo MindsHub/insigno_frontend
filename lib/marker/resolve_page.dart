@@ -75,7 +75,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
               const CircularProgressIndicator()
             else
               ElevatedButton(
-                onPressed: errorMessage != null ? null : resolve,
+                onPressed: errorMessage == null ? resolve : null,
                 child: Text(l10n.resolve),
               ),
             if (error != null) Text(l10n.errorResolving(error!)),

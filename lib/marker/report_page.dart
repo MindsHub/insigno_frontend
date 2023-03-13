@@ -94,7 +94,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               const CircularProgressIndicator()
             else
               ElevatedButton(
-                onPressed: errorMessage != null ? null : send,
+                onPressed: errorMessage == null ? send : null,
                 child: Text(l10n.send),
               ),
             if (error != null) Text(l10n.errorReporting(error!)),
