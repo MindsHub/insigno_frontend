@@ -53,13 +53,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(
-                initialValue: "john@gmail.com",
                 decoration: InputDecoration(labelText: l10n.name),
                 onSaved: (value) => name = value,
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: "NiceDoggo1",
                 decoration: InputDecoration(labelText: l10n.password),
                 onSaved: (value) => password = value,
                 keyboardType: TextInputType.visiblePassword,
