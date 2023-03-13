@@ -45,7 +45,7 @@ class Authentication {
     }
   }
 
-  Future<void> _loginOrSignup(String path, Map<String, dynamic> body) async {
+  Future<void> _loginOrSignup(String path, Map<String, String> body) async {
     final response = await _client
         .post(
           Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
@@ -63,11 +63,11 @@ class Authentication {
     _streamController.add(true);
   }
 
-  Future<void> login(String? name, String? password) {
+  Future<void> login(String name, String password) {
     return _loginOrSignup("/login", {"name": name, "password": password});
   }
 
-  Future<void> signup(String? name, String? password) {
+  Future<void> signup(String name, String password) {
     return _loginOrSignup("/signup", {"name": name, "password": password});
   }
 

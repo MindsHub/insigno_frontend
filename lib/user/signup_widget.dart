@@ -27,7 +27,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
       loading = true;
     });
 
-    get<Authentication>().signup(username, password).then((_) {
+    get<Authentication>().signup(username!, password!).then((_) {
       // if registration has succeeded, whoever instantiated this widget will know about it thanks
       // to Authentication's isLoggedInStream
     }, onError: (e) {
