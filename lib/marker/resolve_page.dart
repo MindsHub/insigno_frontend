@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -38,12 +39,20 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
         .data;
-    final bool isLoggedIn = watchStream(
-                (Authentication authentication) => authentication.getIsLoggedInStream(),
-                get<Authentication>().isLoggedIn())
-            .data ??
-        false;
-    final bool isValidPosition = position?.position?.map(marker.isNearEnoughToResolve) ?? false;
+    final isLoggedIn = watchStream(
+            (Authentication authentication) => authentication.getIsLoggedInStream(),
+            get<Authentication>().isLoggedIn())
+        .data;
+
+    final errorMessage = getErrorMessage(
+      l10n,
+      isLoggedIn,
+      position,
+      whilePositionLoading: () => images.isEmpty ? l10n.addImage : null,
+      afterPositionLoaded: () => (position?.position?.map(marker.isNearEnoughToResolve) ?? false)
+          ? l10n.tooFarToResolve
+          : null,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -61,23 +70,12 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
               loading ? null : (index) => setState(() => images.removeAt(index)),
             ),
             const SizedBox(height: 12),
-            if (!isLoggedIn)
-              Text(l10n.loginRequired)
-            else if (position?.permissionGranted == false)
-              Text(l10n.grantLocationPermission)
-            else if (position?.servicesEnabled == false)
-              Text(l10n.enableLocationServices)
-            else if (images.isEmpty)
-              Text(l10n.addImage)
-            else if (position?.position == null)
-              Text(l10n.locationIsLoading)
-            else if (!isValidPosition)
-              Text(l10n.tooFarToResolve),
+            if (errorMessage != null) Text(errorMessage),
             if (loading)
               const CircularProgressIndicator()
             else
               ElevatedButton(
-                onPressed: (!isLoggedIn || images.isEmpty || !isValidPosition) ? null : resolve,
+                onPressed: errorMessage != null ? null : resolve,
                 child: Text(l10n.resolve),
               ),
             if (error != null) Text(l10n.errorResolving(error!)),

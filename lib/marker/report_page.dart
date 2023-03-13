@@ -10,6 +10,7 @@ import 'package:insigno_frontend/networking/data/marker_type.dart';
 
 import '../map/location_provider.dart';
 import '../networking/authentication.dart';
+import '../util/error_messages.dart';
 import '../util/pair.dart';
 
 class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -34,11 +35,25 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
         .data;
-    final bool isLoggedIn = watchStream(
-                (Authentication authentication) => authentication.getIsLoggedInStream(),
-                get<Authentication>().isLoggedIn())
-            .data ??
-        false;
+    final isLoggedIn = watchStream(
+            (Authentication authentication) => authentication.getIsLoggedInStream(),
+            get<Authentication>().isLoggedIn())
+        .data;
+
+    final errorMessage = getErrorMessage(
+      l10n,
+      isLoggedIn,
+      position,
+      whilePositionLoading: () {
+        if (images.isEmpty) {
+          return l10n.addImage;
+        } else if (markerType == null) {
+          return l10n.selectMarkerType;
+        } else {
+          return null;
+        }
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -74,28 +89,12 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
               value: markerType,
             ),
             const SizedBox(height: 12),
-            if (!isLoggedIn)
-              Text(l10n.loginRequired)
-            else if (position?.permissionGranted == false)
-              Text(l10n.grantLocationPermission)
-            else if (position?.servicesEnabled == false)
-              Text(l10n.enableLocationServices)
-            else if (images.isEmpty)
-              Text(l10n.addImage)
-            else if (markerType == null)
-              Text(l10n.selectMarkerType)
-            else if (position?.position == null)
-              Text(l10n.locationIsLoading),
+            if (errorMessage != null) Text(errorMessage),
             if (loading)
               const CircularProgressIndicator()
             else
               ElevatedButton(
-                onPressed: (!isLoggedIn ||
-                        images.isEmpty ||
-                        markerType == null ||
-                        position?.position == null)
-                    ? null
-                    : send,
+                onPressed: errorMessage != null ? null : send,
                 child: Text(l10n.send),
               ),
             if (error != null) Text(l10n.errorReporting(error!)),
