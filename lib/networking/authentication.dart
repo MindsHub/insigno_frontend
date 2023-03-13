@@ -54,7 +54,16 @@ class Authentication {
   }
 
   Future<void> logout() async {
-    // TODO send logout request
+    final cookie = _cookie;
+    if (cookie == null) {
+      return;
+    }
+
+    await _client.post(
+      Uri(scheme: insignoServerScheme, host: insignoServer, path: "/logout"),
+      headers: {"Cookie": cookie},
+    );
+
     await removeStoredCookie();
   }
 
