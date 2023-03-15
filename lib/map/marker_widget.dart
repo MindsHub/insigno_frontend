@@ -10,13 +10,15 @@ class MarkerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final actualSize = size * (marker.resolved ? 0.7 : 1.0);
+
     return IconButton(
       padding: EdgeInsets.zero,
       icon: Icon(
         marker.type.icon,
         color: marker.type.color,
-        size: size,
-        shadows: [Shadow(color: Colors.black45, blurRadius: size * 0.12)],
+        size: actualSize,
+        shadows: [Shadow(color: Colors.black45, blurRadius: actualSize * 0.12)],
       ),
       onPressed: () => onPressed(marker),
     );
