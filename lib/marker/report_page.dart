@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/marker/add_images_widget.dart';
-import 'package:insigno_frontend/marker/marker_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
@@ -20,6 +19,13 @@ class ReportPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
   @override
   State<ReportPage> createState() => _ReportPageState();
+}
+
+class ReportedResult {
+  final MapMarker newMapMarker;
+  final String? errorAddingImages;
+
+  ReportedResult(this.newMapMarker, this.errorAddingImages);
 }
 
 class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage> {
@@ -121,22 +127,8 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
       (markerId) {
         var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt, false);
         Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
-          (_) {
-            Navigator.popAndPushNamed(
-              context,
-              MarkerPage.routeName,
-              arguments: MarkerPageArgs(mapMarker),
-              result: mapMarker,
-            );
-          },
-          onError: (e) {
-            Navigator.popAndPushNamed(
-              context,
-              MarkerPage.routeName,
-              arguments: MarkerPageArgs(mapMarker, errorAddingImage: e.toString()),
-              result: mapMarker,
-            );
-          },
+          (_) => Navigator.pop(context, ReportedResult(mapMarker, null)),
+          onError: (e) => Navigator.pop(context, ReportedResult(mapMarker, e.toString())),
         );
       },
       onError: (e) {

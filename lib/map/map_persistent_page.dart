@@ -8,6 +8,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
 import 'package:insigno_frontend/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/map/marker_widget.dart';
+import 'package:insigno_frontend/marker/marker_page.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
@@ -305,7 +306,11 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                             height: 36 * markerSizeMultiplier,
                             rotate: true,
                             point: LatLng(e.latitude, e.longitude),
-                            builder: (ctx) => MarkerWidget(e, 36 * markerSizeMultiplier),
+                            builder: (ctx) => MarkerWidget(
+                              e,
+                              36 * markerSizeMultiplier,
+                              openMarkerPage,
+                            ),
                           )))
                   .toList(growable: false),
             );
@@ -318,10 +323,27 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   @override
   bool get wantKeepAlive => true;
 
+  void openMarkerPage(MapMarker m, [String? errorAddingImages]) {
+    Navigator.pushNamed(
+      context,
+      MarkerPage.routeName,
+      arguments: MarkerPageArgs(m, errorAddingImages),
+    ).then((value) {
+      if (!m.resolved && value is bool && value == true) {
+        // the marker just got resolved, so update it in the map
+        setState(() {
+          markers.removeWhere((element) => element.id == m.id);
+          markers.add(MapMarker(m.id, m.latitude, m.longitude, m.type, true));
+        });
+      }
+    });
+  }
+
   void openReportPage() {
     Navigator.pushNamed(context, ReportPage.routeName).then((value) {
-      if (value is MapMarker) {
-        setState(() => markers.add(value));
+      if (value is ReportedResult) {
+        setState(() => markers.add(value.newMapMarker));
+        openMarkerPage(value.newMapMarker, value.errorAddingImages);
       }
     });
   }

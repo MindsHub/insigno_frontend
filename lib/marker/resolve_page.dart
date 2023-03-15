@@ -24,6 +24,12 @@ class ResolvePage extends StatefulWidget with GetItStatefulWidgetMixin {
   State<ResolvePage> createState() => _ResolvePageState();
 }
 
+class ResolvedResult {
+  final String? errorAddingImages;
+
+  ResolvedResult(this.errorAddingImages);
+}
+
 class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolvePage> {
   List<Pair<Uint8List, String?>> images = [];
   bool loading = false;
@@ -101,10 +107,10 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
       (_) {
         Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
           (_) {
-            Navigator.pop(context, null);
+            Navigator.pop(context, ResolvedResult(null));
           },
           onError: (e) {
-            Navigator.pop(context, e.toString());
+            Navigator.pop(context, ResolvedResult(e.toString()));
           },
         );
       },

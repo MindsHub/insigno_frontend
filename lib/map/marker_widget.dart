@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 
-import '../marker/marker_page.dart';
-
 class MarkerWidget extends StatelessWidget {
   final MapMarker marker;
   final double size;
+  final void Function(MapMarker) onPressed;
 
-  const MarkerWidget(this.marker, this.size, {Key? key}) : super(key: key);
+  const MarkerWidget(this.marker, this.size, this.onPressed, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +18,7 @@ class MarkerWidget extends StatelessWidget {
         size: size,
         shadows: [Shadow(color: Colors.black45, blurRadius: size * 0.12)],
       ),
-      onPressed: () =>
-          Navigator.pushNamed(context, MarkerPage.routeName, arguments: MarkerPageArgs(marker)),
+      onPressed: () => onPressed(marker),
     );
   }
 }
