@@ -13,7 +13,7 @@ class UserWidget extends StatefulWidget {
   State<UserWidget> createState() => _UserWidgetState();
 }
 
-class _UserWidgetState extends State<UserWidget> {
+class _UserWidgetState extends State<UserWidget> with SingleTickerProviderStateMixin<UserWidget> {
   static final urlPattern = RegExp(
     r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
     caseSensitive: false,
@@ -27,10 +27,13 @@ class _UserWidgetState extends State<UserWidget> {
   String pillSource = "";
   bool pillLoading = false;
   String? pillError;
+  bool pillSentAtLeastOnce = false;
+  late AnimationController pillAnim;
 
   @override
   void initState() {
     super.initState();
+    pillAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     reload();
   }
 
@@ -98,72 +101,97 @@ class _UserWidgetState extends State<UserWidget> {
                       ),
                     ]) +
               [
-                const SizedBox(height: 24),
-                const Divider(thickness: 1),
-                const SizedBox(height: 8),
-                Form(
-                  key: pillFormKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: l10n.pill,
-                          hintText: l10n.insertEcologyPill,
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return l10n.insertPill;
-                          } else {
-                            return null;
-                          }
-                        },
-                        onSaved: (value) => pillText = value ?? "",
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: l10n.source,
-                          hintText: l10n.insertPossiblySource,
-                        ),
-                        validator: (value) {
-                          if ((value?.isNotEmpty ?? false) && !urlPattern.hasMatch(value!)) {
-                            return l10n.insertValidUrl;
-                          } else {
-                            return null;
-                          }
-                        },
-                        onSaved: (value) => pillSource = value ?? "",
-                      ),
-                      const SizedBox(height: 12),
-                      if (pillError != null)
-                        Text(
-                          pillError!,
-                          style: TextStyle(color: theme.colorScheme.error),
-                          textAlign: TextAlign.center,
-                        ),
-                      const SizedBox(height: 12),
-                      if (pillLoading)
-                        const CircularProgressIndicator()
-                      else
-                        ElevatedButton(
-                          onPressed: () {
-                            if (pillFormKey.currentState?.validate() ?? false) {
-                              pillFormKey.currentState?.save();
-                              submitPill();
+                const Divider(height: 32, thickness: 1),
+                SizeTransition(
+                  sizeFactor: pillAnim,
+                  child: Form(
+                    key: pillFormKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: l10n.pill,
+                            hintText: l10n.insertEcologyPill,
+                          ),
+                          validator: (value) {
+                            if (value?.isEmpty ?? true) {
+                              return l10n.insertPill;
+                            } else {
+                              return null;
                             }
                           },
+                          onSaved: (value) => pillText = value ?? "",
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: l10n.source,
+                            hintText: l10n.insertPossiblySource,
+                          ),
+                          validator: (value) {
+                            if ((value?.isNotEmpty ?? false) && !urlPattern.hasMatch(value!)) {
+                              return l10n.insertValidUrl;
+                            } else {
+                              return null;
+                            }
+                          },
+                          onSaved: (value) => pillSource = value ?? "",
+                        ),
+                        const SizedBox(height: 12),
+                        if (pillError != null)
+                          Text(
+                            pillError!,
+                            style: TextStyle(color: theme.colorScheme.error),
+                            textAlign: TextAlign.center,
+                          ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                  ),
+                ),
+                SizeTransition(
+                  sizeFactor: ReverseAnimation(pillAnim),
+                  child: pillSentAtLeastOnce
+                      ? Center(
+                          child: Text(
+                            l10n.thanks,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
+                if (pillLoading)
+                  const CircularProgressIndicator()
+                else
+                  ElevatedButton(
+                    onPressed: () {
+                      if (pillAnim.isDismissed) {
+                        pillAnim.forward();
+                        pillFormKey.currentState?.reset();
+                      } else if (pillAnim.isCompleted &&
+                          (pillFormKey.currentState?.validate() ?? false)) {
+                        pillFormKey.currentState?.save();
+                        submitPill();
+                      }
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(l10n.suggestPill),
+                        SizeTransition(
+                          sizeFactor: pillAnim,
+                          axis: Axis.horizontal,
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(l10n.suggestPill),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.send),
+                            children: const [
+                              SizedBox(width: 8),
+                              Icon(Icons.send),
                             ],
                           ),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
         ),
       ),
@@ -178,8 +206,9 @@ class _UserWidgetState extends State<UserWidget> {
 
     getIt<Backend>().suggestPill(pillText, pillSource).then((_) {
       // pill uploaded successfully!
-      pillFormKey.currentState?.reset();
+      pillAnim.reverse();
       setState(() {
+        pillSentAtLeastOnce = true;
         pillLoading = false;
       });
     }, onError: (e) {

@@ -55,5 +55,6 @@
   "source": "Fonte",
   "insertPossiblySource": "Inserisci la fonte, se applicabile",
   "insertValidUrl": "Inserisci un indirizzo web valido",
-  "suggestPill": "Suggerisci pillola"
+  "suggestPill": "Suggerisci pillola",
+  "thanks": "Grazie!"
 }

@@ -91,5 +91,6 @@
   "source": "Source",
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
-  "suggestPill": "Suggest pill"
+  "suggestPill": "Suggest pill",
+  "thanks": "Thanks!"
 }
