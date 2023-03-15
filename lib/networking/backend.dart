@@ -96,7 +96,7 @@ class Backend {
   }
 
   Future<List<MapMarker>> loadMapMarkers(
-      final double latitude, final double longitude, final bool includeResolved) async {
+      double latitude, double longitude, bool includeResolved) async {
     return _getJson("/map/get_near", params: {
       "y": latitude.toString(),
       "x": longitude.toString(),
@@ -115,8 +115,7 @@ class Backend {
         }).toList());
   }
 
-  Future<int> addMarker(
-      double latitude, double longitude, MarkerType markerType, String cookie) async {
+  Future<int> addMarker(double latitude, double longitude, MarkerType markerType) async {
     var response = await _postAuthenticated("/map/add", fields: {
       "y": latitude.toString(),
       "x": longitude.toString(),
@@ -125,8 +124,7 @@ class Backend {
     return int.parse(await response.stream.bytesToString());
   }
 
-  Future<void> addMarkerImage(
-      int markerId, Uint8List image, String? mimeType, String cookie) async {
+  Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType) async {
     await _postAuthenticated("/map/image/add", fields: {
       "refers_to_id": markerId.toString(),
     }, files: [
@@ -160,7 +158,7 @@ class Backend {
     });
   }
 
-  Future<void> resolveMarker(int markerId, String cookie) {
+  Future<void> resolveMarker(int markerId) {
     return _postAuthenticated("/map/resolve/$markerId");
   }
 

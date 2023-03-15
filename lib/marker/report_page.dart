@@ -106,9 +106,8 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
 
   void send() async {
     var pos = get<LocationProvider>().lastLocationInfo().position;
-    var cookie = get<Authentication>().maybeCookie();
     var mt = markerType;
-    if (pos == null || cookie == null || images.isEmpty || mt == null || mt == MarkerType.unknown) {
+    if (pos == null || images.isEmpty || mt == null || mt == MarkerType.unknown) {
       return; // this should be unreachable, since "Send" should be hidden
     }
 
@@ -118,11 +117,10 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
     });
 
     final backend = get<Backend>();
-    backend.addMarker(pos.latitude, pos.longitude, mt, cookie).then(
+    backend.addMarker(pos.latitude, pos.longitude, mt).then(
       (markerId) {
         var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt, false);
-        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second, cookie)))
-            .then(
+        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
           (_) {
             Navigator.popAndPushNamed(
               context,

@@ -86,9 +86,8 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
   }
 
   void resolve() {
-    var cookie = get<Authentication>().maybeCookie();
     var markerId = widget.mapMarker.id;
-    if (cookie == null || images.isEmpty) {
+    if (images.isEmpty) {
       return; // should be unreachable
     }
 
@@ -98,10 +97,9 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
     });
 
     final backend = get<Backend>();
-    backend.resolveMarker(widget.mapMarker.id, cookie).then(
+    backend.resolveMarker(widget.mapMarker.id).then(
       (_) {
-        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second, cookie)))
-            .then(
+        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
           (_) {
             Navigator.pop(context, null);
           },
