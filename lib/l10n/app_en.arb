@@ -85,5 +85,11 @@
   "ok": "OK",
   "filterMarkers": "Filter markers",
   "includeResolved": "Include resolved",
-  "reportAsInappropriate": "Report as inappropriate"
+  "reportAsInappropriate": "Report as inappropriate",
+  "insertEcologyPill": "Insert an ecology pill",
+  "insertPill": "Insert a pill",
+  "source": "Source",
+  "insertPossiblySource": "Insert the source, if applicable",
+  "insertValidUrl": "Insert a valid web address",
+  "suggestPill": "Suggest pill"
 }

@@ -14,8 +14,19 @@ class UserWidget extends StatefulWidget {
 }
 
 class _UserWidgetState extends State<UserWidget> {
+  static final urlPattern = RegExp(
+    r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
+    caseSensitive: false,
+  );
+
   bool loading = true;
   AuthenticatedUser? user;
+
+  final pillFormKey = GlobalKey<FormState>();
+  String pillText = "";
+  String pillSource = "";
+  bool pillLoading = false;
+  String? pillError;
 
   @override
   void initState() {
@@ -49,45 +60,133 @@ class _UserWidgetState extends State<UserWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: (user == null)
-              ? [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
-                  logoutButton,
-                ]
-              : [
-                  Text(
-                    user!.name,
-                    style: theme.textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.points(user!.points),
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+          children: ((user == null)
+                  ? [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      logoutButton,
+                    ]
+                  : [
+                      Text(
+                        user!.name,
+                        style: theme.textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.points(user!.points),
+                        style: theme.textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (loading)
+                            const CircularProgressIndicator()
+                          else
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() => {loading = true});
+                                reload();
+                              },
+                              child: Text(l10n.refresh),
+                            ),
+                          const SizedBox(width: 8),
+                          logoutButton,
+                        ],
+                      ),
+                    ]) +
+              [
+                const SizedBox(height: 24),
+                const Divider(thickness: 1),
+                const SizedBox(height: 8),
+                Form(
+                  key: pillFormKey,
+                  child: Column(
                     children: [
-                      if (loading)
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: l10n.pill,
+                          hintText: l10n.insertEcologyPill,
+                        ),
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return l10n.insertPill;
+                          } else {
+                            return null;
+                          }
+                        },
+                        onSaved: (value) => pillText = value ?? "",
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: l10n.source,
+                          hintText: l10n.insertPossiblySource,
+                        ),
+                        validator: (value) {
+                          if ((value?.isNotEmpty ?? false) && !urlPattern.hasMatch(value!)) {
+                            return l10n.insertValidUrl;
+                          } else {
+                            return null;
+                          }
+                        },
+                        onSaved: (value) => pillSource = value ?? "",
+                      ),
+                      const SizedBox(height: 12),
+                      if (pillError != null)
+                        Text(
+                          pillError!,
+                          style: TextStyle(color: theme.colorScheme.error),
+                          textAlign: TextAlign.center,
+                        ),
+                      const SizedBox(height: 12),
+                      if (pillLoading)
                         const CircularProgressIndicator()
                       else
                         ElevatedButton(
                           onPressed: () {
-                            setState(() => {loading = true});
-                            reload();
+                            if (pillFormKey.currentState?.validate() ?? false) {
+                              pillFormKey.currentState?.save();
+                              submitPill();
+                            }
                           },
-                          child: Text(l10n.refresh),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(l10n.suggestPill),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.send),
+                            ],
+                          ),
                         ),
-                      const SizedBox(width: 8),
-                      logoutButton,
                     ],
                   ),
-                ],
+                ),
+              ],
         ),
       ),
     );
+  }
+
+  void submitPill() {
+    setState(() {
+      pillError = null;
+      pillLoading = true;
+    });
+
+    getIt<Backend>().suggestPill(pillText, pillSource).then((_) {
+      // pill uploaded successfully!
+      pillFormKey.currentState?.reset();
+      setState(() {
+        pillLoading = false;
+      });
+    }, onError: (e) {
+      setState(() {
+        pillError = e.toString();
+        pillLoading = false;
+      });
+    });
   }
 }

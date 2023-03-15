@@ -49,5 +49,11 @@
   "ok": "OK",
   "filterMarkers": "Filtra marcatori",
   "includeResolved": "Includi i risolti",
-  "reportAsInappropriate": "Segnala come inappropriato"
+  "reportAsInappropriate": "Segnala come inappropriato",
+  "insertEcologyPill": "Inserisci una pillola di ecologia",
+  "insertPill": "Inserisci una pillola",
+  "source": "Fonte",
+  "insertPossiblySource": "Inserisci la fonte, se applicabile",
+  "insertValidUrl": "Inserisci un indirizzo web valido",
+  "suggestPill": "Suggerisci pillola"
 }

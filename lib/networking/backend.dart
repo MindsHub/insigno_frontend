@@ -171,4 +171,8 @@ class Backend {
     // TODO insert real path
     return _postAuthenticated("/map/report/$markerId");
   }
+  
+  Future<void> suggestPill(String text, String source) {
+    return _postAuthenticated("/pills/add", fields: {"text": text, "source": source});
+  }
 }
