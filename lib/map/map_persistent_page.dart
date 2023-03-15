@@ -79,7 +79,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
     zoomStream = Stream.value(initialZoom)
-        .concatWith([mapController.mapEventStream.map((event) => event.zoom)]);
+        // use mapController.zoom instead of event.zoom since event.zoom is sometimes outdated
+        // (e.g. after repositioning)
+        .concatWith([mapController.mapEventStream.map((event) => mapController.zoom)]);
 
     if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
