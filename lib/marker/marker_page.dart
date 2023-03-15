@@ -2,6 +2,7 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/const.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
@@ -96,7 +97,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
         actions: isLoggedIn && (marker?.canBeReported ?? false)
             ? [
                 IconButton(
-                  onPressed: () => get<Backend>().reportAsInappropriate(marker!.id),
+                  onPressed: openReportAsInappropriateDialog,
                   icon: const Icon(Icons.report),
                   tooltip: l10n.reportAsInappropriate,
                 )
@@ -183,6 +184,15 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
         wasResolvedNow = true;
         setState(() => resolveError = value.errorAddingImages);
         reload();
+      }
+    });
+  }
+
+  void openReportAsInappropriateDialog() {
+    showDialog(context: context, builder: (ctx) => const ReportAsInappropriateDialog())
+        .then((value) {
+      if (value is bool && value == true) {
+        get<Backend>().reportAsInappropriate(marker!.id);
       }
     });
   }

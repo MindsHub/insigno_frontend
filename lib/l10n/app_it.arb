@@ -56,5 +56,6 @@
   "insertPossiblySource": "Inserisci la fonte, se applicabile",
   "insertValidUrl": "Inserisci un indirizzo web valido",
   "suggestPill": "Suggerisci pillola",
-  "thanks": "Grazie!"
+  "thanks": "Grazie!",
+  "confirmReportAsInappropriate": "Sei sicuro di voler segnalare questo marcatore come inappropriato?"
 }

@@ -92,5 +92,6 @@
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
   "suggestPill": "Suggest pill",
-  "thanks": "Thanks!"
+  "thanks": "Thanks!",
+  "confirmReportAsInappropriate": "Are you sure you want to report this marker as inappropriate?"
 }
