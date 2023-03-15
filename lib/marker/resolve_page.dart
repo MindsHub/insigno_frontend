@@ -56,8 +56,8 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
       position,
       whilePositionLoading: () => images.isEmpty ? l10n.addImage : null,
       afterPositionLoaded: () => (position?.position?.map(marker.isNearEnoughToResolve) ?? false)
-          ? l10n.tooFarToResolve
-          : null,
+          ? null
+          : l10n.tooFarToResolve,
     );
 
     return Scaffold(
