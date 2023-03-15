@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
+import 'package:insigno_frontend/user/user_provider.dart';
 
 import '../networking/authentication.dart';
 
-class UserWidget extends StatefulWidget {
-  const UserWidget({Key? key}) : super(key: key);
+class UserWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  UserWidget({Key? key}) : super(key: key);
 
   @override
   State<UserWidget> createState() => _UserWidgetState();
 }
 
-class _UserWidgetState extends State<UserWidget> with SingleTickerProviderStateMixin<UserWidget> {
+class _UserWidgetState extends State<UserWidget>
+    with SingleTickerProviderStateMixin<UserWidget>, GetItStateMixin<UserWidget> {
   static final urlPattern = RegExp(
     r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
     caseSensitive: false,
   );
-
-  bool loading = true;
-  AuthenticatedUser? user;
 
   final pillFormKey = GlobalKey<FormState>();
   String pillText = "";
@@ -34,22 +34,19 @@ class _UserWidgetState extends State<UserWidget> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     pillAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    reload();
-  }
-
-  void reload() {
-    getIt<Backend>() //
-        .getAuthenticatedUser()
-        .then((value) => setState(() {
-              user = value;
-              loading = false;
-            }));
+    getIt<UserProvider>().requestAuthenticatedUser();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+
+    // double.negativeInfinity is used just to signal that the user has not loaded yet
+    final user = watchStream((UserProvider userProv) => userProv.getAuthenticatedUserStream(),
+                AuthenticatedUser("", double.negativeInfinity))
+            .data ??
+        AuthenticatedUser("", double.negativeInfinity);
 
     final logoutButton = ElevatedButton(
       onPressed: () => getIt<Authentication>().logout(),
@@ -63,44 +60,26 @@ class _UserWidgetState extends State<UserWidget> with SingleTickerProviderStateM
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: ((user == null)
-                  ? [
+          children: ((user.points == double.negativeInfinity)
+                  ? <Widget>[
                       const CircularProgressIndicator(),
-                      const SizedBox(height: 16),
-                      logoutButton,
                     ]
-                  : [
+                  : <Widget>[
                       Text(
-                        user!.name,
+                        user.name,
                         style: theme.textTheme.titleMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        l10n.points(user!.points),
+                        l10n.points(user.points),
                         style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (loading)
-                            const CircularProgressIndicator()
-                          else
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() => {loading = true});
-                                reload();
-                              },
-                              child: Text(l10n.refresh),
-                            ),
-                          const SizedBox(width: 8),
-                          logoutButton,
-                        ],
-                      ),
                     ]) +
-              [
+              <Widget>[
+                const SizedBox(height: 12),
+                logoutButton,
                 const Divider(height: 32, thickness: 1),
                 SizeTransition(
                   sizeFactor: pillAnim,

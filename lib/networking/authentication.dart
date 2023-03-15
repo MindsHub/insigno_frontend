@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
+import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/user/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'const.dart';
@@ -71,12 +73,21 @@ class Authentication {
     return _loginOrSignup("/signup", {"name": name, "password": password});
   }
 
+  /// also invalidates the loaded user (if any) of [UserProvider]
   Future<void> removeStoredCookie() async {
+    try {
+      getIt<UserProvider>().invalidateLoadedUser();
+    } on AssertionError catch (_) {
+      // if Authentication depended on UserProvider, we would have a dependency cycle, therefore
+      // we do not depend on it and we must allow it to not have registered/initialized yet
+    }
+
     _streamController.add(false);
     _cookie = null;
     await _preferences.remove(authCookieKey);
   }
 
+  /// also invalidates the loaded user (if any) of [UserProvider]
   Future<void> logout() async {
     final cookie = _cookie;
     if (cookie == null) {

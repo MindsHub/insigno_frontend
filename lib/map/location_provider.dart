@@ -115,7 +115,7 @@ class LocationProvider {
   }
 
   @disposeMethod
-  void dispose() async {
+  Future<void> dispose() async {
     await Future.wait([
       _permissionStatusSub?.cancel() ?? Future.value(null),
       _serviceStatusSub?.cancel() ?? Future.value(null),

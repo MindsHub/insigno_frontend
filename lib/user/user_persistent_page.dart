@@ -43,7 +43,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
       ),
       body: Center(
         child: isLoggedIn
-            ? const UserWidget()
+            ? UserWidget()
             : loginOrSignup
                 ? LoginWidget(() => setState(() => loginOrSignup = false))
                 : SignupWidget(() => setState(() => loginOrSignup = true)),
