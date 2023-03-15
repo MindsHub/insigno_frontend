@@ -5,8 +5,9 @@ class Marker extends MapMarker {
   final DateTime creationDate;
   final DateTime? resolutionDate;
   final int createdBy;
+  final bool canBeReported;
 
   Marker(int id, double latitude, double longitude, MarkerType type, this.creationDate,
-      this.resolutionDate, this.createdBy)
+      this.resolutionDate, this.createdBy, this.canBeReported)
       : super(id, latitude, longitude, type, resolutionDate != null);
 }

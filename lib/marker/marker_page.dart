@@ -87,12 +87,20 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Row(children: [
           Text(mapMarker.type.getName(context)),
           const SizedBox(width: 12),
           mapMarker.type.getThemedIcon(context)
         ]),
+        actions: isLoggedIn && (marker?.canBeReported ?? false)
+            ? [
+                IconButton(
+                  onPressed: () => get<Backend>().reportAsInappropriate(marker!.id),
+                  icon: const Icon(Icons.report),
+                  tooltip: l10n.reportAsInappropriate,
+                )
+              ]
+            : null,
       ),
       body: Center(
         child: Column(

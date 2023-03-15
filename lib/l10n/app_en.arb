@@ -84,5 +84,6 @@
   "cancel": "Cancel",
   "ok": "OK",
   "filterMarkers": "Filter markers",
-  "includeResolved": "Include resolved"
+  "includeResolved": "Include resolved",
+  "reportAsInappropriate": "Report as inappropriate"
 }

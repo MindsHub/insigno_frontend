@@ -48,5 +48,6 @@
   "cancel": "Annulla",
   "ok": "OK",
   "filterMarkers": "Filtra marcatori",
-  "includeResolved": "Includi i risolti"
+  "includeResolved": "Includi i risolti",
+  "reportAsInappropriate": "Segnala come inappropriato"
 }

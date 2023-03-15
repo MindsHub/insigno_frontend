@@ -154,6 +154,7 @@ class Backend {
         DateTime.parse(marker["creation_date"]),
         (resolutionDate as String?).map(DateTime.parse),
         marker["created_by"],
+        true, // TODO obtain "can be reported" field
       );
     });
   }
@@ -164,5 +165,10 @@ class Backend {
 
   Future<AuthenticatedUser> getAuthenticatedUser() {
     return _getJsonAuthenticated("/user").map((u) => AuthenticatedUser(u["name"], u["points"]));
+  }
+
+  Future<void> reportAsInappropriate(int markerId) {
+    // TODO insert real path
+    return _postAuthenticated("/map/report/$markerId");
   }
 }
