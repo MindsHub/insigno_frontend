@@ -81,24 +81,27 @@ class _MarkerFiltersDialogState extends State<MarkerFiltersDialog> {
                 ),
               ]).toList(growable: false),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, null),
-                  child: Text(l10n.cancel),
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  onPressed: () => Navigator.pop(
-                      context,
-                      MarkerFilters(
-                        Set.unmodifiable(shownMarkers),
-                        includeResolved,
-                      )),
-                  child: Text(l10n.ok),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 8, right: 8),
+              child: OverflowBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                overflowSpacing: 4,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, null),
+                    child: Text(l10n.cancel),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(
+                        context,
+                        MarkerFilters(
+                          Set.unmodifiable(shownMarkers),
+                          includeResolved,
+                        )),
+                    child: Text(l10n.ok),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
