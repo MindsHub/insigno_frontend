@@ -47,6 +47,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   late LatLng initialCoordinates;
   late double initialZoom;
+  late Stream<double> zoomStream;
   LatLng? lastLoadMarkersPos;
   bool lastLoadMarkersIncludeResolved = false;
   MarkerFilters markerFilters = MarkerFilters(Set.unmodifiable(MarkerType.values), false);
@@ -77,6 +78,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       prefs.getDouble(lastMapLongitude) ?? defaultInitialCoordinates.longitude,
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
+    zoomStream = Stream.value(initialZoom)
+        .concatWith([mapController.mapEventStream.map((event) => event.zoom)]);
 
     if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
@@ -281,8 +284,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           subdomains: const ['a', 'b', 'c'],
         ),
         StreamBuilder<double>(
-          stream: Stream.value(initialZoom)
-              .concatWith([mapController.mapEventStream.map((event) => event.zoom)]),
+          stream: zoomStream,
           builder: (context, snapshot) {
             final zoom = snapshot.data ?? markersZoomThreshold;
             final showMarkers = zoom > markersZoomThreshold;
