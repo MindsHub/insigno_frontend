@@ -8,15 +8,15 @@ import 'package:insigno_frontend/user/auth_user_provider.dart';
 
 import '../networking/authentication.dart';
 
-class AuthUserWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  AuthUserWidget({Key? key}) : super(key: key);
+class ProfileWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  ProfileWidget({Key? key}) : super(key: key);
 
   @override
-  State<AuthUserWidget> createState() => _AuthUserWidgetState();
+  State<ProfileWidget> createState() => _ProfileWidgetState();
 }
 
-class _AuthUserWidgetState extends State<AuthUserWidget>
-    with SingleTickerProviderStateMixin<AuthUserWidget>, GetItStateMixin<AuthUserWidget> {
+class _ProfileWidgetState extends State<ProfileWidget>
+    with SingleTickerProviderStateMixin<ProfileWidget>, GetItStateMixin<ProfileWidget> {
   static final urlPattern = RegExp(
     r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
     caseSensitive: false,
