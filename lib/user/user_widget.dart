@@ -142,34 +142,54 @@ class _UserWidgetState extends State<UserWidget>
                 if (pillLoading)
                   const CircularProgressIndicator()
                 else
-                  ElevatedButton(
-                    onPressed: () {
-                      if (pillAnim.isDismissed) {
-                        pillAnim.forward();
-                        pillFormKey.currentState?.reset();
-                      } else if (pillAnim.isCompleted &&
-                          (pillFormKey.currentState?.validate() ?? false)) {
-                        pillFormKey.currentState?.save();
-                        submitPill();
-                      }
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(l10n.suggestPill),
-                        SizeTransition(
-                          sizeFactor: pillAnim,
-                          axis: Axis.horizontal,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              SizedBox(width: 8),
-                              Icon(Icons.send),
-                            ],
-                          ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizeTransition(
+                        sizeFactor: pillAnim,
+                        axis: Axis.horizontal,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                              onPressed: () => pillAnim.reverse(),
+                              child: Text(l10n.cancel),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (pillAnim.isDismissed) {
+                            pillAnim.forward();
+                            pillFormKey.currentState?.reset();
+                          } else if (pillAnim.isCompleted &&
+                              (pillFormKey.currentState?.validate() ?? false)) {
+                            pillFormKey.currentState?.save();
+                            submitPill();
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(l10n.suggestPill),
+                            SizeTransition(
+                              sizeFactor: pillAnim,
+                              axis: Axis.horizontal,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  SizedBox(width: 8),
+                                  Icon(Icons.send),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
               ],
         ),
