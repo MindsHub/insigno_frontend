@@ -180,17 +180,21 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                         Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
                   ),
                 const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
-                      arguments: mapMarker.reportedBy),
-                  child: Text(l10n.reportedBy(mapMarker.reportedBy.toString())),
-                ),
-                if (mapMarker.resolvedBy != null)
-                  TextButton(
-                    onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
-                        arguments: mapMarker.resolvedBy),
-                    child: Text(l10n.resolvedBy(mapMarker.resolvedBy.toString())),
-                  ),
+                OverflowBar(
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
+                          arguments: mapMarker.reportedBy),
+                      child: Text(l10n.reportedBy(mapMarker.reportedBy.toString())),
+                    ),
+                    if (mapMarker.resolvedBy != null)
+                      TextButton(
+                        onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
+                            arguments: mapMarker.resolvedBy),
+                        child: Text(l10n.resolvedBy(mapMarker.resolvedBy.toString())),
+                      ),
+                  ],
+                )
               ],
             ),
           ),
