@@ -10,7 +10,7 @@ class MarkerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actualSize = size * (marker.resolved ? 0.7 : 1.0);
+    final actualSize = size * (marker.isResolved() ? 0.7 : 1.0);
 
     return IconButton(
       padding: EdgeInsets.zero,

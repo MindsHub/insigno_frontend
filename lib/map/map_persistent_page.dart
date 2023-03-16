@@ -301,9 +301,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                         point: pos,
                         builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                       ))
-                  .followedBy((showMarkers ? markers : [])
+                  .followedBy((showMarkers ? markers : <MapMarker>[])
                       .where((e) =>
-                          (markerFilters.includeResolved || !e.resolved) &&
+                          (markerFilters.includeResolved || !e.isResolved()) &&
                           markerFilters.shownMarkers.contains(e.type))
                       .map((e) => Marker(
                             width: 36 * markerSizeMultiplier,
@@ -333,11 +333,11 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       MarkerPage.routeName,
       arguments: MarkerPageArgs(m, errorAddingImages),
     ).then((value) {
-      if (!m.resolved && value is bool && value == true) {
-        // the marker just got resolved, so update it in the map
+      if (value is MapMarker) {
+        // the marker may have been resolved, or its data might have changed, so update it
         setState(() {
           markers.removeWhere((element) => element.id == m.id);
-          markers.add(MapMarker(m.id, m.latitude, m.longitude, m.type, true));
+          markers.add(value);
         });
       }
     });

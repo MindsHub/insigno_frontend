@@ -39,7 +39,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   List<int>? images;
   Marker? marker;
   String? resolveError;
-  bool wasResolvedNow = false;
 
   @override
   void initState() {
@@ -106,7 +105,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
       ),
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context, wasResolvedNow);
+          Navigator.pop(context, marker); // pass the up-to-date loaded marker to the parent
           return false;
         },
         child: Center(
@@ -181,8 +180,16 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   void openResolvePage() {
     Navigator.pushNamed(context, ResolvePage.routeName, arguments: marker!).then((value) {
       if (value is ResolvedResult) {
-        wasResolvedNow = true;
-        setState(() => resolveError = value.errorAddingImages);
+        setState(() {
+          resolveError = value.errorAddingImages;
+
+          final m = marker;
+          if (m != null) {
+            // temporarily update value while everything is being reloaded
+            marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate, DateTime.now(),
+                m.createdBy, -1 /* TODO we don't know our user id */, m.canBeReported);
+          }
+        });
         reload();
       }
     });

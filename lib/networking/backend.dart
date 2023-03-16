@@ -104,13 +104,17 @@ class Backend {
       "include_resolved": includeResolved ? "true" : "false",
     }).map((markers) => markers.map<MapMarker>((marker) {
           var point = marker["point"];
+          var resolutionDate = marker["resolution_date"];
           return MapMarker(
             marker["id"],
             point["y"] as double,
             point["x"] as double,
             MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
                 MarkerType.unknown,
-            marker["resolution_date"] != null,
+            DateTime.parse(marker["creation_date"]),
+            (resolutionDate as String?).map(DateTime.parse),
+            marker["created_by"],
+            marker["solved_by"],
           );
         }).toList());
   }
@@ -154,6 +158,7 @@ class Backend {
         DateTime.parse(marker["creation_date"]),
         (resolutionDate as String?).map(DateTime.parse),
         marker["created_by"],
+        marker["solved_by"],
         true, // TODO obtain "can be reported" field
       );
     });
