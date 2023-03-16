@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../networking/data/user.dart';
 
 class UserPage extends StatefulWidget {
   static const routeName = "/userPage";
@@ -12,8 +15,45 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  User? user;
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.user),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: ((user == null)
+                ? <Widget>[
+                    const CircularProgressIndicator(),
+                  ]
+                : <Widget>[
+                    Text(
+                      user!.name,
+                      style: theme.textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.points(user!.points),
+                      style: theme.textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ]),
+          ),
+        ),
+      ),
+    );
   }
 }
