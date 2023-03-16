@@ -8,6 +8,7 @@ import 'package:insigno_frontend/networking/const.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
 import 'package:insigno_frontend/user/user_page.dart';
+import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
@@ -158,20 +159,28 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     height: 128,
                     child: Center(child: CircularProgressIndicator()),
                   ),
-                if (widget.errorAddingImages != null || resolveError != null)
-                  const SizedBox(height: 16),
-                if (widget.errorAddingImages != null)
-                  Text(l10n.errorUploadingReportImages(widget.errorAddingImages!)),
-                if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
-                if (reportAsInappropriateError != null)
-                  Text(l10n.errorReportingAsInappropriate(reportAsInappropriateError!)),
+                ErrorText(
+                  widget.errorAddingImages,
+                  l10n.errorUploadingReportImages,
+                  spaceAbove: 16,
+                ),
+                ErrorText(
+                  resolveError,
+                  l10n.errorUploadingResolveImages,
+                  spaceAbove: 16,
+                ),
+                ErrorText(
+                  reportAsInappropriateError,
+                  l10n.errorReportingAsInappropriate,
+                  spaceAbove: 16,
+                ),
                 const SizedBox(height: 16),
                 if (marker == null || marker?.resolutionDate != null)
                   const SizedBox() // do not show any error if the marker is already resolved
                 else if (!isLoggedIn)
-                  Text(l10n.loginToResolve)
+                  Text(l10n.loginToResolve, textAlign: TextAlign.center)
                 else if (!nearEnoughToResolve)
-                  Text(l10n.getCloserToResolve),
+                  Text(l10n.getCloserToResolve, textAlign: TextAlign.center),
                 if (marker == null)
                   const CircularProgressIndicator()
                 else

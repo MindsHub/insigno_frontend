@@ -4,7 +4,14 @@
   "loginToInsigno": "Login to Insigno!",
   "name": "Name",
   "password": "Password",
-  "wrongUserOrPassword": "Wrong user or password",
+  "wrongUserOrPassword": "Wrong user or password: {error}",
+  "@wrongUserOrPassword": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "logout": "Logout",
   "close": "Close",
   "loginToResolve": "Login to resolve",
@@ -70,7 +77,14 @@
   "insertName": "Insert a name",
   "insertPassword": "Insert a password",
   "passwordsNotMatch": "Passwords don't match",
-  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers.",
+  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers. {error}",
+  "@signupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "points": "{points} points",
   "@points": {
     "placeholders": {
@@ -114,6 +128,22 @@
   },
   "errorReportingAsInappropriate": "Error reporting as inappropriate: {error}",
   "@errorReportingAsInappropriate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSendingPill": "Error sending pill: {error}",
+  "@errorSendingPill": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoading": "Error loading: {error}",
+  "@errorLoading": {
     "placeholders": {
       "error": {
         "type": "String"

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/util/error_text.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
@@ -77,19 +78,8 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
-              const SizedBox(height: 12),
-              if (loginError != null)
-                Text(
-                  l10n.wrongUserOrPassword,
-                  style: TextStyle(color: theme.colorScheme.error),
-                  textAlign: TextAlign.center,
-                ),
-              if (loginError != null)
-                Text(
-                  loginError!,
-                  textAlign: TextAlign.center,
-                ),
-              const SizedBox(height: 12),
+              ErrorText(loginError, l10n.wrongUserOrPassword, spaceAbove: 16),
+              const SizedBox(height: 16),
               loading
                   ? const CircularProgressIndicator()
                   : FloatingActionButton(

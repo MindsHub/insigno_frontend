@@ -6,6 +6,7 @@ import 'package:insigno_frontend/marker/add_images_widget.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/util/error_text.dart';
 
 import '../map/location_provider.dart';
 import '../networking/authentication.dart';
@@ -103,7 +104,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 onPressed: errorMessage == null ? send : null,
                 child: Text(l10n.send),
               ),
-            if (error != null) Text(l10n.errorReporting(error!)),
+            ErrorText(error, l10n.errorReporting),
           ],
         ),
       ),

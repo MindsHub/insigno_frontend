@@ -5,6 +5,7 @@ import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/user/auth_user_provider.dart';
+import 'package:insigno_frontend/util/error_text.dart';
 
 import '../networking/authentication.dart';
 
@@ -116,14 +117,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                           },
                           onSaved: (value) => pillSource = value ?? "",
                         ),
-                        const SizedBox(height: 12),
-                        if (pillError != null)
-                          Text(
-                            pillError!,
-                            style: TextStyle(color: theme.colorScheme.error),
-                            textAlign: TextAlign.center,
-                          ),
-                        const SizedBox(height: 12),
+                        ErrorText(pillError, l10n.errorSendingPill, spaceAbove: 16),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),

@@ -4,7 +4,7 @@
   "loginToInsigno": "Accedi ad Insigno!",
   "name": "Nome",
   "password": "Password",
-  "wrongUserOrPassword": "Utente o password errati",
+  "wrongUserOrPassword": "Utente o password errati: {error}",
   "logout": "Esci",
   "close": "Chiudi",
   "loginToResolve": "Accedi per risolvere",
@@ -42,7 +42,7 @@
   "insertName": "Inserisci un nome",
   "insertPassword": "Inserisci una password",
   "passwordsNotMatch": "Le password non coincidono",
-  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri.",
+  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri. {error}",
   "points": "{points} punti",
   "refresh": "Aggiorna",
   "cancel": "Annulla",
@@ -62,5 +62,7 @@
   "yourProfile": "Il tuo profilo",
   "reportedBy": "Segnalato da {user}",
   "resolvedBy": "Risolto da {user}",
-  "errorReportingAsInappropriate": "Errore nel segnalare come inappropriato: {error}"
+  "errorReportingAsInappropriate": "Errore nel segnalare come inappropriato: {error}",
+  "errorSendingPill": "Errore nell'inviare la pillola: {error}",
+  "errorLoading": "Errore nel caricamento: {error}"
 }
