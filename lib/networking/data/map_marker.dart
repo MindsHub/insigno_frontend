@@ -10,11 +10,11 @@ class MapMarker {
   final MarkerType type;
   final DateTime creationDate;
   final DateTime? resolutionDate;
-  final int createdBy;
+  final int reportedBy;
   final int? resolvedBy;
 
   MapMarker(this.id, this.latitude, this.longitude, this.type, this.creationDate,
-      this.resolutionDate, this.createdBy, this.resolvedBy);
+      this.resolutionDate, this.reportedBy, this.resolvedBy);
 
   LatLng getLatLng() {
     return LatLng(latitude, longitude);

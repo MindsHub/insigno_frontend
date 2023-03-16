@@ -7,6 +7,7 @@ import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/const.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
+import 'package:insigno_frontend/user/user_page.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
@@ -172,6 +173,17 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     child:
                         Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
                   ),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
+                      arguments: mapMarker.reportedBy),
+                  child: Text(l10n.reportedBy(mapMarker.reportedBy.toString())),
+                ),
+                if (mapMarker.resolvedBy != null)
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
+                        arguments: mapMarker.resolvedBy),
+                    child: Text(l10n.resolvedBy(mapMarker.resolvedBy.toString())),
+                  ),
               ],
             ),
           ),
@@ -190,7 +202,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
           if (m != null) {
             // temporarily update value while everything is being reloaded
             marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate, DateTime.now(),
-                m.createdBy, -1 /* TODO we don't know our user id */, m.canBeReported);
+                m.reportedBy, -1 /* TODO we don't know our user id */, m.canBeReported);
           }
         });
         reload();
@@ -208,7 +220,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
           if (m != null) {
             // make sure the user won't be able to report again
             marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate, m.resolutionDate,
-                m.createdBy, m.resolvedBy, false);
+                m.reportedBy, m.resolvedBy, false);
           }
         });
       }
