@@ -89,11 +89,17 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(children: [
-          Text(mapMarker.type.getName(context)),
-          const SizedBox(width: 12),
-          mapMarker.type.getThemedIcon(context)
-        ]),
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(mapMarker.type.getName(context)),
+              const SizedBox(width: 12),
+              mapMarker.type.getThemedIcon(context)
+            ],
+          ),
+        ),
         actions: isLoggedIn && (marker?.canBeReported ?? false)
             ? [
                 IconButton(
