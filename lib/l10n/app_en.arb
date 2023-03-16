@@ -94,5 +94,6 @@
   "insertValidUrl": "Insert a valid web address",
   "suggestPill": "Suggest pill",
   "thanks": "Thanks!",
-  "confirmReportAsInappropriate": "Are you sure you want to report this marker as inappropriate?"
+  "confirmReportAsInappropriate": "Are you sure you want to report this marker as inappropriate?",
+  "yourProfile": "Your profile"
 }

@@ -38,7 +38,7 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
       appBar: AppBar(
         centerTitle: true,
         title: Text(isLoggedIn
-            ? l10n.user
+            ? l10n.yourProfile
             : loginOrSignup
                 ? l10n.loginToInsigno
                 : l10n.signup),
