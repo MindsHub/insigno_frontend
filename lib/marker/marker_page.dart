@@ -38,9 +38,7 @@ class MarkerPageArgs {
 }
 
 class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage> {
-  List<int>? images;
   Marker? marker;
-  String? imagesError;
   String? markerError;
   String? resolveError;
   String? reportAsInappropriateError;
@@ -53,8 +51,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
   void reload() {
     final backend = get<Backend>();
-    backend.getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value),
-        onError: (e) => imagesError = e.toString());
     backend.getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value),
         onError: (e) => markerError = e.toString());
   }
@@ -75,7 +71,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
-    final imageProviders = images?.map((image) => Image.network(
+    final imageProviders = marker?.images.map((image) => Image.network(
           "$insignoServerScheme://$insignoServer/map/image/$image",
           height: 128,
           fit: BoxFit.cover,
@@ -126,7 +122,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (images?.isNotEmpty == true)
+                if (marker?.images.isNotEmpty == true)
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -157,13 +153,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                           )
                           .toList(growable: false),
                     ),
-                  )
-                else if (images == null && marker != null)
-                  const SizedBox(
-                    height: 128,
-                    child: Center(child: CircularProgressIndicator()),
                   ),
-                ErrorText(imagesError, l10n.errorLoadingImages),
                 ErrorText(markerError, l10n.errorLoading),
                 ErrorText(
                   widget.errorAddingImages,
@@ -193,22 +183,23 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     child:
                         Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
                   ),
-                const SizedBox(height: 8),
-                OverflowBar(
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
-                          arguments: mapMarker.reportedBy),
-                      child: Text(l10n.reportedBy(mapMarker.reportedBy.toString())),
-                    ),
-                    if (mapMarker.resolvedBy != null)
+                if (marker != null) const SizedBox(height: 8),
+                if (marker != null)
+                  OverflowBar(
+                    children: [
                       TextButton(
                         onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
-                            arguments: mapMarker.resolvedBy),
-                        child: Text(l10n.resolvedBy(mapMarker.resolvedBy.toString())),
+                            arguments: mapMarker.reportedBy),
+                        child: Text(l10n.reportedBy(marker!.reportedByUser.name)),
                       ),
-                  ],
-                )
+                      if (marker!.resolvedByUser != null)
+                        TextButton(
+                          onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
+                              arguments: mapMarker.resolvedBy),
+                          child: Text(l10n.resolvedBy(marker!.resolvedByUser!.name)),
+                        ),
+                    ],
+                  )
               ],
             ),
           ),
