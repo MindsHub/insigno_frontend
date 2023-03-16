@@ -174,7 +174,7 @@ class Backend {
   }
 
   Future<User> getUser(int userId) {
-    return _getJson("/user").map((u) => User(u["name"], u["points"]));
+    return _getJson("/user/$userId").map((u) => User(u["name"], u["points"]));
   }
 
   Future<void> reportAsInappropriate(int markerId) {

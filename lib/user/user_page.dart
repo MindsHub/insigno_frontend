@@ -23,9 +23,8 @@ class _UserPageState extends State<UserPage> {
   @override
   void initState() {
     super.initState();
-    getIt<Backend>()
-        .getUser(widget.userId)
-        .then((value) => user = value, onError: (e) => error = e.toString());
+    getIt<Backend>().getUser(widget.userId).then((value) => setState(() => user = value),
+        onError: (e) => setState(() => error = e.toString()));
   }
 
   @override
@@ -38,36 +37,37 @@ class _UserPageState extends State<UserPage> {
         title: Text(l10n.user),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: ((user == null)
-                ? <Widget>[
-                    if (error == null)
-                      const CircularProgressIndicator()
-                    else
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: ((user == null)
+                  ? <Widget>[
+                      if (error == null)
+                        const CircularProgressIndicator()
+                      else
+                        Text(
+                          error!,
+                          style: TextStyle(color: theme.colorScheme.error),
+                        ),
+                    ]
+                  : <Widget>[
                       Text(
-                        error!,
-                        style: TextStyle(color: theme.colorScheme.error),
+                        user!.name,
+                        style: theme.textTheme.titleMedium,
+                        textAlign: TextAlign.center,
                       ),
-                  ]
-                : <Widget>[
-                    Text(
-                      user!.name,
-                      style: theme.textTheme.titleMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.points(user!.points),
-                      style: theme.textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ]),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.points(user!.points),
+                        style: theme.textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                    ]),
+            ),
           ),
         ),
       ),
