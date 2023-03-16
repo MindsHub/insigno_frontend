@@ -101,6 +101,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         debugPrint("Ignoring outdated loaded markers at $latLng");
       }
     });
+    // ignore errors when loading map markers (TODO maybe show a button to view errors somewhere?)
   }
 
   @override

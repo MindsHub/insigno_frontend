@@ -47,8 +47,10 @@ class _UserPageState extends State<UserPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: ((user == null)
                   ? <Widget>[
-                      if (error == null) const CircularProgressIndicator(),
-                      ErrorText(error, l10n.errorLoading),
+                      if (error == null)
+                        const CircularProgressIndicator()
+                      else
+                        ErrorText(error, l10n.errorLoading),
                     ]
                   : <Widget>[
                       Text(

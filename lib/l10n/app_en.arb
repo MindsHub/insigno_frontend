@@ -149,5 +149,13 @@
         "type": "String"
       }
     }
+  },
+  "errorLoadingImages": "Error loading images: {error}",
+  "@errorLoadingImages": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

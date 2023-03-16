@@ -64,5 +64,6 @@
   "resolvedBy": "Risolto da {user}",
   "errorReportingAsInappropriate": "Errore nel segnalare come inappropriato: {error}",
   "errorSendingPill": "Errore nell'inviare la pillola: {error}",
-  "errorLoading": "Errore nel caricamento: {error}"
+  "errorLoading": "Errore nel caricamento: {error}",
+  "errorLoadingImages": "Errore nel caricare le immagini: {error}"
 }

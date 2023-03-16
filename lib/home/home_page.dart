@@ -33,6 +33,8 @@ class _HomePageState extends State<HomePage>
       parent: pillAnimationController,
       curve: Curves.linear,
     );
+
+    // ignore any error that may occur while loading the pill
     get<Backend>().loadRandomPill().then((value) => setState(() {
           pill = value;
           pillAnimationController.forward();

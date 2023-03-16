@@ -40,6 +40,8 @@ class MarkerPageArgs {
 class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage> {
   List<int>? images;
   Marker? marker;
+  String? imagesError;
+  String? markerError;
   String? resolveError;
   String? reportAsInappropriateError;
 
@@ -51,8 +53,10 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
   void reload() {
     final backend = get<Backend>();
-    backend.getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value));
-    backend.getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value));
+    backend.getImagesForMarker(widget.mapMarker.id).then((value) => setState(() => images = value),
+        onError: (e) => imagesError = e.toString());
+    backend.getMarker(widget.mapMarker.id).then((value) => setState(() => marker = value),
+        onError: (e) => markerError = e.toString());
   }
 
   @override
@@ -159,16 +163,14 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     height: 128,
                     child: Center(child: CircularProgressIndicator()),
                   ),
+                ErrorText(imagesError, l10n.errorLoadingImages),
+                ErrorText(markerError, l10n.errorLoading),
                 ErrorText(
                   widget.errorAddingImages,
                   l10n.errorUploadingReportImages,
                   spaceAbove: 16,
                 ),
-                ErrorText(
-                  resolveError,
-                  l10n.errorUploadingResolveImages,
-                  spaceAbove: 16,
-                ),
+                ErrorText(resolveError, l10n.errorUploadingResolveImages, spaceAbove: 16),
                 ErrorText(
                   reportAsInappropriateError,
                   l10n.errorReportingAsInappropriate,
@@ -249,18 +251,16 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
         get<Backend>().reportAsInappropriate(marker!.id).then((value) {
           /* reported successfully */
         }, onError: (e) {
-          setState(
-            () {
-              reportAsInappropriateError = e.toString();
+          setState(() {
+            reportAsInappropriateError = e.toString();
 
-              final m = marker;
-              if (m != null) {
-                // allow reporting again
-                marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate,
-                    m.resolutionDate, m.reportedBy, m.resolvedBy, true);
-              }
-            },
-          );
+            final m = marker;
+            if (m != null) {
+              // allow reporting again
+              marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate,
+                  m.resolutionDate, m.reportedBy, m.resolvedBy, true);
+            }
+          });
         });
       }
     });
