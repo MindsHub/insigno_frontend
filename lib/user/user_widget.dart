@@ -89,7 +89,7 @@ class _UserWidgetState extends State<UserWidget>
                       children: [
                         TextFormField(
                           decoration: InputDecoration(
-                            labelText: l10n.pill,
+                            labelText: l10n.infoText,
                             hintText: l10n.insertEcologyPill,
                           ),
                           validator: (value) {

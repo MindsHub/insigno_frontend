@@ -53,6 +53,7 @@
   "insertEcologyPill": "Inserisci una pillola di ecologia",
   "insertPill": "Inserisci una pillola",
   "source": "Fonte",
+  "infoText": "Testo informativo",
   "insertPossiblySource": "Inserisci la fonte, se applicabile",
   "insertValidUrl": "Inserisci un indirizzo web valido",
   "suggestPill": "Suggerisci pillola",

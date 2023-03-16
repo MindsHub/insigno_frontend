@@ -89,6 +89,7 @@
   "insertEcologyPill": "Insert an ecology pill",
   "insertPill": "Insert a pill",
   "source": "Source",
+  "infoText": "Informational text",
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
   "suggestPill": "Suggest pill",
