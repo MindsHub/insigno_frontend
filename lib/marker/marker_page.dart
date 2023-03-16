@@ -200,6 +200,14 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
         .then((value) {
       if (value is bool && value == true) {
         get<Backend>().reportAsInappropriate(marker!.id);
+        setState(() {
+          final m = marker;
+          if (m != null) {
+            // make sure the user won't be able to report again
+            marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate, m.resolutionDate,
+                m.createdBy, m.resolvedBy, false);
+          }
+        });
       }
     });
   }
