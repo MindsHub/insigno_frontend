@@ -19,11 +19,13 @@ class InsignoApp extends StatelessWidget {
         title: "Insigno",
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: lightDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.light),
+          colorScheme: lightDynamic ??
+              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light),
         ),
         darkTheme: ThemeData(
           useMaterial3: true,
-          colorScheme: darkDynamic ?? ColorScheme.fromSwatch(brightness: Brightness.dark),
+          colorScheme: darkDynamic ??
+              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
         ),
         home: HomePage(),
         onGenerateRoute: (RouteSettings settings) {
