@@ -109,68 +109,70 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
           return false;
         },
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (images?.isNotEmpty == true)
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: imageProviders!
-                        .expandIndexed(
-                          (index, image) => [
-                            if (index == 0) const SizedBox(width: 16),
-                            ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
-                              child: GestureDetector(
-                                onTap: () {
-                                  var imageProvider = MultiImageProvider(
-                                    imageProviders.map((e) => e.image).toList(growable: false),
-                                    initialIndex: index,
-                                  );
-                                  showImageViewerPager(
-                                    context,
-                                    imageProvider,
-                                    closeButtonTooltip: l10n.close,
-                                    doubleTapZoomable: true,
-                                  );
-                                },
-                                child: image,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (images?.isNotEmpty == true)
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: imageProviders!
+                          .expandIndexed(
+                            (index, image) => [
+                              if (index == 0) const SizedBox(width: 16),
+                              ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    var imageProvider = MultiImageProvider(
+                                      imageProviders.map((e) => e.image).toList(growable: false),
+                                      initialIndex: index,
+                                    );
+                                    showImageViewerPager(
+                                      context,
+                                      imageProvider,
+                                      closeButtonTooltip: l10n.close,
+                                      doubleTapZoomable: true,
+                                    );
+                                  },
+                                  child: image,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                        )
-                        .toList(growable: false),
+                              const SizedBox(width: 16),
+                            ],
+                          )
+                          .toList(growable: false),
+                    ),
+                  )
+                else if (images == null)
+                  const SizedBox(
+                    height: 128,
+                    child: Center(child: CircularProgressIndicator()),
                   ),
-                )
-              else if (images == null)
-                const SizedBox(
-                  height: 128,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              if (widget.errorAddingImages != null || resolveError != null)
+                if (widget.errorAddingImages != null || resolveError != null)
+                  const SizedBox(height: 16),
+                if (widget.errorAddingImages != null)
+                  Text(l10n.errorUploadingReportImages(widget.errorAddingImages!)),
+                if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
                 const SizedBox(height: 16),
-              if (widget.errorAddingImages != null)
-                Text(l10n.errorUploadingReportImages(widget.errorAddingImages!)),
-              if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
-              const SizedBox(height: 16),
-              if (marker == null) const CircularProgressIndicator(),
-              if (marker == null || marker?.resolutionDate != null)
-                const SizedBox() // do not show any error if the marker is already resolved
-              else if (!isLoggedIn)
-                Text(l10n.loginToResolve)
-              else if (!nearEnoughToResolve)
-                Text(l10n.getCloserToResolve),
-              if (marker != null)
-                ElevatedButton(
-                  onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
-                      ? openResolvePage
-                      : null,
-                  child: Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
-                ),
-            ],
+                if (marker == null) const CircularProgressIndicator(),
+                if (marker == null || marker?.resolutionDate != null)
+                  const SizedBox() // do not show any error if the marker is already resolved
+                else if (!isLoggedIn)
+                  Text(l10n.loginToResolve)
+                else if (!nearEnoughToResolve)
+                  Text(l10n.getCloserToResolve),
+                if (marker != null)
+                  ElevatedButton(
+                    onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
+                        ? openResolvePage
+                        : null,
+                    child:
+                        Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
