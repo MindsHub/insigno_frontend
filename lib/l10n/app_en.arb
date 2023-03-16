@@ -95,5 +95,21 @@
   "suggestPill": "Suggest pill",
   "thanks": "Thanks!",
   "confirmReportAsInappropriate": "Are you sure you want to report this marker as inappropriate?",
-  "yourProfile": "Your profile"
+  "yourProfile": "Your profile",
+  "reportedBy": "Reported by {user}",
+  "@reportedBy": {
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "resolvedBy": "Resolved by {user}",
+  "@resolvedBy": {
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  }
 }

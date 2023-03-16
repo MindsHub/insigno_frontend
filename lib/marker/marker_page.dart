@@ -145,7 +145,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                           .toList(growable: false),
                     ),
                   )
-                else if (images == null)
+                else if (images == null && marker != null)
                   const SizedBox(
                     height: 128,
                     child: Center(child: CircularProgressIndicator()),
@@ -156,14 +156,15 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                   Text(l10n.errorUploadingReportImages(widget.errorAddingImages!)),
                 if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
                 const SizedBox(height: 16),
-                if (marker == null) const CircularProgressIndicator(),
                 if (marker == null || marker?.resolutionDate != null)
                   const SizedBox() // do not show any error if the marker is already resolved
                 else if (!isLoggedIn)
                   Text(l10n.loginToResolve)
                 else if (!nearEnoughToResolve)
                   Text(l10n.getCloserToResolve),
-                if (marker != null)
+                if (marker == null)
+                  const CircularProgressIndicator()
+                else
                   ElevatedButton(
                     onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
                         ? openResolvePage
