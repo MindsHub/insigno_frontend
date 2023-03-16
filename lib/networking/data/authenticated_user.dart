@@ -1,6 +1,5 @@
-class AuthenticatedUser {
-  final String name;
-  final double points;
+import 'user.dart';
 
-  AuthenticatedUser(this.name, this.points);
+class AuthenticatedUser extends User {
+  AuthenticatedUser(super.name, super.points);
 }
