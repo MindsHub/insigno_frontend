@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/user/user_provider.dart';
+import 'package:insigno_frontend/user/auth_user_provider.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 import 'package:latlong2/latlong.dart';
@@ -106,7 +106,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
     final backend = get<Backend>();
     backend.resolveMarker(widget.mapMarker.id).then(
       (_) {
-        get<UserProvider>().addPoints(10.0);
+        get<AuthUserProvider>().addPoints(10.0);
         Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
           (_) => Navigator.pop(context, ResolvedResult(null)),
           onError: (e) => Navigator.pop(context, ResolvedResult(e.toString())),

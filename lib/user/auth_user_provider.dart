@@ -6,14 +6,14 @@ import 'package:insigno_frontend/networking/backend.dart';
 import '../networking/data/authenticated_user.dart';
 
 @lazySingleton
-class UserProvider {
+class AuthUserProvider {
   final Backend _backend;
   AuthenticatedUser? _loadedUser;
   double _additionalPoints = 0;
 
   final StreamController<AuthenticatedUser> _streamController = StreamController.broadcast();
 
-  UserProvider(this._backend);
+  AuthUserProvider(this._backend);
 
   Future<void> requestAuthenticatedUser() async {
     if (_loadedUser == null) {

@@ -4,19 +4,19 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
-import 'package:insigno_frontend/user/user_provider.dart';
+import 'package:insigno_frontend/user/auth_user_provider.dart';
 
 import '../networking/authentication.dart';
 
-class UserWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  UserWidget({Key? key}) : super(key: key);
+class AuthUserWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  AuthUserWidget({Key? key}) : super(key: key);
 
   @override
-  State<UserWidget> createState() => _UserWidgetState();
+  State<AuthUserWidget> createState() => _AuthUserWidgetState();
 }
 
-class _UserWidgetState extends State<UserWidget>
-    with SingleTickerProviderStateMixin<UserWidget>, GetItStateMixin<UserWidget> {
+class _AuthUserWidgetState extends State<AuthUserWidget>
+    with SingleTickerProviderStateMixin<AuthUserWidget>, GetItStateMixin<AuthUserWidget> {
   static final urlPattern = RegExp(
     r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
     caseSensitive: false,
@@ -34,7 +34,7 @@ class _UserWidgetState extends State<UserWidget>
   void initState() {
     super.initState();
     pillAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    getIt<UserProvider>().requestAuthenticatedUser();
+    getIt<AuthUserProvider>().requestAuthenticatedUser();
   }
 
   @override
@@ -43,7 +43,7 @@ class _UserWidgetState extends State<UserWidget>
     final theme = Theme.of(context);
 
     // double.negativeInfinity is used just to signal that the user has not loaded yet
-    final user = watchStream((UserProvider userProv) => userProv.getAuthenticatedUserStream(),
+    final user = watchStream((AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
                 AuthenticatedUser("", double.negativeInfinity))
             .data ??
         AuthenticatedUser("", double.negativeInfinity);

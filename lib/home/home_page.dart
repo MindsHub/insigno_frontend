@@ -4,7 +4,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/home/pill_page.dart';
 import 'package:insigno_frontend/map/map_persistent_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
-import 'package:insigno_frontend/user/user_persistent_page.dart';
+import 'package:insigno_frontend/user/auth_user_persistent_page.dart';
 
 import '../networking/data/pill.dart';
 
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage>
           pillAnimationController.forward();
         }));
 
-    _tabs = <Widget>[MapPersistentPage(), UserPersistentPage()];
+    _tabs = <Widget>[MapPersistentPage(), AuthUserPersistentPage()];
     _tabController = TabController(initialIndex: 0, length: _tabs.length, vsync: this);
     _tabController.addListener(() => setState(() {})); // <- notify when
   }

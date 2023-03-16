@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/user/auth_user_widget.dart';
 import 'package:insigno_frontend/user/login_widget.dart';
 import 'package:insigno_frontend/user/signup_widget.dart';
-import 'package:insigno_frontend/user/user_widget.dart';
 
-class UserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
-  UserPersistentPage({super.key});
+class AuthUserPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
+  AuthUserPersistentPage({super.key});
 
   @override
-  State<UserPersistentPage> createState() => _UserPersistentPageState();
+  State<AuthUserPersistentPage> createState() => _AuthUserPersistentPageState();
 }
 
-class _UserPersistentPageState extends State<UserPersistentPage>
-    with AutomaticKeepAliveClientMixin<UserPersistentPage>, GetItStateMixin<UserPersistentPage> {
+class _AuthUserPersistentPageState extends State<AuthUserPersistentPage>
+    with
+        AutomaticKeepAliveClientMixin<AuthUserPersistentPage>,
+        GetItStateMixin<AuthUserPersistentPage> {
   bool loginOrSignup = true; // start with login
 
   @override
@@ -43,7 +45,7 @@ class _UserPersistentPageState extends State<UserPersistentPage>
       ),
       body: Center(
         child: isLoggedIn
-            ? UserWidget()
+            ? AuthUserWidget()
             : loginOrSignup
                 ? LoginWidget(() => setState(() => loginOrSignup = false))
                 : SignupWidget(() => setState(() => loginOrSignup = true)),
