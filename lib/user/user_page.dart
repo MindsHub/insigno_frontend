@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/di/setup.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 
 import '../networking/data/user.dart';
 
@@ -16,6 +18,15 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   User? user;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    getIt<Backend>()
+        .getUser(widget.userId)
+        .then((value) => user = value, onError: (e) => error = e.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +47,13 @@ class _UserPageState extends State<UserPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: ((user == null)
                 ? <Widget>[
-                    const CircularProgressIndicator(),
+                    if (error == null)
+                      const CircularProgressIndicator()
+                    else
+                      Text(
+                        error!,
+                        style: TextStyle(color: theme.colorScheme.error),
+                      ),
                   ]
                 : <Widget>[
                     Text(

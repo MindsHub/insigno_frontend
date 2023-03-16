@@ -7,6 +7,7 @@ import "package:insigno_frontend/networking/authentication.dart";
 import "package:insigno_frontend/networking/data/authenticated_user.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
+import "package:insigno_frontend/networking/data/user.dart";
 import "package:insigno_frontend/networking/error.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
@@ -170,6 +171,10 @@ class Backend {
 
   Future<AuthenticatedUser> getAuthenticatedUser() {
     return _getJsonAuthenticated("/user").map((u) => AuthenticatedUser(u["name"], u["points"]));
+  }
+
+  Future<User> getUser(int userId) {
+    return _getJson("/user").map((u) => User(u["name"], u["points"]));
   }
 
   Future<void> reportAsInappropriate(int markerId) {
