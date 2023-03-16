@@ -173,6 +173,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                     child:
                         Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
                   ),
+                const SizedBox(height: 8),
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
                       arguments: mapMarker.reportedBy),
