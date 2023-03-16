@@ -8,6 +8,7 @@ import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/user/user_page.dart';
 
 class InsignoApp extends StatelessWidget {
   const InsignoApp({super.key});
@@ -34,6 +35,7 @@ class InsignoApp extends StatelessWidget {
             MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
             ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
             PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
+            UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));
