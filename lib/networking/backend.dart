@@ -9,6 +9,7 @@ import "package:insigno_frontend/networking/data/marker.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
 import "package:insigno_frontend/networking/data/user.dart";
 import "package:insigno_frontend/networking/error.dart";
+import "package:insigno_frontend/networking/parsers.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
 
@@ -147,7 +148,10 @@ class Backend {
   }
 
   Future<Marker> getMarker(int markerId) {
-    return _getJson("/map/$markerId").map((marker) {
+    return (_auth.isLoggedIn()
+            ? _getJsonAuthenticated("/map/$markerId")
+            : _getJson("/map/$markerId"))
+        .map((marker) {
       var point = marker["point"];
       var resolutionDate = marker["resolution_date"];
       return Marker(
@@ -158,9 +162,10 @@ class Backend {
             MarkerType.unknown,
         DateTime.parse(marker["creation_date"]),
         (resolutionDate as String?).map(DateTime.parse),
-        marker["created_by"],
-        marker["solved_by"],
-        true, // TODO obtain "can be reported" field
+        userFromJson(marker["created_by"]),
+        marker["solved_by"]?.map(userFromJson),
+        (marker["images_id"] as List<dynamic>).map((e) => e as int).toList(growable: false),
+        marker["can_report"],
       );
     });
   }
@@ -170,11 +175,11 @@ class Backend {
   }
 
   Future<AuthenticatedUser> getAuthenticatedUser() {
-    return _getJsonAuthenticated("/user").map((u) => AuthenticatedUser(u["name"], u["points"]));
+    return _getJsonAuthenticated("/user").map(authenticatedUserFromJson);
   }
 
   Future<User> getUser(int userId) {
-    return _getJson("/user/$userId").map((u) => User(u["name"], u["points"]));
+    return _getJson("/user/$userId").map(userFromJson);
   }
 
   Future<void> reportAsInappropriate(int markerId) {
