@@ -111,5 +111,13 @@
         "type": "String"
       }
     }
+  },
+  "errorReportingAsInappropriate": "Error reporting as inappropriate: {error}",
+  "@errorReportingAsInappropriate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

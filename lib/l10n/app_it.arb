@@ -61,5 +61,6 @@
   "confirmReportAsInappropriate": "Sei sicuro di voler segnalare questo marcatore come inappropriato?",
   "yourProfile": "Il tuo profilo",
   "reportedBy": "Segnalato da {user}",
-  "resolvedBy": "Risolto da {user}"
+  "resolvedBy": "Risolto da {user}",
+  "errorReportingAsInappropriate": "Errore nel segnalare come inappropriato: {error}"
 }

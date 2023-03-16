@@ -40,6 +40,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   List<int>? images;
   Marker? marker;
   String? resolveError;
+  String? reportAsInappropriateError;
 
   @override
   void initState() {
@@ -162,6 +163,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 if (widget.errorAddingImages != null)
                   Text(l10n.errorUploadingReportImages(widget.errorAddingImages!)),
                 if (resolveError != null) Text(l10n.errorUploadingResolveImages(resolveError!)),
+                if (reportAsInappropriateError != null)
+                  Text(l10n.errorReportingAsInappropriate(reportAsInappropriateError!)),
                 const SizedBox(height: 16),
                 if (marker == null || marker?.resolutionDate != null)
                   const SizedBox() // do not show any error if the marker is already resolved
@@ -225,7 +228,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     showDialog(context: context, builder: (ctx) => const ReportAsInappropriateDialog())
         .then((value) {
       if (value is bool && value == true) {
-        get<Backend>().reportAsInappropriate(marker!.id);
         setState(() {
           final m = marker;
           if (m != null) {
@@ -233,6 +235,23 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
             marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate, m.resolutionDate,
                 m.reportedBy, m.resolvedBy, false);
           }
+        });
+
+        get<Backend>().reportAsInappropriate(marker!.id).then((value) {
+          /* reported successfully */
+        }, onError: (e) {
+          setState(
+            () {
+              reportAsInappropriateError = e.toString();
+
+              final m = marker;
+              if (m != null) {
+                // allow reporting again
+                marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate,
+                    m.resolutionDate, m.reportedBy, m.resolvedBy, true);
+              }
+            },
+          );
         });
       }
     });
