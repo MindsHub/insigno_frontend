@@ -1,4 +1,3 @@
-import "package:collection/collection.dart";
 import "package:flutter/foundation.dart";
 import "package:http/http.dart" as http;
 import "package:http_parser/http_parser.dart";
@@ -93,8 +92,7 @@ class Backend {
   }
 
   Future<Pill> loadRandomPill() async {
-    return _getJson("/pills/random")
-        .map<Pill>((p) => Pill(p["id"], p["text"], p["author"], p["source"], p["accepted"]));
+    return _getJson("/pills/random").map(pillFromJson);
   }
 
   Future<List<MapMarker>> loadMapMarkers(
@@ -104,21 +102,7 @@ class Backend {
       "x": longitude.toString(),
       "srid": "4326", // gps
       "include_resolved": includeResolved ? "true" : "false",
-    }).map((markers) => markers.map<MapMarker>((marker) {
-          var point = marker["point"];
-          var resolutionDate = marker["resolution_date"];
-          return MapMarker(
-            marker["id"],
-            point["y"] as double,
-            point["x"] as double,
-            MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
-                MarkerType.unknown,
-            DateTime.parse(marker["creation_date"]),
-            (resolutionDate as String?).map(DateTime.parse),
-            marker["created_by"],
-            marker["solved_by"],
-          );
-        }).toList());
+    }).map((markers) => markers.map<MapMarker>(mapMarkerFromJson).toList());
   }
 
   Future<int> addMarker(double latitude, double longitude, MarkerType markerType) async {
@@ -143,31 +127,14 @@ class Backend {
   }
 
   Future<List<int>> getImagesForMarker(int markerId) {
-    return _getJson("/map/image/list/$markerId")
-        .map((list) => list.map<int>((i) => i as int).toList());
+    return _getJson("/map/image/list/$markerId").map(imageListFromJson);
   }
 
   Future<Marker> getMarker(int markerId) {
     return (_auth.isLoggedIn()
             ? _getJsonAuthenticated("/map/$markerId")
             : _getJson("/map/$markerId"))
-        .map((marker) {
-      var point = marker["point"];
-      var resolutionDate = marker["resolution_date"];
-      return Marker(
-        marker["id"],
-        point["y"] as double,
-        point["x"] as double,
-        MarkerType.values.firstWhereOrNull((type) => type.id == marker["marker_types_id"]) ??
-            MarkerType.unknown,
-        DateTime.parse(marker["creation_date"]),
-        (resolutionDate as String?).map(DateTime.parse),
-        userFromJson(marker["created_by"]),
-        marker["solved_by"]?.map(userFromJson),
-        (marker["images_id"] as List<dynamic>).map((e) => e as int).toList(growable: false),
-        marker["can_report"],
-      );
-    });
+        .map(markerFromJson);
   }
 
   Future<void> resolveMarker(int markerId) {

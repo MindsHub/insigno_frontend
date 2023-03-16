@@ -227,16 +227,17 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
           if (m != null) {
             // temporarily update value while everything is being reloaded
             marker = Marker(
-                m.id,
-                m.latitude,
-                m.longitude,
-                m.type,
-                m.creationDate,
-                DateTime.now(),
-                m.reportedByUser,
-                null /* TODO we don't know our user */,
-                m.images,
-                m.canBeReported);
+              m.id,
+              m.latitude,
+              m.longitude,
+              m.type,
+              m.creationDate,
+              DateTime.now(),
+              m.reportedByUser,
+              null /* will be updated after reloading */,
+              m.images,
+              m.canBeReported,
+            );
           }
         });
         reload();
@@ -266,8 +267,18 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
             final m = marker;
             if (m != null) {
               // allow reporting again
-              marker = Marker(m.id, m.latitude, m.longitude, m.type, m.creationDate,
-                  m.resolutionDate, m.reportedByUser, m.resolvedByUser, m.images, true);
+              marker = Marker(
+                m.id,
+                m.latitude,
+                m.longitude,
+                m.type,
+                m.creationDate,
+                m.resolutionDate,
+                m.reportedByUser,
+                m.resolvedByUser,
+                m.images,
+                true,
+              );
             }
           });
         });
