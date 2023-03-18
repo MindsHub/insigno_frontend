@@ -52,8 +52,12 @@ class Authentication {
         .post(
           Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
           body: body,
-        )
-        .throwErrors();
+        );
+
+    if (response.statusCode == 401) {
+      throw UnauthorizedException(401, response.body);
+    }
+    response.throwErrors();
 
     final authCookie = response.headers["set-cookie"]?.split("; ")[0];
     if (authCookie == null) {
