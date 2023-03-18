@@ -4,6 +4,8 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
+import '../networking/error.dart';
+
 class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToLoginCallback;
 
@@ -18,6 +20,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
   String? password;
   bool loading = false;
   String? signupError;
+  bool formatSignupError = true;
 
   final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -33,7 +36,13 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
       // to Authentication's isLoggedInStream
     }, onError: (e) {
       setState(() {
-        signupError = e.toString();
+        if (e is UnauthorizedException && e.response.isNotEmpty) {
+          signupError = e.response;
+          formatSignupError = false;
+        } else {
+          signupError = e.toString();
+          formatSignupError = true;
+        }
         loading = false;
       });
     });
@@ -93,7 +102,11 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
-              ErrorText(signupError, l10n.signupFailed, spaceAbove: 16),
+              ErrorText(
+                  signupError,
+                  formatSignupError ? l10n.signupFailed : (v) => v,
+                  spaceAbove: 16,
+              ),
               const SizedBox(height: 16),
               loading
                   ? const CircularProgressIndicator()

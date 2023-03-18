@@ -4,6 +4,8 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
+import '../networking/error.dart';
+
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
 
@@ -18,6 +20,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
   String? password;
   bool loading = false;
   String? loginError;
+  bool formatLoginError = true;
 
   final formKey = GlobalKey<FormState>();
 
@@ -32,7 +35,13 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
       // Authentication's isLoggedInStream
     }, onError: (e) {
       setState(() {
-        loginError = e.toString();
+        if (e is UnauthorizedException && e.response.isNotEmpty) {
+          loginError = e.response;
+          formatLoginError = false;
+        } else {
+          loginError = e.toString();
+          formatLoginError = true;
+        }
         loading = false;
       });
     });
@@ -41,7 +50,6 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -78,7 +86,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
-              ErrorText(loginError, l10n.wrongUserOrPassword, spaceAbove: 16),
+              ErrorText(
+                  loginError,
+                  formatLoginError ? l10n.wrongUserOrPassword : (v) => v,
+                  spaceAbove: 16,
+              ),
               const SizedBox(height: 16),
               loading
                   ? const CircularProgressIndicator()

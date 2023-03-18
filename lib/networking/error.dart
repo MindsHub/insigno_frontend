@@ -1,5 +1,4 @@
 import 'package:http/http.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void _throwErrors<T extends BaseResponse>(final T response) {
   if (response.statusCode < 400) {
@@ -32,13 +31,13 @@ extension ThrowErrorsFutureExtension<T extends BaseResponse> on Future<T> {
 
 abstract class HttpException implements Exception {
   final int statusCode;
-  final String prefix;
+  final String response;
 
-  HttpException(this.statusCode, this.prefix);
+  HttpException(this.statusCode, this.response);
 
   @override
   String toString() {
-    return "$statusCode $prefix";
+    return "$statusCode $response";
   }
 }
 
