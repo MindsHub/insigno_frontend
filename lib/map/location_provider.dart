@@ -11,6 +11,7 @@ class LocationProvider {
     accuracy: LocationAccuracy.best,
     distanceFilter: 1, // meters
     forceLocationManager: true,
+    intervalDuration: const Duration(milliseconds: 500)
   );
 
   StreamSubscription<LocationPermission>? _permissionStatusSub;
