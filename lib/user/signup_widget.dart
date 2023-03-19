@@ -15,7 +15,8 @@ class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   State<SignupWidget> createState() => _SignupWidgetState();
 }
 
-class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
+class _SignupWidgetState extends State<SignupWidget>
+    with GetItStateMixin<SignupWidget> {
   String? username;
   String? password;
   bool loading = false;
@@ -56,84 +57,89 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: l10n.name),
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return l10n.insertName;
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) => username = value,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: firstPasswordController,
-                decoration: InputDecoration(labelText: l10n.password),
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return l10n.insertPassword;
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) => password = value,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                decoration: InputDecoration(labelText: l10n.repeatPassword),
-                validator: (value) {
-                  if (value != firstPasswordController.value.text) {
-                    return l10n.passwordsNotMatch;
-                  } else {
-                    return null;
-                  }
-                },
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-              ),
-              ErrorText(
+        child: AutofillGroup(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(labelText: l10n.name),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return l10n.insertName;
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => username = value,
+                  autofillHints: const [AutofillHints.username],
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: firstPasswordController,
+                  decoration: InputDecoration(labelText: l10n.password),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return l10n.insertPassword;
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => password = value,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.newPassword],
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  decoration: InputDecoration(labelText: l10n.repeatPassword),
+                  validator: (value) {
+                    if (value != firstPasswordController.value.text) {
+                      return l10n.passwordsNotMatch;
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.newPassword],
+                ),
+                ErrorText(
                   signupError,
                   formatSignupError ? l10n.signupFailed : (v) => v,
                   spaceAbove: 16,
-              ),
-              const SizedBox(height: 16),
-              loading
-                  ? const CircularProgressIndicator()
-                  : FloatingActionButton(
-                      onPressed: () {
-                        setState(() => signupError = null);
-                        if (formKey.currentState?.validate() ?? false) {
-                          formKey.currentState?.save();
-                          performSignup();
-                        }
-                      },
-                      tooltip: l10n.signup,
-                      child: const Icon(Icons.login),
-                    ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(l10n.alreadyHaveAccount),
-                  const SizedBox(width: 4),
-                  TextButton(
-                    onPressed: widget.switchToLoginCallback,
-                    child: Text(l10n.login),
-                  )
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 16),
+                loading
+                    ? const CircularProgressIndicator()
+                    : FloatingActionButton(
+                        onPressed: () {
+                          setState(() => signupError = null);
+                          if (formKey.currentState?.validate() ?? false) {
+                            formKey.currentState?.save();
+                            performSignup();
+                          }
+                        },
+                        tooltip: l10n.signup,
+                        child: const Icon(Icons.login),
+                      ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(l10n.alreadyHaveAccount),
+                    const SizedBox(width: 4),
+                    TextButton(
+                      onPressed: widget.switchToLoginCallback,
+                      child: Text(l10n.login),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
