@@ -42,7 +42,7 @@
   "insertName": "Inserisci un nome",
   "insertPassword": "Inserisci una password",
   "passwordsNotMatch": "Le password non coincidono",
-  "signupFailed": "La registrazione è fallita. Il nome potrebbe essere già in uso, inoltre verifica di aver inserito una password di almeno 8 caratteri con maiuscole, minuscole e numeri. {error}",
+  "signupFailed": "La registrazione è fallita: {error}",
   "points": "{points} punti",
   "refresh": "Aggiorna",
   "cancel": "Annulla",
@@ -65,5 +65,9 @@
   "errorReportingAsInappropriate": "Errore nel segnalare come inappropriato: {error}",
   "errorSendingPill": "Errore nell'inviare la pillola: {error}",
   "errorLoading": "Errore nel caricamento: {error}",
-  "errorLoadingImages": "Errore nel caricare le immagini: {error}"
+  "errorLoadingImages": "Errore nel caricare le immagini: {error}",
+  "invalidNameLength": "Usa da 3 a 20 caratteri",
+  "invalidNameCharacters": "Usa solo lettere, numeri, spazi e _",
+  "invalidPasswordLength": "Usa almeno 8 caratteri",
+  "invalidPasswordCharacters": "Deve contenere maiuscole, minuscole, numeri e speciali"
 }

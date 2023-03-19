@@ -15,8 +15,11 @@ class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   State<SignupWidget> createState() => _SignupWidgetState();
 }
 
-class _SignupWidgetState extends State<SignupWidget>
-    with GetItStateMixin<SignupWidget> {
+class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
+  static final nameValidator = RegExp(r'^[a-zA-Z0-9 _]*$');
+  static final passwordValidator =
+      RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$');
+
   String? username;
   String? password;
   bool loading = false;
@@ -52,7 +55,6 @@ class _SignupWidgetState extends State<SignupWidget>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -68,8 +70,13 @@ class _SignupWidgetState extends State<SignupWidget>
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.name),
                   validator: (value) {
-                    if (value?.isEmpty ?? true) {
+                    final v = value?.trim() ?? "";
+                    if (v.isEmpty) {
                       return l10n.insertName;
+                    } else if (v.length < 3 || v.length > 20) {
+                      return l10n.invalidNameLength;
+                    } else if (!nameValidator.hasMatch(v)) {
+                      return l10n.invalidNameCharacters;
                     } else {
                       return null;
                     }
@@ -82,8 +89,13 @@ class _SignupWidgetState extends State<SignupWidget>
                   controller: firstPasswordController,
                   decoration: InputDecoration(labelText: l10n.password),
                   validator: (value) {
-                    if (value?.isEmpty ?? true) {
+                    final v = value ?? "";
+                    if (v.isEmpty) {
                       return l10n.insertPassword;
+                    } else if (v.length < 8) {
+                      return l10n.invalidPasswordLength;
+                    } else if (!passwordValidator.hasMatch(v)) {
+                      return l10n.invalidPasswordCharacters;
                     } else {
                       return null;
                     }

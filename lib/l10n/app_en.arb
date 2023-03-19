@@ -77,7 +77,7 @@
   "insertName": "Insert a name",
   "insertPassword": "Insert a password",
   "passwordsNotMatch": "Passwords don't match",
-  "signupFailed": "Failed to signup. The name might be already in use, also make sure the password is at least 8 characters long with uppercase, lowercase and numbers. {error}",
+  "signupFailed": "Failed to signup: {error}",
   "@signupFailed": {
     "placeholders": {
       "error": {
@@ -157,5 +157,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "invalidNameLength": "Use 3 to 20 characters",
+  "invalidNameCharacters": "You may only use letters, numbers, spaces and _",
+  "invalidPasswordLength": "Use at least 8 characters",
+  "invalidPasswordCharacters": "Must contain uppercase, lowercase, number, special"
 }
