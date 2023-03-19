@@ -57,6 +57,7 @@ dependencies:
   collection:
   latlong2:
   url_launcher:
+  os_detect: # used for a debugging hack in location_provider.dart
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926

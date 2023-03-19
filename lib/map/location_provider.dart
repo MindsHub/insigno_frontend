@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:insigno_frontend/map/location_info.dart';
+import 'package:os_detect/os_detect.dart' as Platform;
 
 @lazySingleton
 class LocationProvider {
   static var locationSettings = AndroidSettings(
-    accuracy: LocationAccuracy.best,
-    distanceFilter: 1, // meters
-    forceLocationManager: true,
-    intervalDuration: const Duration(milliseconds: 500)
-  );
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 1, // meters
+      forceLocationManager: true,
+      intervalDuration: const Duration(milliseconds: 500));
 
   StreamSubscription<LocationPermission>? _permissionStatusSub;
   StreamSubscription<ServiceStatus>? _serviceStatusSub;
@@ -23,6 +23,20 @@ class LocationProvider {
   final StreamController<LocationInfo> _streamController = StreamController.broadcast();
 
   LocationProvider() {
+    if (Platform.isLinux) {
+      // hardcoded for debugging purporses
+      _handlePosition(Position(
+        longitude: 11.00323,
+        latitude: 45.75548,
+        timestamp: DateTime.now(),
+        accuracy: 0,
+        altitude: 0,
+        heading: 0,
+        speed: 0,
+        speedAccuracy: 0,
+      ));
+      return;
+    }
     _permissionStatusSub = Geolocator.checkPermission().asStream().listen((permission) async {
       debugPrint("Location permission status $permission");
       await _handlePermission(permission, true);
