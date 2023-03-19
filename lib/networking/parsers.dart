@@ -5,6 +5,7 @@ import 'package:insigno_frontend/networking/data/marker.dart';
 import "package:insigno_frontend/util/nullable.dart";
 
 import 'data/marker_type.dart';
+import 'data/marker_update.dart';
 import 'data/pill.dart';
 import 'data/user.dart';
 
@@ -56,4 +57,8 @@ Marker markerFromJson(dynamic m) {
 
 Pill pillFromJson(dynamic p) {
   return Pill(p["id"], p["text"], p["author"], p["source"], p["accepted"]);
+}
+
+MarkerUpdate markerUpdateFromJson(dynamic u) {
+  return MarkerUpdate(u["id"], u["earned_points"]);
 }

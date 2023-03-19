@@ -106,8 +106,8 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
 
     final backend = get<Backend>();
     backend.resolveMarker(widget.mapMarker.id).then(
-      (_) {
-        get<AuthUserProvider>().addPoints(10.0);
+      (markerUpdate) {
+        get<AuthUserProvider>().addPoints(markerUpdate.earnedPoints);
         Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
           (_) => Navigator.pop(context, ResolvedResult(null)),
           onError: (e) => Navigator.pop(context, ResolvedResult(e.toString())),

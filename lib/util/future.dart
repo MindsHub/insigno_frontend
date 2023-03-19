@@ -21,3 +21,11 @@ extension FutureResponse on Future<Response> {
     return map((response) => response.mapParseJson());
   }
 }
+
+extension FutureStreamedResponse on Future<StreamedResponse> {
+  Future<dynamic> mapParseJson() async {
+    final resp = await this;
+    final body = await resp.stream.bytesToString(utf8);
+    return jsonDecode(body);
+  }
+}

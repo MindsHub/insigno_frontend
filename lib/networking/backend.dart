@@ -15,6 +15,7 @@ import "package:insigno_frontend/util/nullable.dart";
 import "const.dart";
 import "data/map_marker.dart";
 import "data/marker_type.dart";
+import "data/marker_update.dart";
 
 @lazySingleton
 class Backend {
@@ -91,6 +92,11 @@ class Backend {
     return response;
   }
 
+  Future<dynamic> _postJsonAuthenticated(String path,
+      {Map<String, String>? fields, List<http.MultipartFile>? files}) {
+    return _postAuthenticated(path, fields: fields, files: files).mapParseJson();
+  }
+
   Future<Pill> loadRandomPill() async {
     return _getJson("/pills/random").map(pillFromJson);
   }
@@ -105,13 +111,12 @@ class Backend {
     }).map((markers) => markers.map<MapMarker>(mapMarkerFromJson).toList());
   }
 
-  Future<int> addMarker(double latitude, double longitude, MarkerType markerType) async {
-    var response = await _postAuthenticated("/map/add", fields: {
+  Future<MarkerUpdate> addMarker(double latitude, double longitude, MarkerType markerType) {
+    return _postJsonAuthenticated("/map/add", fields: {
       "y": latitude.toString(),
       "x": longitude.toString(),
       "marker_types_id": markerType.id.toString(),
-    });
-    return int.parse(await response.stream.bytesToString());
+    }).map(markerUpdateFromJson);
   }
 
   Future<void> addMarkerImage(int markerId, Uint8List image, String? mimeType) async {
@@ -137,8 +142,8 @@ class Backend {
         .map(markerFromJson);
   }
 
-  Future<void> resolveMarker(int markerId) {
-    return _postAuthenticated("/map/resolve/$markerId");
+  Future<MarkerUpdate> resolveMarker(int markerId) {
+    return _postJsonAuthenticated("/map/resolve/$markerId").map(markerUpdateFromJson);
   }
 
   Future<AuthenticatedUser> getAuthenticatedUser() {
@@ -150,7 +155,6 @@ class Backend {
   }
 
   Future<void> reportAsInappropriate(int markerId) {
-    // TODO insert real path
     return _postAuthenticated("/map/report/$markerId");
   }
 

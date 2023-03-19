@@ -10,6 +10,7 @@ import 'package:insigno_frontend/util/error_text.dart';
 
 import '../map/location_provider.dart';
 import '../networking/authentication.dart';
+import '../user/auth_user_provider.dart';
 import '../util/error_messages.dart';
 import '../util/pair.dart';
 
@@ -125,11 +126,14 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
 
     final backend = get<Backend>();
     backend.addMarker(pos.latitude, pos.longitude, mt).then(
-      (markerId) {
+      (markerUpdate) {
+        get<AuthUserProvider>().addPoints(markerUpdate.earnedPoints);
+
         // temporary map marker used only locally
-        var mapMarker = MapMarker(markerId, pos.latitude, pos.longitude, mt, DateTime.now(), null,
-            -1 /* TODO we don't know our user id */, null);
-        Future.wait(images.map((e) => backend.addMarkerImage(markerId, e.first, e.second))).then(
+        var mapMarker = MapMarker(markerUpdate.id, pos.latitude, pos.longitude, mt, DateTime.now(),
+            null, -1 /* TODO we don't know our user id */, null);
+        Future.wait(images.map((e) => backend.addMarkerImage(markerUpdate.id, e.first, e.second)))
+            .then(
           (_) => Navigator.pop(context, ReportedResult(mapMarker, null)),
           onError: (e) => Navigator.pop(context, ReportedResult(mapMarker, e.toString())),
         );
