@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
@@ -56,70 +57,75 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
         padding: const EdgeInsets.all(16),
         child: Form(
           key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: l10n.name),
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return l10n.insertName;
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) => name = value,
-                autofillHints: const [AutofillHints.username],
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                decoration: InputDecoration(labelText: l10n.password),
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return l10n.insertPassword;
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) => password = value,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                autofillHints: const [AutofillHints.password],
-              ),
-              ErrorText(
-                loginError,
-                formatLoginError ? l10n.wrongUserOrPassword : (v) => v,
-                spaceAbove: 16,
-              ),
-              const SizedBox(height: 16),
-              loading
-                  ? const CircularProgressIndicator()
-                  : FloatingActionButton(
-                      onPressed: () {
-                        setState(() => loginError = null);
-                        if (formKey.currentState?.validate() ?? false) {
-                          formKey.currentState?.save();
-                          performLogin();
-                        }
-                      },
-                      tooltip: l10n.login,
-                      child: const Icon(Icons.login),
-                    ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(l10n.notHaveAccount),
-                  const SizedBox(width: 4),
-                  TextButton(
-                    onPressed: widget.switchToSignupCallback,
-                    child: Text(l10n.signup),
-                  )
-                ],
-              ),
-            ],
+          child: AutofillGroup(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(labelText: l10n.name),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return l10n.insertName;
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => name = value,
+                  autofillHints: const [AutofillHints.username],
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  decoration: InputDecoration(labelText: l10n.password),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return l10n.insertPassword;
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => password = value,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.password],
+                  textInputAction: TextInputAction.done,
+                ),
+                ErrorText(
+                  loginError,
+                  formatLoginError ? l10n.wrongUserOrPassword : (v) => v,
+                  spaceAbove: 16,
+                ),
+                const SizedBox(height: 16),
+                loading
+                    ? const CircularProgressIndicator()
+                    : FloatingActionButton(
+                        onPressed: () {
+                          setState(() => loginError = null);
+                          if (formKey.currentState?.validate() ?? false) {
+                            formKey.currentState?.save();
+                            TextInput.finishAutofillContext();
+                            performLogin();
+                          }
+                        },
+                        tooltip: l10n.login,
+                        child: const Icon(Icons.login),
+                      ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(l10n.notHaveAccount),
+                    const SizedBox(width: 4),
+                    TextButton(
+                      onPressed: widget.switchToSignupCallback,
+                      child: Text(l10n.signup),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
