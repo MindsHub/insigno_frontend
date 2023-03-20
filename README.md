@@ -1,6 +1,6 @@
-# insigno_frontend
+# Insigno
 
-Insigno app
+Flutter frontend for Insigno.
 
 ## Dependency injection
 

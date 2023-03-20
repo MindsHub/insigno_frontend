@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "org.mindshub.insigno" "\0"
-            VALUE "FileDescription", "insigno_frontend" "\0"
+            VALUE "FileDescription", "Insigno app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "insigno_frontend" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 org.mindshub.insigno. All rights reserved." "\0"
-            VALUE "OriginalFilename", "insigno_frontend.exe" "\0"
-            VALUE "ProductName", "insigno_frontend" "\0"
+            VALUE "OriginalFilename", "Insigno.exe" "\0"
+            VALUE "ProductName", "Insigno" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

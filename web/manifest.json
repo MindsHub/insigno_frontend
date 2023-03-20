@@ -1,6 +1,6 @@
 {
-    "name": "insigno_frontend",
-    "short_name": "insigno_frontend",
+    "name": "Insigno",
+    "short_name": "Insigno",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
