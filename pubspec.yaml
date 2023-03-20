@@ -36,28 +36,28 @@ dependencies:
   intl:
 
   # dependency injection
-  get_it:
-  get_it_mixin:
-  injectable:
+  get_it: ^7.2.0
+  get_it_mixin: ^4.0.0
+  injectable: ^2.1.0
 
   # ui
-  flutter_map:
-  dynamic_color:
-  easy_image_viewer:
+  flutter_map: ^3.1.0
+  dynamic_color: ^1.6.2
+  easy_image_viewer: ^1.2.0
 
   # core functionality
-  geolocator: # used to load location
-  image_picker: # used only on Android and iOS to take pictures with the camera
+  geolocator: ^9.0.2 # used to load location
+  image_picker: ^0.8.7 # used only on Android and iOS to take pictures with the camera
 
   # utils (os_detect may be useful, but is not needed atm)
-  shared_preferences:
-  http:
-  http_parser:
-  flutter_svg:
-  collection:
-  latlong2:
-  url_launcher:
-  os_detect: # used for a debugging hack in location_provider.dart
+  shared_preferences: ^2.0.18
+  http: ^0.13.5
+  http_parser: ^4.0.2
+  flutter_svg: ^2.0.4
+  collection: ^1.17.0
+  latlong2: ^0.8.1
+  url_launcher: ^6.1.10
+  os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
