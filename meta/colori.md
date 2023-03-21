@@ -1,3 +1,0 @@
-- background: D4FFB6
-- foreground: 80b900 (cestino) e 8fce0f (mindshub)
-- logo mindshub originale: e74c3c
