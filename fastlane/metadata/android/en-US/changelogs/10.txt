@@ -1,0 +1,1 @@
+Initial release: register and login from within the app, report and collect trash by taking pictures, view and suggest ecology pills.

@@ -1,0 +1,1 @@
+Versione iniziale: registrazione e login all'interno dell'app, segnalazione e raccolta dei rifiuti tramite foto, visualizzazione e suggerimento di pillole di ecologia.

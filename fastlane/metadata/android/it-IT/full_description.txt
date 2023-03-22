@@ -1,0 +1,9 @@
+Insigno rende piacevole e stimolante <b>tenere pulita</b> la tua città. È un progetto dell'<i>APS MindsHub</i>: https://mindshub.it/.
+
+Ogni utente può <b>segnalare</b> dell'immondizia o dei rifiuti abbandonati che trova, <i>catalogandoli</i> per tipo (plastica, carta, ...) e scattando un'<i>immagine</i> per rendere chiara la posizione dell'oggetto. Tutte le segnalazioni poi compaiono su una <b>mappa</b>, permettendo agli utenti di <b>raccogliere</b> le immondizie nelle vicinanze e scattare delle immagini per documentarne la risoluzione. Le azioni di segnalazione e recupero dei rifiuti fanno <b>guadagnare punti</b>, e richiedono l'accesso alla <i>posizione</i> per poter determinare dov'è l'oggetto.
+
+Ad ogni avvio dell'app verranno mostrate delle <i><b>pillole</b></i> informative, con FAQ, novità e consigli riguardanti l'ecologia e il rispetto dell'ambiente.
+
+Insigno è <b>Free Software</b>, puoi trovare il codice qui:
+- Frontend (app): https://github.com/MindsHub/insigno_frontend
+- Backend (server): https://github.com/MindsHub/insigno_backend

@@ -1,0 +1,9 @@
+Insigno makes <b>keeping your city clean</b> enjoyable and inspiring. It is a project developed by the MindsHub Association: https://mindshub.it/.
+
+Any user can <b>report</b> abandoned garbage they find, <i>classifying</i> it by type (plastic, paper, ...) and taking a <i>picture</i> to make it simple to locate the object. All reports then appear on a <b>map</b>, allowing users to <b>pick up</b> nearby garbage, taking pictures to document the process. Reporting and collecting trash allow users to <b>earn points</b>, and require access to the phone's <i>location</i> in order to determine the object's position.
+
+Informative <i><b>pills</b></i> will be shown each time the app is launched, with FAQs, news, and tips regarding ecology and environment protection.
+
+Insigno is <b>Free Software</b>, you can find the code here:
+- Frontend (app): https://github.com/MindsHub/insigno_frontend
+- Backend (server): https://github.com/MindsHub/insigno_backend
