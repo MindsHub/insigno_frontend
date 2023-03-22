@@ -11,6 +11,7 @@ import "package:insigno_frontend/networking/error.dart";
 import "package:insigno_frontend/networking/parsers.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 import "const.dart";
 import "data/map_marker.dart";
@@ -160,5 +161,11 @@ class Backend {
 
   Future<void> suggestPill(String text, String source) {
     return _postAuthenticated("/pills/add", fields: {"text": text, "source": source});
+  }
+
+  Future<bool> isCompatible() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    return _getJson("/compatibile", params: {"version_str": packageInfo.version})
+        .map((v) => v as bool);
   }
 }

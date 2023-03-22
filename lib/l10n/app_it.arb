@@ -69,5 +69,6 @@
   "invalidNameLength": "Usa da 3 a 20 caratteri",
   "invalidNameCharacters": "Usa solo lettere, numeri, spazi e _",
   "invalidPasswordLength": "Usa almeno 8 caratteri",
-  "invalidPasswordCharacters": "Deve contenere maiuscole, minuscole, numeri e speciali"
+  "invalidPasswordCharacters": "Deve contenere maiuscole, minuscole, numeri e speciali",
+  "oldVersion": "Stai usando una versione vecchia e incompatibile di Insigno, per favore aggiorna all'ultima"
 }

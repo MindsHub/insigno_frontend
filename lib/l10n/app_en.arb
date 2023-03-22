@@ -161,5 +161,6 @@
   "invalidNameLength": "Use 3 to 20 characters",
   "invalidNameCharacters": "You may only use letters, numbers, spaces and _",
   "invalidPasswordLength": "Use at least 8 characters",
-  "invalidPasswordCharacters": "Must contain uppercase, lowercase, number, special"
+  "invalidPasswordCharacters": "Must contain uppercase, lowercase, number, special",
+  "oldVersion": "You are using an old incompatible version of Insigno, please update to the latest"
 }

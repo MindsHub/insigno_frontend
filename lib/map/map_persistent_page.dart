@@ -55,6 +55,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   String lastErrorMessage = "";
   late final AnimationController errorMessageAnim;
+  bool isVersionCompatible = true;
 
   @override
   void initState() {
@@ -86,6 +87,10 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
     }
+
+    // check whether this version of insigno iscompatible with the backend, ignoring any errors
+    get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
+        onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
   }
 
   void loadMarkers(final LatLng latLng) async {
@@ -147,7 +152,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             get<Authentication>().isLoggedIn())
         .data;
 
-    final String? errorMessage = getErrorMessage(l10n, isLoggedIn, position);
+    final String? errorMessage =
+        isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
     if (errorMessage == null) {
       errorMessageAnim.reverse();
     } else {
