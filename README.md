@@ -7,10 +7,10 @@ Flutter frontend for Insigno.
 Quando si aggiungono o spostano file di Dependency Injection (ad esempio, quelli contenenti `@singleton`, `@lazySingleton`, `@injectable` o `@module`), bisogna rigenerare il file di setup `lib/di/setup.config.dart` ([fonte](https://github.com/Milad-Akarie/injectable#run-the-generator)).
 ```bash
 # rigenera i file una volta sola
-flutter packages pub run build_runner build
+flutter pub run build_runner build
 
 # rigenera i file ad ogni modifica, finche' e' in esecuzione
-flutter packages pub run build_runner watch
+flutter pub run build_runner watch
 ```
 
 ## Naming
