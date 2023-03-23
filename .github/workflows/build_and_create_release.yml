@@ -27,19 +27,12 @@ jobs:
       - name: Print version and version code
         run: |
           echo "Version ${{ env.VERSION }}, version code ${{ env.VERSION_CODE }}"
-      - name: tmp
-        run: |
-          cd "$BUILD_DIR"
-          ls
-          echo "-------------"
-          ls submodules/flutter
-          echo "-------------"
-          ls submodules/flutter/bin
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
+          git config --global --add safe.directory "$BUILD_DIR/submodules/flutter"
       - name: Build x86_64 apk
         run: |
           cd "$BUILD_DIR"
