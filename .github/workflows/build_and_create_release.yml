@@ -10,6 +10,8 @@ jobs:
         with:
           submodules: true
       - run: |
-          mkdir -p /home/vagrant
-          cd /home/vagrant
-          pwd
+          sudo mkdir /home/vagrant
+          sudo chown runner /home/vagrant
+          mkdir /home/vagrant/build
+          mv ${{ github.workspace }} /home/vagrant/build/org.mindshub.insigno
+          ls /home/vagrant/build/org.mindshub.insigno
