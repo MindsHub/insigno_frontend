@@ -1,6 +1,9 @@
 name: Build and create release
 on: workflow_dispatch
 
+env:
+  BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,11 +14,18 @@ jobs:
           submodules: true
       - name: Move repo to correct place
         run: |
-          sudo mkdir /home/vagrant
-          sudo chown runner /home/vagrant
-          mkdir /home/vagrant/build
-          mv ${{ github.workspace }} /home/vagrant/build/org.mindshub.insigno
-          ls /home/vagrant/build/org.mindshub.insigno
+          sudo mkdir -p "$BUILD_DIR"
+          sudo chown runner "$BUILD_DIR"
+          mv ${{ github.workspace }} "$BUILD_DIR"
+          mkdir ${{ github.workspace }}
+      - name: Setup flutter
+        run: |
+          cd /home/vagrant/build/org.mindshub.insigno
+          export PUB_CACHE=/home/vagrant/build/org.mindshub.insigno/.pub-cache
+#          submodules/flutter/bin/flutter config --no-analytics
+#          submodules/flutter/bin/flutter pub get
+      - name: Build
       - name: Move repo back to avoid cleanup issues
         run: |
           mv /home/vagrant/build/org.mindshub.insigno ${{ github.workspace }}
+
