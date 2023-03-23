@@ -3,6 +3,7 @@ on: workflow_dispatch
 
 env:
   BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
+  PUB_CACHE: /home/vagrant/build/org.mindshub.insigno/.pub-cache
 
 jobs:
   build:
@@ -21,11 +22,8 @@ jobs:
       - name: Setup flutter
         run: |
           cd /home/vagrant/build/org.mindshub.insigno
-          export PUB_CACHE=/home/vagrant/build/org.mindshub.insigno/.pub-cache
-#          submodules/flutter/bin/flutter config --no-analytics
-#          submodules/flutter/bin/flutter pub get
       - name: Build
       - name: Move repo back to avoid cleanup issues
         run: |
-          mv /home/vagrant/build/org.mindshub.insigno ${{ github.workspace }}
+          mv "$BUILD_DIR" ${{ github.workspace }}
 
