@@ -2,6 +2,7 @@ name: Build and create release
 on: workflow_dispatch
 
 env:
+  # these directories are the same as in F-Droid's buildserver, ensuring reproducibility
   BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
   PUB_CACHE: /home/vagrant/build/org.mindshub.insigno/.pub-cache
 
@@ -18,10 +19,36 @@ jobs:
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
           mv ${{ github.workspace }} "$BUILD_DIR"
+          # the folder needs to exist in order for a step to run
           mkdir ${{ github.workspace }}
+      - name: Extract version and version code
+        run: |
+          echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
+          echo "VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)" >> $GITHUB_ENV
+      - name: Print version and version code
+          echo "Version ${{ env.VERSION }}, version code ${{ env.VERSION_CODE }}"
       - name: Setup flutter
         run: |
           cd /home/vagrant/build/org.mindshub.insigno
+          submodules/flutter/bin/flutter config --no-analytics
+          submodules/flutter/bin/flutter pub get
+      - name: Build x86_64 apk
+        run: |
+          cd /home/vagrant/build/org.mindshub.insigno
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 1 )) --build-name=${{ env.VERSION }} --target-platform=android-x64
+      - name: Build arm apk
+        run: |
+          cd /home/vagrant/build/org.mindshub.insigno
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 2 )) --build-name=${{ env.VERSION }} --target-platform=android-arm
+      - name: Build arm64 apk
+        run: |
+          cd /home/vagrant/build/org.mindshub.insigno
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 3 )) --build-name=${{ env.VERSION }} --target-platform=android-arm54
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: apks
+          path: "$BUILD_DIR/build/app/outputs/flutter-apk/*.apk"
       - name: Move repo back to avoid cleanup issues
         run: |
           mv "$BUILD_DIR" ${{ github.workspace }}
