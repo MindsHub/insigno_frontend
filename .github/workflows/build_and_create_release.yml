@@ -26,6 +26,7 @@ jobs:
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
           echo "VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)" >> $GITHUB_ENV
       - name: Print version and version code
+        run: |
           echo "Version ${{ env.VERSION }}, version code ${{ env.VERSION_CODE }}"
       - name: Setup flutter
         run: |
