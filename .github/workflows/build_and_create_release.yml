@@ -18,9 +18,7 @@ jobs:
         run: |
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
-          mv ${{ github.workspace }} "$BUILD_DIR"
-          # the folder needs to exist in order for a step to run
-          mkdir ${{ github.workspace }}
+          mv ${{ github.workspace }}/* "$BUILD_DIR"
       - name: Extract version and version code
         run: |
           cd "$BUILD_DIR"
@@ -59,7 +57,4 @@ jobs:
         with:
           name: apks
           path: "$BUILD_DIR/build/app/outputs/flutter-apk/*.apk"
-      - name: Move repo back to avoid cleanup issues
-        run: |
-          mv "$BUILD_DIR" ${{ github.workspace }}
 
