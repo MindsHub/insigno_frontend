@@ -22,7 +22,6 @@ jobs:
       - name: Setup flutter
         run: |
           cd /home/vagrant/build/org.mindshub.insigno
-      - name: Build
       - name: Move repo back to avoid cleanup issues
         run: |
           mv "$BUILD_DIR" ${{ github.workspace }}
