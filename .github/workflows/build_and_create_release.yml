@@ -9,9 +9,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-      - run: |
+      - name: Move repo to correct place
+        run: |
           sudo mkdir /home/vagrant
           sudo chown runner /home/vagrant
           mkdir /home/vagrant/build
           mv ${{ github.workspace }} /home/vagrant/build/org.mindshub.insigno
           ls /home/vagrant/build/org.mindshub.insigno
+      - name: Move repo back to avoid cleanup issues
+        run: |
+          mv /home/vagrant/build/org.mindshub.insigno ${{ github.workspace }}
