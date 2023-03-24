@@ -49,9 +49,9 @@ jobs:
       - name: Move apks to folder for upload
         run: |
           mkdir apks
-          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
-          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
-          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
