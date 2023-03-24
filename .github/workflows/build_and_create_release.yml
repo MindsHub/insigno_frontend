@@ -10,13 +10,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Move repo to correct place
+      - name: Clone repository
         run: |
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
-          mv ${{ github.workspace }}/* "$BUILD_DIR"
+          git clone --recurse-submodules ${{ github.repositoryUrl }} "$BUILD_DIR"
       - name: Extract version and version code
         run: |
           cd "$BUILD_DIR"
@@ -25,11 +23,6 @@ jobs:
       - name: Print version, version code and build directory
         run: |
           echo "Version ${{ env.VERSION }}, version code ${{ env.VERSION_CODE }}, build directory $BUILD_DIR"
-      - name: Clone flutter
-        run: |
-          cd "$BUILD_DIR"
-          git submodule init
-          git submodule update
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
