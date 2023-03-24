@@ -24,7 +24,7 @@ jobs:
           echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
           echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
           echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
-          BUILD_TOOLS_PATH=$($ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed | grep build-tools | tail -n 1 | sed -nE 's~^.*(build-tools/[^\s]+).*$~\1~p')
+          BUILD_TOOLS_PATH=$($ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed | grep build-tools/ | tail -n 1 | sed -nE 's~^.*(build-tools/[^ \t]+).*$~\1~p')
           echo "APKSIGNER=$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner" >> $GITHUB_ENV
       - name: Print some information
         run: |
