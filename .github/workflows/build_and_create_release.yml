@@ -46,7 +46,7 @@ jobs:
       - name: Move apks to folder for upload
         run: |
           mkdir apks
-          cp "$BUILD_DIR/build/app/outputs/flutter-apk/*.apk" ./apks/
+          cp "$BUILD_DIR"/build/app/outputs/flutter-apk/*.apk ./apks/
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
