@@ -34,9 +34,6 @@ jobs:
           echo "Android home: $ANDROID_HOME"
           echo "Chosen apksigner: ${{ env.APKSIGNER }}"
           echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs)
-          echo "Sdkmanager output:"
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed
-          exit 1
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
@@ -62,10 +59,12 @@ jobs:
           mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
       - name: Sign APKs
         run: |
-          cd apks
+          openssl base64 -A -d -out keystore.jks <<< "${{ secrets.SIGNING_KEYSTORE_BASE64 }}"
+          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
+          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
+          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: apks
           path: apks
-
