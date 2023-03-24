@@ -3,8 +3,8 @@ on: workflow_dispatch
 
 env:
   # these directories are the same as in F-Droid's buildserver, ensuring reproducibility
-  BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
-  PUB_CACHE: /home/vagrant/build/org.mindshub.insigno/.pub-cache
+  BUILD_DIR: /builds/fdroid/fdroiddata/build/org.mindshub.insigno
+  PUB_CACHE: /builds/fdroid/fdroiddata/build/org.mindshub.insigno/.pub-cache
 
 jobs:
   build:
