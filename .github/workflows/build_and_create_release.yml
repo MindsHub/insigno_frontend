@@ -14,7 +14,7 @@ jobs:
         run: |
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
-          git clone --recurse-submodules ${{ github.repositoryUrl }} "$BUILD_DIR"
+          git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" "$BUILD_DIR"
       - name: Extract version and version code
         run: |
           cd "$BUILD_DIR"
