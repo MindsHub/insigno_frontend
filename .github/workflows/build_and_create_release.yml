@@ -21,9 +21,9 @@ jobs:
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
           VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)
-          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))"
-          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))"
-          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))"
+          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
+          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
+          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
       - name: Print some information
         run: |
           echo "Version ${{ env.VERSION }}"
