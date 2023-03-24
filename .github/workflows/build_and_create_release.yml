@@ -23,11 +23,9 @@ jobs:
           echo "VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)" >> $GITHUB_ENV
       - name: Print some information
         run: |
-          cd "$BUILD_DIR"
           echo "Version ${{ env.VERSION }}"
           echo "Version code ${{ env.VERSION_CODE }}"
           echo "Build directory $BUILD_DIR"
-          submodules/flutter/bin/flutter doctor -v
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
