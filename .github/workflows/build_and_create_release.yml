@@ -33,9 +33,9 @@ jobs:
           echo "Build directory: $BUILD_DIR"
           echo "Android home: $ANDROID_HOME"
           echo "Chosen apksigner: ${{ env.APKSIGNER }}"
-          echo "Available Android build-tools:"
-          ls "$ANDROID_HOME/build-tools/"
-          ls -d "$ANDROID_HOME/build-tools/*/"
+          echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs)
+          echo "Sdkmanager output:"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed
           exit 1
       - name: Setup flutter
         run: |
