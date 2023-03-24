@@ -20,11 +20,14 @@ jobs:
         run: |
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
-          echo "VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)" >> $GITHUB_ENV
+          VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)
+          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))"
+          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))"
+          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))"
       - name: Print some information
         run: |
           echo "Version ${{ env.VERSION }}"
-          echo "Version code ${{ env.VERSION_CODE }}"
+          echo "Version codes: ${{ env.VERCODE_1 }}, ${{ env.VERCODE_2 }}, ${{ env.VERCODE_3 }}"
           echo "Build directory $BUILD_DIR"
       - name: Setup flutter
         run: |
@@ -34,19 +37,21 @@ jobs:
       - name: Build x86_64 apk
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 1 )) --build-name=${{ env.VERSION }} --target-platform=android-x64
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_1 }} --build-name=${{ env.VERSION }} --target-platform=android-x64
       - name: Build arm apk
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 2 )) --build-name=${{ env.VERSION }} --target-platform=android-arm
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_2 }} --build-name=${{ env.VERSION }} --target-platform=android-arm
       - name: Build arm64 apk
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 3 )) --build-name=${{ env.VERSION }} --target-platform=android-arm64
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }} --target-platform=android-arm64
       - name: Move apks to folder for upload
         run: |
           mkdir apks
-          cp "$BUILD_DIR"/build/app/outputs/flutter-apk/*.apk ./apks/
+          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
+          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
+          cp "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
