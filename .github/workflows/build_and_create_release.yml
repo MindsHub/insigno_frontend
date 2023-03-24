@@ -24,11 +24,19 @@ jobs:
           echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
           echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
           echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
+          BUILD_TOOLS_PATH=$($ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed | grep build-tools | tail -n 1 | sed -nE 's~^.*(build-tools/[^\s]+).*$~\1~p')
+          echo "APKSIGNER=$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner" >> $GITHUB_ENV
       - name: Print some information
         run: |
-          echo "Version ${{ env.VERSION }}"
+          echo "Version: ${{ env.VERSION }}"
           echo "Version codes: ${{ env.VERCODE_1 }}, ${{ env.VERCODE_2 }}, ${{ env.VERCODE_3 }}"
-          echo "Build directory $BUILD_DIR"
+          echo "Build directory: $BUILD_DIR"
+          echo "Android home: $ANDROID_HOME"
+          echo "Chosen apksigner: ${{ env.APKSIGNER }}"
+          echo "Available Android build-tools:"
+          ls "$ANDROID_HOME/build-tools/"
+          ls -d "$ANDROID_HOME/build-tools/*/"
+          exit 1
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
@@ -52,6 +60,9 @@ jobs:
           mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
           mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
           mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
+      - name: Sign APKs
+        run: |
+          cd apks
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
