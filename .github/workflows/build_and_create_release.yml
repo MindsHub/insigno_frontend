@@ -39,19 +39,19 @@ jobs:
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
-      - name: Build x86_64 apk
+      - name: Build x86_64 APK
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_1 }} --build-name=${{ env.VERSION }} --target-platform=android-x64
-      - name: Build arm apk
+      - name: Build arm APK
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_2 }} --build-name=${{ env.VERSION }} --target-platform=android-arm
-      - name: Build arm64 apk
+      - name: Build arm64 APK
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }} --target-platform=android-arm64
-      - name: Move apks to folder for upload
+      - name: Move APKs to folder for upload
         run: |
           mkdir apks
           mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
