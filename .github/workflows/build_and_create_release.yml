@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
+        # not using actions/checkout because it does not clone `.git`, required for Flutter
         run: |
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
@@ -20,14 +21,16 @@ jobs:
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
           echo "VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)" >> $GITHUB_ENV
-      - name: Print version, version code and build directory
+      - name: Print some information
         run: |
-          echo "Version ${{ env.VERSION }}, version code ${{ env.VERSION_CODE }}, build directory $BUILD_DIR"
+          cd "$BUILD_DIR"
+          echo "Version ${{ env.VERSION }}"
+          echo "Version code ${{ env.VERSION_CODE }}"
+          echo "Build directory $BUILD_DIR"
+          submodules/flutter/bin/flutter doctor -v
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
-          git config --global --add safe.directory "$BUILD_DIR/submodules/flutter"
-          submodules/flutter/bin/flutter doctor -v
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
       - name: Build x86_64 apk
@@ -41,7 +44,7 @@ jobs:
       - name: Build arm64 apk
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 3 )) --build-name=${{ env.VERSION }} --target-platform=android-arm54
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=$(( ${{ env.VERSION_CODE }} * 10 + 3 )) --build-name=${{ env.VERSION }} --target-platform=android-arm64
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
