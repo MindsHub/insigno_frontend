@@ -68,3 +68,16 @@ jobs:
         with:
           name: apks
           path: apks
+      - name: Create draft release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: ${{ env.VERSION }}
+          draft: true
+          files: |
+            "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
+            "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
+            "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
