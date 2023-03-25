@@ -5,13 +5,11 @@ env:
   # these directories are the same as in F-Droid's buildserver, ensuring reproducibility
   BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
   PUB_CACHE: /home/vagrant/build/org.mindshub.insigno/.pub-cache
-  FLUTTER_ROOT: /home/vagrant/build/org.mindshub.insigno/submodules/flutter
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install 
       - name: Clone repository
         # not using actions/checkout because it does not clone `.git`, required for Flutter
         run: |
@@ -81,9 +79,3 @@ jobs:
             apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk
             apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk
             apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk
-      - name: Create Google Play config file
-        run: |
-          openssl base64 -A -d -out play_config.json <<< "${{ secrets.PLAY_STORE_CONFIG_BASE64 }}"
-      - name: Install bundle
-        run: |
-          bundle config
