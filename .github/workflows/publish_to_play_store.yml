@@ -86,5 +86,5 @@ jobs:
       - name: Run Fastlane to publish to Play Store and update metadata
         run: |
           cd "$BUILD_DIR/android"
-          bundle exec fastlane run upload_to_play_store release_status:"draft" json_key:"play_config.json" aab:"../build/app/outputs/bundle/release/app-release.aab"
+          bundle exec fastlane run upload_to_play_store release_status:"draft" json_key:"play_config.json" aab:"../build/app/outputs/bundle/release/app-release.aab" package_name:"org.mindshub.insigno"
         
