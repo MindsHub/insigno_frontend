@@ -1,3 +1,6 @@
+Gemfile
+Gemfile.lock
+
 gradle-wrapper.jar
 /.gradle
 /captures/
