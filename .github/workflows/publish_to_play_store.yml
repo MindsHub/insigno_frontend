@@ -56,7 +56,7 @@ jobs:
           cd "$BUILD_DIR/android/app"
           openssl base64 -A -d -out keystore.jks <<< "${{ secrets.SIGNING_KEYSTORE_BASE64 }}"
           echo >> ./build.gradle
-          echo "android {"
+          echo "android {" >> ./build.gradle
           echo "    signingConfigs {" >> ./build.gradle
           echo "        release {" >> ./build.gradle
           echo "            keyAlias '${{ secrets.SIGNING_KEY_ALIAS }}'" >> ./build.gradle
