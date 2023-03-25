@@ -56,17 +56,19 @@ jobs:
           cd "$BUILD_DIR/android/app"
           openssl base64 -A -d -out keystore.jks <<< "${{ secrets.SIGNING_KEYSTORE_BASE64 }}"
           echo >> ./build.gradle
-          echo "signingConfigs {" >> ./build.gradle
-          echo "    release {" >> ./build.gradle
-          echo "        keyAlias '${{ secrets.SIGNING_KEY_ALIAS }}'" >> ./build.gradle
-          echo "        keyPassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
-          echo "        storeFile '$BUILD_DIR/android/app/keystore.jks'" >> ./build.gradle
-          echo "        storePassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
+          echo "android {"
+          echo "    signingConfigs {" >> ./build.gradle
+          echo "        release {" >> ./build.gradle
+          echo "            keyAlias '${{ secrets.SIGNING_KEY_ALIAS }}'" >> ./build.gradle
+          echo "            keyPassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
+          echo "            storeFile file('$BUILD_DIR/android/app/keystore.jks')" >> ./build.gradle
+          echo "            storePassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
+          echo "        }" >> ./build.gradle
           echo "    }" >> ./build.gradle
-          echo "}" >> ./build.gradle
-          echo "buildTypes {" >> ./build.gradle
-          echo "    release {" >> ./build.gradle
-          echo "        signingConfig signingConfigs.release" >> ./build.gradle
+          echo "    buildTypes {" >> ./build.gradle
+          echo "        release {" >> ./build.gradle
+          echo "            signingConfig signingConfigs.release" >> ./build.gradle
+          echo "        }" >> ./build.gradle
           echo "    }" >> ./build.gradle
           echo "}" >> ./build.gradle
       - name: Build AAB
