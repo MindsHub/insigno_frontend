@@ -27,7 +27,7 @@ jobs:
           sudo gem install bundler
           cp Gemfile Gemfile.lock android/
           cd "$BUILD_DIR/android"
-          bundle install
+          sudo bundle install
       - name: Extract version and version code
         run: |
           cd "$BUILD_DIR"
