@@ -26,10 +26,10 @@ jobs:
       - name: Setup Fastlane
         run: |
           brew install ruby
-          sudo gem install bundler
+          gem install bundler
           cp Gemfile Gemfile.lock ios/
           cd ios
-          sudo bundle install
+          bundle install
       - name: Extract version and version code
         run: |
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
