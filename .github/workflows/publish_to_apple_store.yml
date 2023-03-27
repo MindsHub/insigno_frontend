@@ -45,7 +45,7 @@ jobs:
         run: |
           cd ios
           cat "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
-          cat <<< $(cat $(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb | tr '\n' '\r' | sed -E 's/,\r        "prices"\r/\r/' | tr '\r' '\n') > "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
+          echo -e "import sys\nv=open(sys.argv[1]).read()\nv=v.replace(',\\\n        \"prices\"\\\n', '\\\n')\nwith open(sys.argv[1], 'w') as f:\n    f.write(v)" | python3 - $(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb
           cat "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
       - name: Extract version and version code
         run: |
