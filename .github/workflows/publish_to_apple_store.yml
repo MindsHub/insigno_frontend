@@ -1,0 +1,70 @@
+name: Publish to Apple Store
+on: workflow_dispatch
+
+env:
+  # these directories are the same as in F-Droid's buildserver, ensuring reproducibility
+  BUILD_DIR: /home/vagrant/build/org.mindshub.insigno
+  PUB_CACHE: /home/vagrant/build/org.mindshub.insigno/.pub-cache
+  # these are needed by fastlane
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+  FLUTTER_ROOT: /home/vagrant/build/org.mindshub.insigno/submodules/flutter
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Install provisioning profile certificate
+        run: |
+          security create-keychain -p password build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p password build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k actions build.keychain
+          openssl base64 -A -d -out ios_development.cer <<< "${{ secrets.IOS_PROFILE_CERTIFICATE_BASE64 }}"
+          security import ios_development.cer -k build.keychain -P password -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/productbuild -T /usr/bin/productsign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
+      - name: Clone repository
+        # not using actions/checkout because it does not clone `.git`, required for Flutter
+        run: |
+          sudo mkdir -p "$BUILD_DIR"
+          sudo chown runner "$BUILD_DIR"
+          git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" "$BUILD_DIR"
+      - name: Setup Fastlane
+        run: |
+          cd "$BUILD_DIR"
+          sudo apt install ruby ruby-dev
+          sudo gem install bundler
+          cp Gemfile Gemfile.lock android/
+          cd "$BUILD_DIR/android"
+          sudo bundle install
+      - name: Extract version and version code
+        run: |
+          cd "$BUILD_DIR"
+          echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
+          VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)
+          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
+          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
+          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
+      - name: Print some information
+        run: |
+          echo "Version: ${{ env.VERSION }}"
+          echo "Version codes: ${{ env.VERCODE_1 }}, ${{ env.VERCODE_2 }}, ${{ env.VERCODE_3 }}"
+          echo "Build directory: $BUILD_DIR"
+      - name: Setup flutter
+        run: |
+          cd "$BUILD_DIR"
+          submodules/flutter/bin/flutter config --no-analytics
+          submodules/flutter/bin/flutter pub get
+      - name: Build ios app
+        run: |
+          cd "$BUILD_DIR"
+          submodules/flutter/bin/flutter build ios --release --no-codesign --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }}
+      - name: Copy Fastlane metadata to correct directory
+        run: |
+          cd "$BUILD_DIR"
+          cp -r fastlane/ ios/
+      - name: Run Fastlane to publish to Apple Store and update metadata
+        run: |
+          cd "$BUILD_DIR/ios"
+          bundle exec fastlane run build_app skip_build_archive:true archive_path:"../build/ios/archive/Runner.xcarchive"
+          bundle exec fastlane run upload_to_app_store release_status:"draft" json_key:"play_config.json" aab:"../build/app/outputs/bundle/release/app-release.aab" package_name:"org.mindshub.insigno"
