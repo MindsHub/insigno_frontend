@@ -41,6 +41,12 @@ jobs:
           cp Gemfile Gemfile.lock ios/
           cd ios
           bundle install
+      - name: Patch fastlane bug 21125
+        run: |
+          cd ios
+          cat "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
+          cat <<< $(cat $(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb | tr '\n' '\r' | sed -E 's/,\r        "prices"\r/\r/' | tr '\r' '\n') > "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
+          cat "$(bundle show fastlane)/spaceship/lib/spaceship/connect_api/models/app.rb"
       - name: Extract version and version code
         run: |
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
