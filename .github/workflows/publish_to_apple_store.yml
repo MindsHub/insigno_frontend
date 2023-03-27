@@ -19,7 +19,6 @@ jobs:
           security create-keychain -p password build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p password build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k password build.keychain
       - name: Install provisioning profile certificate
         run: |
           openssl base64 -A -d -out ios_development.cer <<< "${{ secrets.IOS_PROFILE_CERTIFICATE_BASE64 }}"
