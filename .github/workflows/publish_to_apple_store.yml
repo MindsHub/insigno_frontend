@@ -16,7 +16,7 @@ jobs:
         with:
           keychain: "signing_temp"
           create-keychain: "true"
-          keychain-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          keychain-password: "password"
           p12-file-base64: ${{ secrets.IOS_CERTIFICATE_P12_BASE64 }}
           p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
       - name: Clone repository
