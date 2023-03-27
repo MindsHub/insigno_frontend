@@ -34,7 +34,7 @@ jobs:
       - name: Codemagic tools
         run: |
           python3 -m pip install codemagic-cli-tools
-          xcode-project use-profiles
+          xcode-project use-profiles --project=./ios/Runner.xcodeproj
       - name: Setup Fastlane
         run: |
           brew install ruby
