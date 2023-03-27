@@ -24,6 +24,7 @@ jobs:
           openssl base64 -A -d -out ios_development.cer <<< "${{ secrets.IOS_PROFILE_CERTIFICATE_BASE64 }}"
           security import ios_development.cer -k build.keychain -P password -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/productbuild -T /usr/bin/productsign
           security -h
+          security find-identity -v
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
       - name: Clone repository
         # not using actions/checkout because it does not clone `.git`, required for Flutter
