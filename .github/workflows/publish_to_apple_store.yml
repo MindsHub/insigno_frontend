@@ -31,6 +31,9 @@ jobs:
         run: |
           mkdir -p "~/Library/MobileDevice/Provisioning Profiles"
           openssl base64 -A -d -out "~/Library/MobileDevice/Provisioning Profiles/build_pp.mobileprovision" <<< "${{ secrets.IOS_MOBILEPROVISION_BASE64 }}"
+      - name: Codemagic tools
+        run: |
+          python3 -m pip install codemagic-cli-tools
           xcode-project use-profiles
       - name: Setup Fastlane
         run: |
