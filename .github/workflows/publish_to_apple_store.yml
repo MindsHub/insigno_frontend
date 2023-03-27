@@ -67,8 +67,10 @@ jobs:
         run: |
           cp -r fastlane/ ios/
       - name: Create Apple API Key file
+        env:
+          FILE_CONTENT: ${{ secrets.APPLE_AUTH_KEY_JSON }}
         run: |
-          echo "${{ secrets.APPLE_AUTH_KEY_JSON }}" > apple_auth.json
+          echo "$FILE_CONTENT" > apple_auth.json
       - name: Run Fastlane to publish to Apple Store and update metadata
         run: |
           cd ios/
