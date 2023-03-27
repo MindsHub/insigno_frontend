@@ -71,4 +71,5 @@ jobs:
           echo "${{ secrets.APPLE_AUTH_KEY_JSON }}" > apple_auth.json
       - name: Run Fastlane to publish to Apple Store and update metadata
         run: |
-          bundle exec fastlane run upload_to_app_store api_key_path:"apple_auth.json" ipa:"../build/ios/ipa/*.ipa" package_name:"org.mindshub.insigno"
+          cd ios/
+          bundle exec fastlane run upload_to_app_store api_key_path:"../apple_auth.json" ipa:"../build/ios/ipa/*.ipa"
