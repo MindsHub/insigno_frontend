@@ -77,5 +77,5 @@ jobs:
       - name: Run Fastlane to publish to Apple Store and update metadata
         run: |
           cd ios/
-          bundle exec fastlane run upload_to_app_store api_key_path:"../apple_auth.json" force:true metadata_path:"./fastlane/metadata" screenshots_path:"./fastlane/screenshots" ipa:"../build/ios/ipa/Insigno.ipa"
+          bundle exec fastlane run upload_to_app_store api_key_path:"../apple_auth.json" force:true metadata_path:"./fastlane/metadata" screenshots_path:"./fastlane/screenshots" precheck_include_in_app_purchases:false ipa:"../build/ios/ipa/Insigno.ipa"
         # skip_binary_upload:true app_identifier:org.mindshub.insigno 
