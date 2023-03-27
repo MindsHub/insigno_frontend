@@ -25,8 +25,7 @@ jobs:
           git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" .
       - name: Setup Fastlane
         run: |
-          sudo apt install ruby ruby-dev
-          sudo gem install bundler
+          sudo brew install fastlane
           cp Gemfile Gemfile.lock ios/
           cd ios
           sudo bundle install
