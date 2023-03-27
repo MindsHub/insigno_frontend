@@ -1,6 +1,5 @@
 # Fastlane
-fastlane/report.xml
-fastlane/README.md
+fastlane/
 Gemfile
 Gemfile.lock
 
