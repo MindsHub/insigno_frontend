@@ -60,7 +60,6 @@ jobs:
         run: |
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
-          submodules/flutter/bin/flutter build ipa --help
       - name: Build ios app
         run: |
           submodules/flutter/bin/flutter build ipa --release --export-options-plist=export_options.plist --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }}
