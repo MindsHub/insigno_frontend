@@ -14,6 +14,7 @@ jobs:
       - name: Create keychain
         run: |
           security create-keychain -p password build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p password build.keychain
       - name: Install signing certificate
@@ -22,6 +23,11 @@ jobs:
           security import certificate.p12 -k build.keychain -f pkcs12 -A -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/productbuild -T /usr/bin/productsign -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}"
           rm certificate.p12
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
+          security list-keychain -d user -s build.keychain
+      - name: Install provisioning profile
+        run: |
+          mkdir -p "~/Library/MobileDevice/Provisioning Profiles"
+          openssl base64 -A -d -out "~/Library/MobileDevice/Provisioning Profiles/build_pp.mobileprovision" <<< "${{ secrets.IOS_MOBILEPROVISION_BASE64 }}"
       - name: Clone repository
         # not using actions/checkout because it does not clone `.git`, required for Flutter
         run: |
@@ -60,4 +66,4 @@ jobs:
           echo "${{ secrets.APPLE_AUTH_KEY_JSON }}" > apple_auth.json
       - name: Run Fastlane to publish to Apple Store and update metadata
         run: |
-          bundle exec fastlane run upload_to_app_store api_key_path:"apple_auth.json" ipa:"../build/app/outputs/bundle/release/app-release.aab" package_name:"org.mindshub.insigno"
+          bundle exec fastlane run upload_to_app_store api_key_path:"apple_auth.json" ipa:"../build/ios/ipa/*.ipa" package_name:"org.mindshub.insigno"
