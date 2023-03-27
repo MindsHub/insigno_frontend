@@ -9,7 +9,8 @@ for lang in * ; do
     if [ -d "$lang" ]; then
         echo "Handling $lang"
         pushd "$lang"
-        mv full_description.txt description.txt
+        cat full_description.txt | sed 's|<[a-zA-Z0-9/]*>||g' > description.txt
+        rm full_description.txt
         mv short_description.txt promotional_text.txt
         rm title.txt
         mv changelogs/$1.txt release_notes.txt || echo "Release notes $1 not found for language $lang"
@@ -20,7 +21,8 @@ for lang in * ; do
         pushd images/phoneScreenshots
         for img in * ; do
             if [ -f "$img" ]; then
-                for device in "1290:2796:iPhone (6.7-inch)" "1242:2688:iPhone (6.5-inch)" "1242:2208:iPhone (5.5-inch)" \
+                # "1242:2688:iPhone (6.5-inch)" seems not to be needed
+                for device in "1290:2796:iPhone (6.7-inch)" "1242:2208:iPhone (5.5-inch)" \
                 "2048:2732:iPad Pro (12.9-inch) (2nd generation)" \
                 "2048:2732:iPad Pro (12.9-inch) (6th generation)" ; do
                     WIDTH="$(cut -d: -f1 <<<$device)"
