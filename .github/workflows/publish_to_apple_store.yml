@@ -15,6 +15,7 @@ jobs:
         # not using actions/checkout because it does not clone `.git`, required for Flutter
         run: |
           git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" .
+          git checkout "${{ github.sha }}"
       - name: Create keychain
         run: |
           security create-keychain -p password build.keychain

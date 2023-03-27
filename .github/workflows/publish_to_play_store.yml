@@ -20,6 +20,8 @@ jobs:
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
           git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" "$BUILD_DIR"
+          cd "$BUILD_DIR"
+          git checkout "${{ github.sha }}"
       - name: Setup Fastlane
         run: |
           cd "$BUILD_DIR"
