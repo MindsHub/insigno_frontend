@@ -9,15 +9,16 @@ import '../networking/error.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
+  final bool justRegistered;
 
-  LoginWidget(this.switchToSignupCallback, {super.key});
+  LoginWidget(this.switchToSignupCallback, this.justRegistered, {super.key});
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
 }
 
 class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWidget> {
-  String? name;
+  String? email;
   String? password;
   bool loading = false;
   String? loginError;
@@ -31,7 +32,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
       loading = true;
     });
 
-    get<Authentication>().login(name!, password!).then((_) {
+    get<Authentication>().login(email!, password!).then((_) {
       // if login has succeeded, whoever instantiated this widget will know about it thanks to
       // Authentication's isLoggedInStream
     }, onError: (e) {
@@ -63,17 +64,24 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text(
+                  l10n.confirmEmail,
+                  textAlign: TextAlign.center,
+                  style:
+                      Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
-                  decoration: InputDecoration(labelText: l10n.name),
+                  decoration: InputDecoration(labelText: l10n.email),
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
-                      return l10n.insertName;
+                      return l10n.insertEmail;
                     } else {
                       return null;
                     }
                   },
-                  onSaved: (value) => name = value,
-                  autofillHints: const [AutofillHints.username],
+                  onSaved: (value) => email = value,
+                  autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 8),

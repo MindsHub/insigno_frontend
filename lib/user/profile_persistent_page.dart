@@ -18,6 +18,7 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         AutomaticKeepAliveClientMixin<ProfilePersistentPage>,
         GetItStateMixin<ProfilePersistentPage> {
   bool loginOrSignup = true; // start with login
+  bool justRegistered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +48,11 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         child: isLoggedIn
             ? ProfileWidget()
             : loginOrSignup
-                ? LoginWidget(() => setState(() => loginOrSignup = false))
-                : SignupWidget(() => setState(() => loginOrSignup = true)),
+                ? LoginWidget(() => setState(() => loginOrSignup = false), justRegistered)
+                : SignupWidget((isJustRegistered) => setState(() {
+                      loginOrSignup = true;
+                      justRegistered = isJustRegistered;
+                    })),
       ),
     );
   }
