@@ -4,6 +4,6 @@ Ogni utente può <b>segnalare</b> dell'immondizia o dei rifiuti abbandonati che 
 
 Ad ogni avvio dell'app verranno mostrate delle <i><b>pillole</b></i> informative, con FAQ, novità e consigli riguardanti l'ecologia e il rispetto dell'ambiente.
 
-Insigno è <b>Free Software</b>, puoi trovare il codice qui:
+L'AntiFeature "NonFreeNet" di F-Droid è presente perchè l'app richiede il login per svolgere gran parte delle operazioni. Insigno però è <b>Free Software</b>, puoi trovare il codice qui:
 - Frontend (app): https://github.com/MindsHub/insigno_frontend
 - Backend (server): https://github.com/MindsHub/insigno_backend
