@@ -8,7 +8,7 @@ import 'package:insigno_frontend/util/error_text.dart';
 import '../networking/error.dart';
 
 class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  final Function() switchToLoginCallback;
+  final Function(bool) switchToLoginCallback;
 
   SignupWidget(this.switchToLoginCallback, {super.key});
 
@@ -17,11 +17,15 @@ class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
+  // taken from the HTML5 validation spec, except for the + at the end which used to be a *
+  static final emailValidator = RegExp(
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)+$");
   static final nameValidator = RegExp(r'^[a-zA-Z0-9 _]*$');
   static final passwordValidator =
       RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$');
 
-  String? username;
+  String? email;
+  String? name;
   String? password;
   bool loading = false;
   String? signupError;
@@ -36,9 +40,8 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
       loading = true;
     });
 
-    get<Authentication>().signup(username!, password!).then((_) {
-      // if registration has succeeded, whoever instantiated this widget will know about it thanks
-      // to Authentication's isLoggedInStream
+    get<Authentication>().signup(email!, name!, password!).then((_) {
+      widget.switchToLoginCallback(true);
     }, onError: (e) {
       setState(() {
         if (e is UnauthorizedException && e.response.isNotEmpty) {
@@ -69,6 +72,23 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
+                  decoration: InputDecoration(labelText: l10n.email),
+                  validator: (value) {
+                    final v = value?.trim() ?? "";
+                    if (v.isEmpty) {
+                      return l10n.insertEmail;
+                    } else if (!emailValidator.hasMatch(v)) {
+                      return l10n.insertValidEmail;
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => email = value,
+                  autofillHints: const [AutofillHints.email],
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
                   decoration: InputDecoration(labelText: l10n.name),
                   validator: (value) {
                     final v = value?.trim() ?? "";
@@ -82,7 +102,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                       return null;
                     }
                   },
-                  onSaved: (value) => username = value,
+                  onSaved: (value) => name = value,
                   autofillHints: const [AutofillHints.username],
                   maxLength: 20,
                   textInputAction: TextInputAction.next,
@@ -151,7 +171,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                     Text(l10n.alreadyHaveAccount),
                     const SizedBox(width: 4),
                     TextButton(
-                      onPressed: widget.switchToLoginCallback,
+                      onPressed: () => widget.switchToLoginCallback(false),
                       child: Text(l10n.login),
                     )
                   ],

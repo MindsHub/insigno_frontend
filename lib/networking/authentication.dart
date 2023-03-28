@@ -47,12 +47,11 @@ class Authentication {
     }
   }
 
-  Future<void> _loginOrSignup(String path, Map<String, String> body) async {
-    final response = await _client
-        .post(
-          Uri(scheme: insignoServerScheme, host: insignoServer, path: path),
-          body: body,
-        );
+  Future<void> login(String email, String password) async {
+    final response = await _client.post(
+      Uri(scheme: insignoServerScheme, host: insignoServer, path: "/login"),
+      body: {"email": email, "password": password},
+    );
 
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
@@ -69,12 +68,16 @@ class Authentication {
     _streamController.add(true);
   }
 
-  Future<void> login(String name, String password) {
-    return _loginOrSignup("/login", {"name": name, "password": password});
-  }
+  Future<void> signup(String email, String name, String password) async {
+    final response = await _client.post(
+      Uri(scheme: insignoServerScheme, host: insignoServer, path: "/signup"),
+      body: {"email": email, "name": name, "password": password},
+    );
 
-  Future<void> signup(String name, String password) {
-    return _loginOrSignup("/signup", {"name": name, "password": password});
+    if (response.statusCode == 401) {
+      throw UnauthorizedException(401, response.body);
+    }
+    response.throwErrors();
   }
 
   /// also invalidates the loaded user (if any) of [AuthUserProvider]

@@ -162,5 +162,9 @@
   "invalidNameCharacters": "You may only use letters, numbers, spaces and _",
   "invalidPasswordLength": "Use at least 8 characters",
   "invalidPasswordCharacters": "Must contain uppercase, lowercase, number, special",
-  "oldVersion": "You are using an old unsupported version of Insigno, please update to the latest"
+  "oldVersion": "You are using an old unsupported version of Insigno, please update to the latest",
+  "email": "Email",
+  "insertEmail": "Insert an email",
+  "insertValidEmail": "Insert a valid email",
+  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here"
 }

@@ -1,3 +1,9 @@
+# Fastlane
+fastlane/report.xml
+fastlane/README.md
+Gemfile
+Gemfile.lock
+
 gradle-wrapper.jar
 /.gradle
 /captures/
