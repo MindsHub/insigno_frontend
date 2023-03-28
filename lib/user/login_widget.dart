@@ -64,13 +64,16 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  l10n.confirmEmail,
-                  textAlign: TextAlign.center,
-                  style:
-                      Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
+                if (widget.justRegistered)
+                  Text(
+                    l10n.confirmEmail,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                if (widget.justRegistered) const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.email),
                   validator: (value) {
