@@ -43,6 +43,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>NSLocationWhenInUseUsageDescription</key><string>This app needs access to location when open.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+	<string>Taking photos is required in order to report or resolve trash.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is required in order to properly locate the trash you find and report.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is required in order to properly locate the trash you find and report.</string>
 </dict>
 </plist>
