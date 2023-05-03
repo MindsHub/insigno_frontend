@@ -74,5 +74,7 @@
   "email": "Email",
   "insertEmail": "Inserisci un'email",
   "insertValidEmail": "Inserisci un'email valida",
-  "confirmEmail": "Prima di poter usare Insigno, devi confermare il tuo account cliccando sul link inviato all'email che hai specificato, poi potrai fare il login da qui"
+  "confirmEmail": "Prima di poter usare Insigno, devi confermare il tuo account cliccando sul link inviato all'email che hai specificato, poi potrai fare il login da qui",
+  "errorOccurred": "Oh no, errore!",
+  "copy": "Copia"
 }
