@@ -10,13 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository and create apks directory
+      - name: Clone repository
         # not using actions/checkout because it does not clone `.git`, required for Flutter
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
-          mkdir apks
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
           git clone --recurse-submodules "https://github.com/$GITHUB_REPOSITORY.git" "$BUILD_DIR"
@@ -58,7 +57,6 @@ jobs:
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-x64
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
       - name: Build arm APK
         env:
           VERSION: ${{ env.VERSION }}
@@ -66,7 +64,6 @@ jobs:
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
       - name: Build arm64 APK
         env:
           VERSION: ${{ env.VERSION }}
@@ -74,7 +71,17 @@ jobs:
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm64
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
+      - name: Move APKs to folder for upload
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE_1: ${{ env.VERCODE_1 }}
+          VERCODE_2: ${{ env.VERCODE_2 }}
+          VERCODE_3: ${{ env.VERCODE_3 }}
+        run: |
+          mkdir apks
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
       - name: Sign APKs
         env:
           KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
