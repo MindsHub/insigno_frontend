@@ -10,31 +10,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
+      - name: Clone repository and create apks directory
         # not using actions/checkout because it does not clone `.git`, required for Flutter
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
+          mkdir apks
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
-          git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" "$BUILD_DIR"
+          git clone --recurse-submodules "https://github.com/$GITHUB_REPOSITORY.git" "$BUILD_DIR"
           cd "$BUILD_DIR"
-          git checkout "${{ github.sha }}"
+          git checkout "$GITHUB_SHA"
       - name: Extract version and version code
         run: |
           cd "$BUILD_DIR"
-          echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
-          VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)
-          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
-          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
-          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
-          BUILD_TOOLS_PATH=$($ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed | grep build-tools/ | tail -n 1 | sed -nE 's~^.*(build-tools/[^ \t]+).*$~\1~p')
-          echo "APKSIGNER=$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner" >> $GITHUB_ENV
+          echo "VERSION=\"$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)\"" >> "$GITHUB_ENV"
+          VERSION_CODE="$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)"
+          echo "VERCODE_1=\"$(( "$VERSION_CODE" * 10 + 1 ))\"" >> "$GITHUB_ENV"
+          echo "VERCODE_2=\"$(( "$VERSION_CODE" * 10 + 2 ))\"" >> "$GITHUB_ENV"
+          echo "VERCODE_3=\"$(( "$VERSION_CODE" * 10 + 3 ))\"" >> "$GITHUB_ENV"
+          BUILD_TOOLS_PATH="$("$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed | grep build-tools/ | tail -n 1 | sed -nE 's~^.*(build-tools/[^ \t]+).*$~\1~p')"
+          echo "APKSIGNER=\"$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner\"" >> $GITHUB_ENV
       - name: Print some information
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE_1: ${{ env.VERCODE_1 }}
+          VERCODE_2: ${{ env.VERCODE_2 }}
+          VERCODE_3: ${{ env.VERCODE_3 }}
+          APKSIGNER: ${{ env.APKSIGNER }}
         run: |
-          echo "Version: ${{ env.VERSION }}"
-          echo "Version codes: ${{ env.VERCODE_1 }}, ${{ env.VERCODE_2 }}, ${{ env.VERCODE_3 }}"
+          echo "Version: $VERSION"
+          echo "Version codes: $VERCODE_1, $VERCODE_2, $VERCODE_3"
           echo "Build directory: $BUILD_DIR"
           echo "Android home: $ANDROID_HOME"
-          echo "Chosen apksigner: ${{ env.APKSIGNER }}"
+          echo "Chosen apksigner: $APKSIGNER"
           echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs)
       - name: Setup flutter
         run: |
@@ -42,29 +52,44 @@ jobs:
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
       - name: Build x86_64 APK
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE: ${{ env.VERCODE_1 }}
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_1 }} --build-name=${{ env.VERSION }} --target-platform=android-x64
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-x64
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
       - name: Build arm APK
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE: ${{ env.VERCODE_2 }}
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_2 }} --build-name=${{ env.VERSION }} --target-platform=android-arm
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
       - name: Build arm64 APK
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE: ${{ env.VERCODE_3 }}
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }} --target-platform=android-arm64
-      - name: Move APKs to folder for upload
-        run: |
-          mkdir apks
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
+          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm64
+          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${VERSION}_$VERCODE.apk"
       - name: Sign APKs
+        env:
+          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          VERSION: ${{ env.VERSION }}
+          VERCODE_1: ${{ env.VERCODE_1 }}
+          VERCODE_2: ${{ env.VERCODE_2 }}
+          VERCODE_3: ${{ env.VERCODE_3 }}
+          APKSIGNER: ${{ env.APKSIGNER }}
         run: |
-          openssl base64 -A -d -out keystore.jks <<< "${{ secrets.SIGNING_KEYSTORE_BASE64 }}"
-          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk"
-          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk"
-          "${{ env.APKSIGNER }}" sign --ks ./keystore.jks --ks-key-alias "${{ secrets.SIGNING_KEY_ALIAS }}" --ks-pass "pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" "./apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk"
+          openssl base64 -A -d -out keystore.jks <<< "$KEYSTORE_BASE64"
+          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
+          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
+          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
