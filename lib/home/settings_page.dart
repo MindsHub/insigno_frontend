@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/home/about_card_widget.dart';
 
 class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   SettingsPage({Key? key}) : super(key: key);
@@ -25,56 +25,14 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Card(
-              child: InkWell(
-                onTap: () {},
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.insignoDescription,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      SvgPicture.asset(
-                        "assets/icons/insigno_logo.svg",
-                        width: MediaQuery.of(context).size.width / 5,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            AboutCardWidget(
+              description: l10n.insignoDescription,
+              svgAssetPath: "assets/icons/insigno_logo.svg",
             ),
             const SizedBox(height: 8),
-            Card(
-              child: InkWell(
-                onTap: () {},
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.mindshubDescription,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      SvgPicture.asset(
-                        "assets/icons/mindshub_logo.svg",
-                        width: MediaQuery.of(context).size.width / 5,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            AboutCardWidget(
+              description: l10n.mindshubDescription,
+              svgAssetPath: "assets/icons/mindshub_logo.svg",
             ),
             if (kDebugMode) const SizedBox(height: 8),
             if (kDebugMode)
