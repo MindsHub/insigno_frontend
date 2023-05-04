@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
       body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _tabController,
         children: _tabs,
       ),
