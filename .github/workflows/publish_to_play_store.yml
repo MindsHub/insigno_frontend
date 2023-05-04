@@ -94,7 +94,8 @@ jobs:
         run: |
           cd "$BUILD_DIR/android"
           openssl base64 -A -d -out play_config.json <<< "$PLAY_STORE_CONFIG_BASE64"
-      #- name: Run Fastlane to publish to Play Store and update metadata
-      #  run: |
-      #    cd "$BUILD_DIR/android"
-      #    bundle exec fastlane run upload_to_play_store release_status:"draft" json_key:"play_config.json" aab:"../build/app/outputs/bundle/release/app-release.aab" package_name:"org.mindshub.insigno"
+      - name: Run Fastlane to publish to Play Store and update metadata
+        run: |
+          cd "$BUILD_DIR/android"
+          bundle exec fastlane run upload_to_play_store release_status:"draft" json_key:"play_config.json" aab:"../build/app/outputs/bundle/release/app-release.aab" package_name:"org.mindshub.insigno"
+        
