@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/home/pill_page.dart';
+import 'package:insigno_frontend/home/settings_page.dart';
 import 'package:insigno_frontend/map/map_persistent_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/user/profile_persistent_page.dart';
@@ -41,8 +42,8 @@ class _HomePageState extends State<HomePage>
           pillAnimationController.forward();
         }));
 
-    _tabs = <Widget>[MapPersistentPage(), ProfilePersistentPage()];
-    _tabController = TabController(initialIndex: 0, length: _tabs.length, vsync: this);
+    _tabs = <Widget>[ProfilePersistentPage(), MapPersistentPage(), SettingsPage()];
+    _tabController = TabController(initialIndex: 1, length: _tabs.length, vsync: this);
     _tabController.addListener(() => setState(() {})); // <- notify when
   }
 
@@ -102,8 +103,9 @@ class _HomePageState extends State<HomePage>
               ),
             BottomNavigationBar(
               items: [
+                BottomNavigationBarItem(icon: const Icon(Icons.person), label: l10n.user),
                 BottomNavigationBarItem(icon: const Icon(Icons.map), label: l10n.map),
-                BottomNavigationBarItem(icon: const Icon(Icons.person), label: l10n.user)
+                BottomNavigationBarItem(icon: const Icon(Icons.settings), label: l10n.settings)
               ],
               currentIndex: _tabController.index,
               onTap: (i) => _tabController.animateTo(i),

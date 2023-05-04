@@ -168,5 +168,6 @@
   "insertValidEmail": "Insert a valid email",
   "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here",
   "errorOccurred": "Oh no, error!",
-  "copy": "Copy"
+  "copy": "Copy",
+  "settings": "Settings"
 }
