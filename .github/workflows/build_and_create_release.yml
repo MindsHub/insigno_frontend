@@ -21,7 +21,7 @@ jobs:
           git clone --recurse-submodules "https://github.com/$GITHUB_REPOSITORY.git" "$BUILD_DIR"
           cd "$BUILD_DIR"
           git checkout "$GITHUB_SHA"
-      - name: Extract version and version code
+      - name: Extract version, version code and some paths
         run: |
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> "$GITHUB_ENV"
@@ -39,12 +39,12 @@ jobs:
           VERCODE_3: ${{ env.VERCODE_3 }}
           APKSIGNER: ${{ env.APKSIGNER }}
         run: |
-          echo "Version: $VERSION"
-          echo "Version codes: $VERCODE_1, $VERCODE_2, $VERCODE_3"
-          echo "Build directory: $BUILD_DIR"
-          echo "Android home: $ANDROID_HOME"
-          echo "Chosen apksigner: $APKSIGNER"
-          echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs)
+          echo "Version: $VERSION" >> "$GITHUB_STEP_SUMMARY"
+          echo "Version codes: $VERCODE_1, $VERCODE_2, $VERCODE_3" >> "$GITHUB_STEP_SUMMARY"
+          echo "Build directory: $BUILD_DIR" >> "$GITHUB_STEP_SUMMARY"
+          echo "Android home: $ANDROID_HOME" >> "$GITHUB_STEP_SUMMARY"
+          echo "Chosen apksigner: $APKSIGNER" >> "$GITHUB_STEP_SUMMARY"
+          echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs) >> "$GITHUB_STEP_SUMMARY"
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
