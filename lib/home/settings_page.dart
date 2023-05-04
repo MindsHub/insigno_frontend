@@ -28,11 +28,13 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
             AboutCardWidget(
               description: l10n.insignoDescription,
               svgAssetPath: "assets/icons/insigno_logo.svg",
+              urlString: "https://github.com/MindsHub/insigno_frontend.git",
             ),
             const SizedBox(height: 8),
             AboutCardWidget(
               description: l10n.mindshubDescription,
               svgAssetPath: "assets/icons/mindshub_logo.svg",
+              urlString: "https://mindshub.it",
             ),
             if (kDebugMode) const SizedBox(height: 8),
             if (kDebugMode)

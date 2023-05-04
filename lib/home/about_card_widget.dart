@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutCardWidget extends StatelessWidget {
   final String description;
   final String svgAssetPath;
+  final String urlString;
 
-  const AboutCardWidget({Key? key, required this.description, required this.svgAssetPath})
+  const AboutCardWidget(
+      {Key? key, required this.description, required this.svgAssetPath, required this.urlString})
       : super(key: key);
 
   @override
@@ -14,7 +19,9 @@ class AboutCardWidget extends StatelessWidget {
 
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          launchUrlString(urlString);
+        },
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -30,7 +37,7 @@ class AboutCardWidget extends StatelessWidget {
               const SizedBox(width: 16),
               SvgPicture.asset(
                 svgAssetPath,
-                width: MediaQuery.of(context).size.width / 5,
+                width: min(MediaQuery.of(context).size.width / 5, 128),
               ),
             ],
           ),
