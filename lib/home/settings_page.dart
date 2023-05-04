@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -18,7 +19,24 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [Text("Ciao")],
+          children: [
+            if (kDebugMode)
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    child: const Text("Crash sync"),
+                    onPressed: () => throw Exception("Synccc"),
+                  ),
+                  TextButton(
+                    child: const Text("Crash async"),
+                    onPressed: () => Future.delayed(
+                        const Duration(seconds: 0), () => throw Exception("Asynccc")),
+                  ),
+                ],
+              ),
+          ],
         ),
       ),
     );
