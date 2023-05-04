@@ -58,7 +58,7 @@ jobs:
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> "$GITHUB_ENV"
           VERSION_CODE="$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)"
-          echo "VERCODE=$(( "$VERSION_CODE" * 10 + 3 ))" >> "$GITHUB_ENV"
+          echo "VERCODE=$(( $VERSION_CODE * 10 + 3 ))" >> "$GITHUB_ENV"
       - name: Print some information
         env:
           VERSION: ${{ env.VERSION }}
