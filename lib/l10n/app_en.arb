@@ -169,5 +169,7 @@
   "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here",
   "errorOccurred": "Oh no, error!",
   "copy": "Copy",
-  "settings": "Settings"
+  "settings": "Settings",
+  "insignoDescription": "Insigno lets you report and collect garbage, earning points while doing so! Insigno is free software, click to view code and report problems.",
+  "mindshubDescription": "Insigno is developed by MindsHub, an Italian no-profit association providing a space for enthusiasts to collaborate on informatics, mechanics, electronics and 3D printing."
 }

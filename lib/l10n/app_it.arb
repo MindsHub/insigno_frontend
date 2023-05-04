@@ -77,5 +77,7 @@
   "confirmEmail": "Prima di poter usare Insigno, devi confermare il tuo account cliccando sul link inviato all'email che hai specificato, poi potrai fare il login da qui",
   "errorOccurred": "Oh no, errore!",
   "copy": "Copia",
-  "settings": "Impostazioni"
+  "settings": "Impostazioni",
+  "insignoDescription": "Con Insigno puoi segnalare e raccogliere immondizie, e nel farlo guadagnerai punti! Insigno è software libero, clicca per vedere il codice e segnalare problemi.",
+  "mindshubDescription": "Insigno è sviluppato da MindsHub, un'associazione no-profit trentina che mette a disposizione degli appassionati uno spazio per collaborare su informatica, meccanica, elettronica e stampa 3D."
 }
