@@ -171,5 +171,10 @@
   "copy": "Copy",
   "settings": "Settings",
   "insignoDescription": "Insigno lets you report and collect garbage, earning points while doing so! Insigno is free software, click to view code and report problems.",
-  "mindshubDescription": "Insigno is developed by MindsHub, an Italian no-profit association providing a space for enthusiasts to collaborate on informatics, mechanics, electronics and 3D printing."
+  "mindshubDescription": "Insigno is developed by MindsHub, an Italian no-profit association providing a space for enthusiasts to collaborate on informatics, mechanics, electronics and 3D printing.",
+  "hostServer": "Insigno server to which to connect",
+  "invalidHostServer": "Not an Insigno server",
+  "reset": "Reset",
+  "use": "Use",
+  "edit": "Edit"
 }

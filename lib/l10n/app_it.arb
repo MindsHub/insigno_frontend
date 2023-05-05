@@ -79,5 +79,10 @@
   "copy": "Copia",
   "settings": "Impostazioni",
   "insignoDescription": "Con Insigno puoi segnalare e raccogliere immondizie, e nel farlo guadagnerai punti! Insigno è software libero, clicca per vedere il codice e segnalare problemi.",
-  "mindshubDescription": "Insigno è sviluppato da MindsHub, un'associazione no-profit trentina che mette a disposizione degli appassionati uno spazio per collaborare su informatica, meccanica, elettronica e stampa 3D."
+  "mindshubDescription": "Insigno è sviluppato da MindsHub, un'associazione no-profit trentina che mette a disposizione degli appassionati uno spazio per collaborare su informatica, meccanica, elettronica e stampa 3D.",
+  "hostServer": "Server Insigno a cui connettersi",
+  "invalidHostServer": "Non è un server Insigno",
+  "reset": "Reset",
+  "use": "Usa",
+  "edit": "Modifica"
 }

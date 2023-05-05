@@ -4,3 +4,4 @@ const String lastMapLongitude = 'last_map_longitude';
 const String lastMapZoom = 'last_map_zoom';
 const String serverScheme = 'server_scheme';
 const String serverHost = 'server_host';
+const String serverPort = 'server_port';

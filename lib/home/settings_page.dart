@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/home/about_card_widget.dart';
+import 'package:insigno_frontend/home/server_host_widget.dart';
 
 class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   SettingsPage({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -36,6 +36,8 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
               svgAssetPath: "assets/icons/mindshub_logo.svg",
               urlString: "https://mindshub.it",
             ),
+            const SizedBox(height: 8),
+            ServerHostWidget(),
             if (kDebugMode) const SizedBox(height: 8),
             if (kDebugMode)
               Row(
