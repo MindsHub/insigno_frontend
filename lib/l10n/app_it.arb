@@ -84,5 +84,6 @@
   "invalidHostServer": "Non è un server Insigno",
   "reset": "Reset",
   "use": "Usa",
-  "edit": "Modifica"
+  "edit": "Modifica",
+  "onlyHttpsAccepted": "Solo URL HTTPS sono accettati"
 }

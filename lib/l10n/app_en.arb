@@ -176,5 +176,6 @@
   "invalidHostServer": "Not an Insigno server",
   "reset": "Reset",
   "use": "Use",
-  "edit": "Edit"
+  "edit": "Edit",
+  "onlyHttpsAccepted": "Only HTTPS URLs are accepted"
 }

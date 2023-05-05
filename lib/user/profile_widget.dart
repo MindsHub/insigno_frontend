@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:http/http.dart' as http;
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
+import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/user/auth_user_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
@@ -18,17 +20,13 @@ class ProfileWidget extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _ProfileWidgetState extends State<ProfileWidget>
     with SingleTickerProviderStateMixin<ProfileWidget>, GetItStateMixin<ProfileWidget> {
-  static final urlPattern = RegExp(
-    r"(https?|http)://([-A-Z\d.]+)(/[-A-Z\d+&@#/%=~_|!:,.;]*)?(\?[A-Z\d+&@#/%=~_|!:,.;]*)?",
-    caseSensitive: false,
-  );
-
   final pillFormKey = GlobalKey<FormState>();
   String pillText = "";
   String pillSource = "";
   bool pillLoading = false;
   String? pillError;
   bool pillSentAtLeastOnce = false;
+  String? pillSourceError;
   late AnimationController pillAnim;
 
   @override
@@ -109,11 +107,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             hintText: l10n.insertPossiblySource,
                           ),
                           validator: (value) {
-                            if ((value?.isNotEmpty ?? false) && !urlPattern.hasMatch(value!)) {
-                              return l10n.insertValidUrl;
-                            } else {
-                              return null;
-                            }
+                            return pillSourceError;
                           },
                           onSaved: (value) => pillSource = value ?? "",
                         ),
@@ -156,14 +150,17 @@ class _ProfileWidgetState extends State<ProfileWidget>
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (pillAnim.isDismissed) {
                             pillAnim.forward();
                             pillFormKey.currentState?.reset();
-                          } else if (pillAnim.isCompleted &&
-                              (pillFormKey.currentState?.validate() ?? false)) {
+                            pillSourceError = null;
+                          } else if (pillAnim.isCompleted) {
                             pillFormKey.currentState?.save();
-                            submitPill();
+                            pillSourceError = await getPillSourceError(l10n);
+                            if (pillFormKey.currentState?.validate() ?? false) {
+                              submitPill();
+                            }
                           }
                         },
                         child: Row(
@@ -190,6 +187,47 @@ class _ProfileWidgetState extends State<ProfileWidget>
         ),
       ),
     );
+  }
+
+  Future<String?> getPillSourceError(AppLocalizations l10n) async {
+    if (pillSource.isEmpty) {
+      return null;
+    }
+
+    final Uri uri;
+    try {
+      uri = Uri.parse(pillSource.contains("://") ? pillSource : "https://$pillSource");
+    } on FormatException catch (_) {
+      return l10n.insertValidUrl;
+    }
+
+    if (uri.scheme != "https") {
+      return l10n.onlyHttpsAccepted;
+    }
+
+    setState(() {
+      pillLoading = true;
+    });
+    try {
+      await get<http.Client>() //
+          .head(uri)
+          .timeout(const Duration(seconds: 3))
+          .throwErrors();
+      setState(() {
+        pillLoading = false;
+      });
+      return null;
+    } on FormatException catch (_) {
+      setState(() {
+        pillLoading = false;
+      });
+      return l10n.insertValidUrl;
+    } catch (e) {
+      setState(() {
+        pillLoading = false;
+      });
+      return e.toString();
+    }
   }
 
   void submitPill() {
