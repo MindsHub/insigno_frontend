@@ -65,8 +65,8 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
                       : null,
               hintText: ServerHostHandler.getDefaultUriString(),
             ),
-            onSubmitted: (v) {
-              useUriString();
+            onSubmitted: (v) async {
+              await useUriString();
             },
           ),
         ),
@@ -148,7 +148,7 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
     });
   }
 
-  void useUriString() async {
+  Future<void> useUriString() async {
     setState(() {
       uriError = false;
       serverError = false;
@@ -177,31 +177,40 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
     }
 
     final packageInfo = await PackageInfo.fromPlatform();
-    await get<http.Client>() //
-        .head(Uri(
-          scheme: uri.scheme,
-          host: uri.host,
-          port: uri.port,
-          path: "/compatibile",
-          queryParameters: {"version_str": packageInfo.version},
-        ))
-        .timeout(const Duration(seconds: 3))
-        .throwErrors()
-        .then((_) {
-      get<ServerHostHandler>().setSchemeHost(uri.scheme, uri.host, uri.hasPort ? uri.port : null);
-      _controller?.text = get<ServerHostHandler>().getUri("").toString();
+    try {
+      await get<http.Client>() //
+          .head(Uri(
+            scheme: uri.scheme,
+            host: uri.host,
+            port: uri.port,
+            path: "/compatibile",
+            queryParameters: {"version_str": packageInfo.version},
+          ))
+          .timeout(const Duration(seconds: 3))
+          .throwErrors();
+    } on FormatException catch (_) {
       setState(() {
-        editing = false;
-        uriError = false;
+        uriError = true;
         serverError = false;
         loading = false;
       });
-    }, onError: (e) {
+      return;
+    } catch (e) {
       setState(() {
         uriError = false;
         serverError = true;
         loading = false;
       });
+      return;
+    }
+
+    get<ServerHostHandler>().setSchemeHost(uri.scheme, uri.host, uri.hasPort ? uri.port : null);
+    _controller?.text = get<ServerHostHandler>().getUri("").toString();
+    setState(() {
+      editing = false;
+      uriError = false;
+      serverError = false;
+      loading = false;
     });
   }
 }
