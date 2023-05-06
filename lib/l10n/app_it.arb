@@ -89,7 +89,7 @@
   "reviewImages": "Revisiona immagini",
   "verdictOk": "A posto!",
   "verdictDelete": "Elimina",
-  "verdictDeleteReport": "Elimina e segnala",
+  "verdictDeleteReport": "Segnala ed elimina",
   "verdictSkip": "Salta",
   "noImageToReview": "Nessuna immagine da revisionare rimasta",
   "errorReviewing": "Errore nel revisionare: {error}"

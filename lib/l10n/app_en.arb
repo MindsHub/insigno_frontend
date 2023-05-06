@@ -181,7 +181,7 @@
   "reviewImages": "Review images",
   "verdictOk": "Ok!",
   "verdictDelete": "Delete",
-  "verdictDeleteReport": "Delete and report",
+  "verdictDeleteReport": "Report and delete",
   "verdictSkip": "Skip",
   "noImageToReview": "No remaining image to review",
   "errorReviewing": "Error reviewing: {error}",
