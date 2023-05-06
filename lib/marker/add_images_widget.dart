@@ -10,6 +10,8 @@ import 'package:os_detect/os_detect.dart' as Platform;
 import '../util/pair.dart';
 
 class AddImagesWidget extends StatelessWidget {
+  static const imageHeight = 256.0;
+
   final List<Pair<Uint8List, String?>> images;
   final void Function(Pair<Uint8List, String?>)? addImageCallback;
   final void Function(int)? removeImageCallback;
@@ -41,7 +43,7 @@ class AddImagesWidget extends StatelessWidget {
                         borderRadius: const BorderRadius.all(Radius.circular(16)),
                         child: Image.memory(
                           image.first,
-                          height: 128,
+                          height: imageHeight,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -83,7 +85,7 @@ class AddImagesWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: SizedBox(
                 width: 96,
-                height: 128,
+                height: imageHeight,
                 child: Icon(
                   Icons.add_a_photo,
                   size: 48,

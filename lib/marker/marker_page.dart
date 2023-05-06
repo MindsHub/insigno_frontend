@@ -2,6 +2,7 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/marker/add_images_widget.dart';
 import 'package:insigno_frontend/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
@@ -71,8 +72,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
-    final imageProviders =
-        marker?.images.map((image) => imageFromNetwork(imageId: image, height: 128));
+    final imageProviders = marker?.images
+        .map((image) => imageFromNetwork(imageId: image, height: AddImagesWidget.imageHeight));
 
     return Scaffold(
       appBar: AppBar(
