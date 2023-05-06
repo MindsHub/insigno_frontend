@@ -43,9 +43,9 @@ class _ProfileWidgetState extends State<ProfileWidget>
 
     // double.negativeInfinity is used just to signal that the user has not loaded yet
     final user = watchStream((AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
-                AuthenticatedUser(-1, "", double.negativeInfinity))
+                AuthenticatedUser(-1, "", double.negativeInfinity, false))
             .data ??
-        AuthenticatedUser(-1, "", double.negativeInfinity);
+        AuthenticatedUser(-1, "", double.negativeInfinity, false);
 
     final logoutButton = ElevatedButton(
       onPressed: () => getIt<Authentication>().logout(),

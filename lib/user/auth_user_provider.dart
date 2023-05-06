@@ -35,7 +35,8 @@ class AuthUserProvider {
 
     final u = _loadedUser;
     if (u != null) {
-      _streamController.add(AuthenticatedUser(u.id, u.name, u.points + _additionalPoints));
+      _streamController
+          .add(AuthenticatedUser(u.id, u.name, u.points + _additionalPoints, u.isAdmin));
     }
   }
 

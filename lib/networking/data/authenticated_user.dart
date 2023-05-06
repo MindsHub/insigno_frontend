@@ -1,5 +1,7 @@
 import 'user.dart';
 
 class AuthenticatedUser extends User {
-  AuthenticatedUser(super.id, super.name, super.points);
+  final bool isAdmin;
+
+  AuthenticatedUser(super.id, super.name, super.points, this.isAdmin);
 }
