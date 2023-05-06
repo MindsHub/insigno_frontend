@@ -80,11 +80,12 @@ class _ProfileWidgetState extends State<ProfileWidget>
               <Widget>[
                 const SizedBox(height: 12),
                 logoutButton,
-                const Divider(height: 32, thickness: 1),
-                ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
-                  child: Text(l10n.reviewImages),
-                ),
+                if (user.isAdmin) const Divider(height: 32, thickness: 1),
+                if (user.isAdmin)
+                  ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
+                    child: Text(l10n.reviewImages),
+                  ),
                 const Divider(height: 32, thickness: 1),
                 SizeTransition(
                   sizeFactor: pillAnim,
