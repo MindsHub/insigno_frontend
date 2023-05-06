@@ -77,20 +77,21 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.reviewImages)),
       body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: loading
-                ? const CircularProgressIndicator()
-                : errorLoading != null
-                    ? ErrorText(errorLoading, l10n.errorLoading)
-                    : images.isEmpty
-                        ? Text(l10n.noImageToReview)
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ClipRRect(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: loading
+              ? const CircularProgressIndicator()
+              : errorLoading != null
+                  ? ErrorText(errorLoading, l10n.errorLoading)
+                  : images.isEmpty
+                      ? Text(l10n.noImageToReview)
+                      : Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: ClipRRect(
                                 borderRadius: const BorderRadius.all(Radius.circular(16)),
                                 child: GestureDetector(
                                   onTap: () {
@@ -104,85 +105,85 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                   child: image,
                                 ),
                               ),
-                              ErrorText(errorReviewing, l10n.errorReviewing, spaceAbove: 16),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        sendVerdict(ReviewVerdict.ok);
-                                      },
-                                      child: Text(
-                                        l10n.verdictOk,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                            ),
+                            ErrorText(errorReviewing, l10n.errorReviewing, spaceAbove: 16),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.ok);
+                                    },
+                                    child: Text(
+                                      l10n.verdictOk,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        if (images.length == 1) {
-                                          setState(() {
-                                            images.removeAt(0);
-                                            loading = true;
-                                            errorLoading = null;
-                                          });
-                                          loadMoreImages();
-                                        } else {
-                                          setState(() {
-                                            images.removeAt(0);
-                                          });
-                                        }
-                                      },
-                                      child: Text(
-                                        l10n.verdictSkip,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      if (images.length == 1) {
+                                        setState(() {
+                                          images.removeAt(0);
+                                          loading = true;
+                                          errorLoading = null;
+                                        });
+                                        loadMoreImages();
+                                      } else {
+                                        setState(() {
+                                          images.removeAt(0);
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      l10n.verdictSkip,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        sendVerdict(ReviewVerdict.delete);
-                                      },
-                                      child: Text(
-                                        l10n.verdictDelete,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.delete);
+                                    },
+                                    child: Text(
+                                      l10n.verdictDelete,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        sendVerdict(ReviewVerdict.deleteReport);
-                                      },
-                                      child: Text(
-                                        l10n.verdictDeleteReport,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.deleteReport);
+                                    },
+                                    child: Text(
+                                      l10n.verdictDeleteReport,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-          ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
         ),
       ),
     );
