@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/marker_image.dart';
+import 'package:insigno_frontend/networking/data/review_verdict.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/nullable.dart';
@@ -31,10 +32,6 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
   }
 
   void loadMoreImages() {
-    setState(() {
-      loading = true;
-      errorLoading = null;
-    });
     getIt<Backend>().getToReview().then((value) {
       setState(() {
         loading = false;
@@ -44,6 +41,29 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
       setState(() {
         loading = false;
         errorLoading = e.toString();
+      });
+    });
+  }
+
+  void sendVerdict(ReviewVerdict verdict) {
+    setState(() {
+      loading = true;
+      errorReviewing = null;
+    });
+    getIt<Backend>().review(images.first.id, verdict).then((_) {
+      if (images.length == 1) {
+        images.removeAt(0);
+        loadMoreImages();
+      } else {
+        setState(() {
+          images.removeAt(0);
+          loading = false;
+        });
+      }
+    }, onError: (e) {
+      setState(() {
+        loading = false;
+        errorReviewing = e.toString();
       });
     });
   }
@@ -90,7 +110,9 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                 children: [
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        sendVerdict(ReviewVerdict.ok);
+                                      },
                                       child: Text(
                                         l10n.verdictOk,
                                         maxLines: 1,
@@ -102,7 +124,20 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        if (images.length == 1) {
+                                          setState(() {
+                                            images.removeAt(0);
+                                            loading = true;
+                                            errorLoading = null;
+                                          });
+                                          loadMoreImages();
+                                        } else {
+                                          setState(() {
+                                            images.removeAt(0);
+                                          });
+                                        }
+                                      },
                                       child: Text(
                                         l10n.verdictSkip,
                                         maxLines: 1,
@@ -118,7 +153,9 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                 children: [
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        sendVerdict(ReviewVerdict.delete);
+                                      },
                                       child: Text(
                                         l10n.verdictDelete,
                                         maxLines: 1,
@@ -130,7 +167,9 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        sendVerdict(ReviewVerdict.deleteReport);
+                                      },
                                       child: Text(
                                         l10n.verdictDeleteReport,
                                         maxLines: 1,
