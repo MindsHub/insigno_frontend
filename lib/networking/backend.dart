@@ -5,7 +5,9 @@ import "package:injectable/injectable.dart";
 import "package:insigno_frontend/networking/authentication.dart";
 import "package:insigno_frontend/networking/data/authenticated_user.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
+import "package:insigno_frontend/networking/data/marker_image.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
+import "package:insigno_frontend/networking/data/review_verdict.dart";
 import "package:insigno_frontend/networking/data/user.dart";
 import "package:insigno_frontend/networking/error.dart";
 import "package:insigno_frontend/networking/parsers.dart";
@@ -155,5 +157,14 @@ class Backend {
     final packageInfo = await PackageInfo.fromPlatform();
     return _getJson("/compatibile", params: {"version_str": packageInfo.version})
         .map((v) => v as bool);
+  }
+
+  Future<List<MarkerImage>> getToReview() {
+    return _getJsonAuthenticated("/map/image/to_review")
+        .map((img) => img.map<MarkerImage>(markerImageFromJson).toList());
+  }
+
+  Future<void> review(int imageId, ReviewVerdict verdict) {
+    return _postAuthenticated("/map/image/review/$imageId", fields: {"verdict": verdict.verdict});
   }
 }

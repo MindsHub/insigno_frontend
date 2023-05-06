@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
+import 'package:insigno_frontend/networking/data/marker_image.dart';
 import "package:insigno_frontend/util/nullable.dart";
 
 import 'data/marker_type.dart';
@@ -61,4 +62,8 @@ Pill pillFromJson(dynamic p) {
 
 MarkerUpdate markerUpdateFromJson(dynamic u) {
   return MarkerUpdate(u["id"], u["earned_points"]);
+}
+
+MarkerImage markerImageFromJson(dynamic u) {
+  return MarkerImage(u["id"], u["refers_to"]);
 }
