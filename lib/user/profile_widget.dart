@@ -7,6 +7,7 @@ import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/user/auth_user_provider.dart';
+import 'package:insigno_frontend/user/image_review_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 import '../networking/authentication.dart';
@@ -79,6 +80,11 @@ class _ProfileWidgetState extends State<ProfileWidget>
               <Widget>[
                 const SizedBox(height: 12),
                 logoutButton,
+                const Divider(height: 32, thickness: 1),
+                ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
+                  child: Text(l10n.reviewImages),
+                ),
                 const Divider(height: 32, thickness: 1),
                 SizeTransition(
                   sizeFactor: pillAnim,

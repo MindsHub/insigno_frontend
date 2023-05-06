@@ -177,5 +177,19 @@
   "reset": "Reset",
   "use": "Use",
   "edit": "Edit",
-  "onlyHttpsAccepted": "Only HTTPS URLs are accepted"
+  "onlyHttpsAccepted": "Only HTTPS URLs are accepted",
+  "reviewImages": "Review images",
+  "verdictOk": "Ok!",
+  "verdictDelete": "Delete",
+  "verdictDeleteReport": "Delete and report",
+  "verdictSkip": "Skip",
+  "noImageToReview": "No remaining image to review",
+  "errorReviewing": "Error reviewing: {error}",
+  "@errorReviewing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

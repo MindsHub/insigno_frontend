@@ -85,5 +85,12 @@
   "reset": "Reset",
   "use": "Usa",
   "edit": "Modifica",
-  "onlyHttpsAccepted": "Solo URL HTTPS sono accettati"
+  "onlyHttpsAccepted": "Solo URL HTTPS sono accettati",
+  "reviewImages": "Revisiona immagini",
+  "verdictOk": "A posto!",
+  "verdictDelete": "Elimina",
+  "verdictDeleteReport": "Elimina e segnala",
+  "verdictSkip": "Salta",
+  "noImageToReview": "Nessuna immagine da revisionare rimasta",
+  "errorReviewing": "Errore nel revisionare: {error}"
 }

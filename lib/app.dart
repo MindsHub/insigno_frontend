@@ -9,6 +9,7 @@ import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/user/image_review_page.dart';
 import 'package:insigno_frontend/user/user_page.dart';
 
 class InsignoApp extends StatelessWidget {
@@ -40,7 +41,8 @@ class InsignoApp extends StatelessWidget {
             ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
             PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
             UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
-            ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails)
+            ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
+            ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));

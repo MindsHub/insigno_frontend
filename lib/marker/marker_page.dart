@@ -6,9 +6,9 @@ import 'package:insigno_frontend/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
-import 'package:insigno_frontend/networking/server_host_handler.dart';
 import 'package:insigno_frontend/user/user_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
+import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
@@ -71,23 +71,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
-    final imageProviders = marker?.images.map((image) => Image.network(
-          get<ServerHostHandler>().getUri("/map/image/$image").toString(),
-          height: 128,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            );
-          },
-        ));
+    final imageProviders =
+        marker?.images.map((image) => imageFromNetwork(imageId: image, height: 128));
 
     return Scaffold(
       appBar: AppBar(
