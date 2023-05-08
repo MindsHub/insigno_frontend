@@ -78,7 +78,19 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
         ));
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.reviewImages)),
+      appBar: AppBar(
+        title: Text(l10n.reviewImages),
+        actions: images.firstOrNull?.map((i) => [
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Icon(
+                  i.markerType.icon,
+                  size: 48,
+                  color: i.markerType.color,
+                ),
+              ),
+            ]),
+      ),
       body: Center(
         child: loading
             ? const CircularProgressIndicator()
