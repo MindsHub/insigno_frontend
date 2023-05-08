@@ -84,11 +84,11 @@ class AddImagesWidget extends StatelessWidget {
               onTap: addImageCallback?.map((_) => captureImage),
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: SizedBox(
-                width: 96,
+                width: imageHeight / 1.618,
                 height: imageHeight,
                 child: Icon(
                   Icons.add_a_photo,
-                  size: 48,
+                  size: 64,
                   color: addImageCallback == null ? fgDisabledColor : fgColor,
                 ),
               ),
