@@ -128,18 +128,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                               Expanded(
                                 child: OutlinedButton(
                                   onPressed: () {
-                                    if (images.length == 1) {
-                                      setState(() {
-                                        images.removeAt(0);
-                                        loading = true;
-                                        errorLoading = null;
-                                      });
-                                      loadMoreImages();
-                                    } else {
-                                      setState(() {
-                                        images.removeAt(0);
-                                      });
-                                    }
+                                    sendVerdict(ReviewVerdict.skip);
                                   },
                                   child: Text(
                                     l10n.verdictSkip,
