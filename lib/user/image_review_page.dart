@@ -117,9 +117,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                     },
                                     child: Text(
                                       l10n.verdictOk,
-                                      maxLines: 1,
                                       textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -142,9 +140,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                     },
                                     child: Text(
                                       l10n.verdictSkip,
-                                      maxLines: 1,
                                       textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -160,9 +156,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                     },
                                     child: Text(
                                       l10n.verdictDelete,
-                                      maxLines: 1,
                                       textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -174,9 +168,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
                                     },
                                     child: Text(
                                       l10n.verdictDeleteReport,
-                                      maxLines: 1,
                                       textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
