@@ -1,0 +1,14 @@
+New
+• Allow changing the Insigno server to connect to
+• Add error reporting page
+• Add settings and about page
+• Allow admins to review images
+
+Improved
+• Use all location providers, for faster location loading on some phones
+• Proper URL validation for pill source
+• Make marker images double size
+• Disable scrolling between tabs
+
+Fixed
+• Show "Confirm email" text only after registering

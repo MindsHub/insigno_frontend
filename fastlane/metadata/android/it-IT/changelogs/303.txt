@@ -1,0 +1,13 @@
+Novità
+• Scelta del server Insigno a cui connettersi
+• Pagina di segnalazione errori
+• Pagina con impostazioni e informazioni
+• Gli admin ora possono revisionare le immagini
+
+Miglioramenti
+• Caricamento della posizione più veloce su alcuni telefoni, usando tutti i fornitori
+• Miglior validazione dell'URL di fonte delle pillole
+• Le immagini dei marcatori sono ora grandi il doppio
+
+Correzioni
+• Il messaggio di conferma della mail viene ora mostrato solo dopo la registrazione
