@@ -1,6 +1,8 @@
+import 'package:insigno_frontend/networking/data/marker_type.dart';
+
 class MarkerImage {
   final int id;
-  final int refersTo;
+  final MarkerType markerType;
 
-  MarkerImage(this.id, this.refersTo);
+  MarkerImage(this.id, this.markerType);
 }

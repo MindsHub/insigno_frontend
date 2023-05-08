@@ -22,6 +22,11 @@ List<int> imageListFromJson(dynamic l) {
   return (l as List<dynamic>).map<int>((i) => i as int).toList();
 }
 
+MarkerType markerTypeFromJson(dynamic m) {
+  return MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
+      MarkerType.unknown;
+}
+
 MapMarker mapMarkerFromJson(dynamic m) {
   var point = m["point"];
   var resolutionDate = m["resolution_date"];
@@ -29,8 +34,7 @@ MapMarker mapMarkerFromJson(dynamic m) {
     m["id"],
     point["y"] as double,
     point["x"] as double,
-    MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
-        MarkerType.unknown,
+    markerTypeFromJson(m),
     DateTime.parse(m["creation_date"]),
     (resolutionDate as String?).map(DateTime.parse), // might be null
     m["created_by"],
@@ -45,8 +49,7 @@ Marker markerFromJson(dynamic m) {
     m["id"],
     point["y"] as double,
     point["x"] as double,
-    MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
-        MarkerType.unknown,
+    markerTypeFromJson(m),
     DateTime.parse(m["creation_date"]),
     (resolutionDate as String?).map(DateTime.parse), // might be null
     userFromJson(m["created_by"]),
@@ -65,5 +68,5 @@ MarkerUpdate markerUpdateFromJson(dynamic u) {
 }
 
 MarkerImage markerImageFromJson(dynamic u) {
-  return MarkerImage(u["id"], u["refers_to"]);
+  return MarkerImage(u["id"], markerTypeFromJson(u));
 }
