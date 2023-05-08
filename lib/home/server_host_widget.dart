@@ -37,6 +37,7 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     final currentUriString = watchStream((ServerHostHandler s) => s.getUriStringStream(),
                 get<ServerHostHandler>().getUri("").toString())
@@ -70,6 +71,8 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
             },
           ),
         ),
+        const SizedBox(height: 8),
+        Text(l10n.hostServerDescription, style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         if (loading)
           const Padding(

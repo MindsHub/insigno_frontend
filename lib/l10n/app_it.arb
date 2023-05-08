@@ -82,6 +82,7 @@
   "mindshubDescription": "Insigno è sviluppato da MindsHub, un'associazione no-profit trentina che mette a disposizione degli appassionati uno spazio per collaborare su informatica, meccanica, elettronica e stampa 3D.",
   "hostServer": "Server Insigno a cui connettersi",
   "invalidHostServer": "Non è un server Insigno",
+  "hostServerDescription": "Dato che Insigno è software libero, puoi scegliere di connetterti ad altre istanze del servizio di backend",
   "reset": "Reset",
   "use": "Usa",
   "edit": "Modifica",
