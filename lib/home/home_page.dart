@@ -36,14 +36,18 @@ class _HomePageState extends State<HomePage>
     );
 
     // ignore any error that may occur while loading the pill
-    get<Backend>().loadRandomPill().then((value) => setState(() {
-          pill = value;
-          pillAnimationController.forward();
-        }));
+    get<Backend>().loadRandomPill().then((value) {
+      setState(() {
+        pill = value;
+        pillAnimationController.forward();
+      });
+    }, onError: (_) {
+      // ignore errors when loading pills
+    });
 
     _tabs = <Widget>[ProfilePersistentPage(), MapPersistentPage(), SettingsPage()];
     _tabController = TabController(initialIndex: 1, length: _tabs.length, vsync: this);
-    _tabController.addListener(() => setState(() {})); // <- notify when
+    _tabController.addListener(() => setState(() {})); // <- update page when the tab is changed
   }
 
   @override
