@@ -65,7 +65,7 @@ dependency_overrides:
     git:
       url: https://github.com/Stypox/flutter-geolocator.git
       path: geolocator_android
-      ref: force-gps
+      ref: use-all-providers
 
 dev_dependencies:
   flutter_test:

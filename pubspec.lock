@@ -313,8 +313,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: geolocator_android
-      ref: force-gps
-      resolved-ref: b50c9798e48703f49b1e8f7de67c814ab3b3acad
+      ref: use-all-providers
+      resolved-ref: b161598224fffc6a45fa3192c31986dab07ea8b5
       url: "https://github.com/Stypox/flutter-geolocator.git"
     source: git
     version: "4.1.7"
