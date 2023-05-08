@@ -106,7 +106,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 ErrorText(
                   loginError,
                   formatLoginError ? l10n.wrongUserOrPassword : (v) => v,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
                 const SizedBox(height: 16),
                 loading

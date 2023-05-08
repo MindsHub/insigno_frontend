@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/server_host_handler.dart';
 
-Image imageFromNetwork({required int imageId, double? height, double? width}) {
+Image imageFromNetwork({required int imageId, double? height, double? width, BoxFit? fit}) {
   return Image.network(
     getIt<ServerHostHandler>().getUri("/map/image/$imageId").toString(),
     height: height,
     width: width,
-    fit: BoxFit.cover,
+    fit: fit,
     loadingBuilder: (context, child, loadingProgress) {
       if (loadingProgress == null) {
         return child;

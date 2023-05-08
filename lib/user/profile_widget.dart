@@ -118,7 +118,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                           },
                           onSaved: (value) => pillSource = value ?? "",
                         ),
-                        ErrorText(pillError, l10n.errorSendingPill, spaceAbove: 16),
+                        ErrorText(pillError, l10n.errorSendingPill, topPadding: 16),
                         const SizedBox(height: 16),
                       ],
                     ),

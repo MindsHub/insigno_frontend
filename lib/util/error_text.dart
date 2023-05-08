@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 class ErrorText extends StatelessWidget {
   final String? errorString;
   final String Function(String errorString) formatter;
-  final double spaceAbove;
-  final double spaceBelow;
+  final double topPadding;
+  final double horizontalPadding;
   final TextAlign textAlign;
 
   const ErrorText(this.errorString, this.formatter,
-      {this.spaceAbove = 0, this.spaceBelow = 0, this.textAlign = TextAlign.center, Key? key})
+      {this.topPadding = 0,
+      this.horizontalPadding = 0,
+      this.textAlign = TextAlign.center,
+      Key? key})
       : super(key: key);
 
   @override
@@ -24,17 +27,13 @@ class ErrorText extends StatelessWidget {
       textAlign: textAlign,
     );
 
-    if (spaceAbove <= 0 && spaceBelow <= 0) {
+    if (topPadding <= 0 && horizontalPadding <= 0) {
       return text;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (spaceAbove > 0) SizedBox(height: spaceAbove),
-        text,
-        if (spaceBelow > 0) SizedBox(height: spaceBelow),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, top: topPadding),
+      child: text,
     );
   }
 }

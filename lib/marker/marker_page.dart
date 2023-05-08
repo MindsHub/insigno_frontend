@@ -144,13 +144,13 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 ErrorText(
                   widget.errorAddingImages,
                   l10n.errorUploadingReportImages,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
-                ErrorText(resolveError, l10n.errorUploadingResolveImages, spaceAbove: 16),
+                ErrorText(resolveError, l10n.errorUploadingResolveImages, topPadding: 16),
                 ErrorText(
                   reportAsInappropriateError,
                   l10n.errorReportingAsInappropriate,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
                 const SizedBox(height: 16),
                 if (marker == null || marker?.resolutionDate != null)
