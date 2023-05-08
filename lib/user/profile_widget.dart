@@ -57,9 +57,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: ((user.points == double.negativeInfinity)
                   ? <Widget>[
                       const CircularProgressIndicator(),
@@ -78,7 +76,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
                       ),
                     ]) +
               <Widget>[
-                const SizedBox(height: 12),
+                const SizedBox(
+                  height: 12,
+                  width: double.infinity, // to make the column have maximum width
+                ),
                 logoutButton,
                 if (user.isAdmin) const Divider(height: 32, thickness: 1),
                 if (user.isAdmin)

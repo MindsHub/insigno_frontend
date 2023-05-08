@@ -152,7 +152,10 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                   l10n.errorReportingAsInappropriate,
                   topPadding: 16,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(
+                  height: 16,
+                  width: double.infinity, // to make the column have maximum width
+                ),
                 if (marker == null || marker?.resolutionDate != null)
                   const SizedBox() // do not show any error if the marker is already resolved
                 else if (!isLoggedIn)

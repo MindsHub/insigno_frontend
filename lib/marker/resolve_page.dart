@@ -68,26 +68,30 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
         title: Text(l10n.resolve),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AddImagesWidget(
-              images,
-              loading ? null : (image) => setState(() => images.add(image)),
-              loading ? null : (index) => setState(() => images.removeAt(index)),
-            ),
-            const SizedBox(height: 12),
-            if (errorMessage != null) Text(errorMessage),
-            if (loading)
-              const CircularProgressIndicator()
-            else
-              ElevatedButton(
-                onPressed: errorMessage == null ? resolve : null,
-                child: Text(l10n.resolve),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AddImagesWidget(
+                images,
+                loading ? null : (image) => setState(() => images.add(image)),
+                loading ? null : (index) => setState(() => images.removeAt(index)),
               ),
-            ErrorText(error, l10n.errorResolving),
-          ],
+              const SizedBox(
+                height: 12,
+                width: double.infinity, // to make the column have maximum width
+              ),
+              if (errorMessage != null) Text(errorMessage),
+              if (loading)
+                const CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: errorMessage == null ? resolve : null,
+                  child: Text(l10n.resolve),
+                ),
+              ErrorText(error, l10n.errorResolving),
+            ],
+          ),
         ),
       ),
     );
