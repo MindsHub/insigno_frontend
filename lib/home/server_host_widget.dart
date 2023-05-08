@@ -71,9 +71,14 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
             },
           ),
         ),
-        const SizedBox(height: 8),
-        Text(l10n.hostServerDescription, style: theme.textTheme.labelMedium),
-        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            l10n.hostServerDescription,
+            style: theme.textTheme.labelMedium,
+            textAlign: TextAlign.center,
+          ),
+        ),
         if (loading)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
