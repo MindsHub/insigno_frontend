@@ -49,5 +49,7 @@
 	<string>Location is required in order to properly locate the trash you find and report.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Location is required in order to properly locate the trash you find and report.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

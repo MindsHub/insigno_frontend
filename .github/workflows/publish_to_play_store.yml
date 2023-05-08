@@ -16,12 +16,15 @@ jobs:
     steps:
       - name: Clone repository
         # not using actions/checkout because it does not clone `.git`, required for Flutter
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
           sudo mkdir -p "$BUILD_DIR"
           sudo chown runner "$BUILD_DIR"
-          git clone --recurse-submodules "https://github.com/${{ github.repository }}.git" "$BUILD_DIR"
+          git clone --recurse-submodules "https://github.com/$GITHUB_REPOSITORY.git" "$BUILD_DIR"
           cd "$BUILD_DIR"
-          git checkout "${{ github.sha }}"
+          git checkout "$GITHUB_SHA"
       - name: Setup Fastlane
         run: |
           cd "$BUILD_DIR"
@@ -30,41 +33,39 @@ jobs:
           cp Gemfile Gemfile.lock android/
           cd "$BUILD_DIR/android"
           sudo bundle install
-      - name: Extract version and version code
+      - name: Extract version, version code and some paths
         run: |
           cd "$BUILD_DIR"
-          echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> $GITHUB_ENV
-          VERSION_CODE=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)
-          echo "VERCODE_1=$(( $VERSION_CODE * 10 + 1 ))" >> $GITHUB_ENV
-          echo "VERCODE_2=$(( $VERSION_CODE * 10 + 2 ))" >> $GITHUB_ENV
-          echo "VERCODE_3=$(( $VERSION_CODE * 10 + 3 ))" >> $GITHUB_ENV
-          BUILD_TOOLS_PATH=$($ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed | grep build-tools/ | tail -n 1 | sed -nE 's~^.*(build-tools/[^ \t]+).*$~\1~p')
-          echo "APKSIGNER=$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner" >> $GITHUB_ENV
+          echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> "$GITHUB_ENV"
+          VERSION_CODE="$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\2~p' pubspec.yaml)"
+          echo "VERCODE=$(( "$VERSION_CODE" * 10 + 3 ))" >> "$GITHUB_ENV"
       - name: Print some information
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE: ${{ env.VERCODE }}
         run: |
-          echo "Version: ${{ env.VERSION }}"
-          echo "Version codes: ${{ env.VERCODE_1 }}, ${{ env.VERCODE_2 }}, ${{ env.VERCODE_3 }}"
-          echo "Build directory: $BUILD_DIR"
-          echo "Android home: $ANDROID_HOME"
-          echo "Chosen apksigner: ${{ env.APKSIGNER }}"
-          echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs)
+          echo "Version: $VERSION" >> "$GITHUB_STEP_SUMMARY"
+          echo "Version code: $VERCODE" >> "$GITHUB_STEP_SUMMARY"
+          echo "Build directory: $BUILD_DIR" >> "$GITHUB_STEP_SUMMARY"
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter config --no-analytics
           submodules/flutter/bin/flutter pub get
       - name: Add signing config to app/build.gradle
+        env:
+          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
         run: |
           cd "$BUILD_DIR/android/app"
-          openssl base64 -A -d -out keystore.jks <<< "${{ secrets.SIGNING_KEYSTORE_BASE64 }}"
+          openssl base64 -A -d -out keystore.jks <<< "$KEYSTORE_BASE64"
           echo >> ./build.gradle
           echo "android {" >> ./build.gradle
           echo "    signingConfigs {" >> ./build.gradle
           echo "        release {" >> ./build.gradle
-          echo "            keyAlias '${{ secrets.SIGNING_KEY_ALIAS }}'" >> ./build.gradle
-          echo "            keyPassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
-          echo "            storeFile file('$BUILD_DIR/android/app/keystore.jks')" >> ./build.gradle
-          echo "            storePassword '${{ secrets.SIGNING_KEYSTORE_PASSWORD }}'" >> ./build.gradle
+          echo "            keyAlias System.env.KEY_ALIAS" >> ./build.gradle
+          echo "            keyPassword System.env.KEYSTORE_PASSWORD" >> ./build.gradle
+          echo "            storeFile file(System.env.BUILD_DIR + '/android/app/keystore.jks')" >> ./build.gradle
+          echo "            storePassword System.env.KEYSTORE_PASSWORD" >> ./build.gradle
           echo "        }" >> ./build.gradle
           echo "    }" >> ./build.gradle
           echo "    buildTypes {" >> ./build.gradle
@@ -74,17 +75,25 @@ jobs:
           echo "    }" >> ./build.gradle
           echo "}" >> ./build.gradle
       - name: Build AAB
+        env:
+          VERSION: ${{ env.VERSION }}
+          VERCODE: ${{ env.VERCODE }}
+          # used by gradle via System.env
+          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: |
           cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build appbundle --release --build-number=${{ env.VERCODE_3 }} --build-name=${{ env.VERSION }}
+          submodules/flutter/bin/flutter build appbundle --release --build-number="$VERCODE" --build-name="$VERSION"
       - name: Copy Fastlane metadata to correct directory
         run: |
           cd "$BUILD_DIR"
           cp -r fastlane/ android/
       - name: Create Google Play config file
+        env:
+          PLAY_STORE_CONFIG_BASE64: ${{ secrets.PLAY_STORE_CONFIG_BASE64 }}
         run: |
           cd "$BUILD_DIR/android"
-          openssl base64 -A -d -out play_config.json <<< "${{ secrets.PLAY_STORE_CONFIG_BASE64 }}"
+          openssl base64 -A -d -out play_config.json <<< "$PLAY_STORE_CONFIG_BASE64"
       - name: Run Fastlane to publish to Play Store and update metadata
         run: |
           cd "$BUILD_DIR/android"

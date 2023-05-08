@@ -102,7 +102,7 @@
   "reportAsInappropriate": "Report as inappropriate",
   "insertEcologyPill": "Insert an ecology pill",
   "insertPill": "Insert a pill",
-  "source": "Source",
+  "source": "Source (web address)",
   "infoText": "Informational text",
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
@@ -166,5 +166,31 @@
   "email": "Email",
   "insertEmail": "Insert an email",
   "insertValidEmail": "Insert a valid email",
-  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here"
+  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here",
+  "errorOccurred": "Oh no, error!",
+  "copy": "Copy",
+  "settings": "Settings",
+  "insignoDescription": "Insigno lets you report and collect garbage, earning points while doing so! Insigno is free software, click to view code and report problems.",
+  "mindshubDescription": "Insigno is developed by MindsHub, an Italian no-profit association providing a space for enthusiasts to collaborate on informatics, mechanics, electronics and 3D printing.",
+  "hostServer": "Insigno server to which to connect",
+  "hostServerDescription": "Since Insigno is free software, you can choose to connect to other instances of the backend service",
+  "invalidHostServer": "Not an Insigno server",
+  "reset": "Reset",
+  "use": "Use",
+  "edit": "Edit",
+  "onlyHttpsAccepted": "Only HTTPS URLs are accepted",
+  "reviewImages": "Review images",
+  "verdictOk": "Ok!",
+  "verdictDelete": "Delete",
+  "verdictDeleteReport": "Report and delete",
+  "verdictSkip": "Skip",
+  "noImageToReview": "No remaining image to review",
+  "errorReviewing": "Error reviewing: {error}",
+  "@errorReviewing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

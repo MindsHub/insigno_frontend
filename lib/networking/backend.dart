@@ -5,15 +5,17 @@ import "package:injectable/injectable.dart";
 import "package:insigno_frontend/networking/authentication.dart";
 import "package:insigno_frontend/networking/data/authenticated_user.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
+import "package:insigno_frontend/networking/data/marker_image.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
+import "package:insigno_frontend/networking/data/review_verdict.dart";
 import "package:insigno_frontend/networking/data/user.dart";
 import "package:insigno_frontend/networking/error.dart";
 import "package:insigno_frontend/networking/parsers.dart";
+import "package:insigno_frontend/networking/server_host_handler.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
-import "const.dart";
 import "data/map_marker.dart";
 import "data/marker_type.dart";
 import "data/marker_update.dart";
@@ -22,17 +24,13 @@ import "data/marker_update.dart";
 class Backend {
   final http.Client _client;
   final Authentication _auth;
+  final ServerHostHandler _serverHostHandler;
 
-  Backend(this._client, this._auth);
+  Backend(this._client, this._auth, this._serverHostHandler);
 
   Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
     return _client //
-        .get(Uri(
-          scheme: insignoServerScheme,
-          host: insignoServer,
-          path: path,
-          queryParameters: params,
-        ))
+        .get(_serverHostHandler.getUri(path, params: params))
         .throwErrors()
         .mapParseJson();
   }
@@ -44,12 +42,7 @@ class Backend {
     }
 
     final response = await _client.get(
-      Uri(
-        scheme: insignoServerScheme,
-        host: insignoServer,
-        path: path,
-        queryParameters: params,
-      ),
+      _serverHostHandler.getUri(path, params: params),
       headers: {"Cookie": cookie},
     );
 
@@ -68,12 +61,9 @@ class Backend {
     }
 
     final request = http.MultipartRequest(
-        "POST",
-        Uri(
-          scheme: insignoServerScheme,
-          host: insignoServer,
-          path: path,
-        ));
+      "POST",
+      _serverHostHandler.getUri(path),
+    );
     request.headers["Cookie"] = cookie;
 
     if (fields != null) {
@@ -167,5 +157,14 @@ class Backend {
     final packageInfo = await PackageInfo.fromPlatform();
     return _getJson("/compatibile", params: {"version_str": packageInfo.version})
         .map((v) => v as bool);
+  }
+
+  Future<List<MarkerImage>> getToReview() {
+    return _getJsonAuthenticated("/map/image/to_review")
+        .map((img) => img.map<MarkerImage>(markerImageFromJson).toList());
+  }
+
+  Future<void> review(int imageId, ReviewVerdict verdict) {
+    return _postAuthenticated("/map/image/review/$imageId", fields: {"verdict": verdict.verdict});
   }
 }

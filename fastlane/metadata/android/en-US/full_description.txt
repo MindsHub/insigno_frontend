@@ -4,6 +4,6 @@ Any user can <b>report</b> abandoned garbage they find, <i>classifying</i> it by
 
 Informative <i><b>pills</b></i> will be shown each time the app is launched, with FAQs, news, and tips regarding ecology and environment protection.
 
-The app requires logging in to perform most operations, thus the "NonFreeNet" AntiFeature. But Insigno is completely <b>Free Software</b>, you can find the code here:
+Insigno is completely <b>Free Software</b>, you can find the code here:
 - Frontend (app): https://github.com/MindsHub/insigno_frontend
 - Backend (server): https://github.com/MindsHub/insigno_backend

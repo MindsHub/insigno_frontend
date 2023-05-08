@@ -69,44 +69,48 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
         title: Text(l10n.report),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AddImagesWidget(
-              images,
-              loading ? null : (image) => setState(() => images.add(image)),
-              loading ? null : (index) => setState(() => images.removeAt(index)),
-            ),
-            const SizedBox(height: 12),
-            DropdownButton(
-              hint: Text(l10n.markerType),
-              items: MarkerType.values
-                  .where((element) => element != MarkerType.unknown)
-                  .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Row(children: [
-                        e.getThemedIcon(context),
-                        const SizedBox(width: 8),
-                        Text(e.getName(context))
-                      ])))
-                  .toList(growable: false),
-              onChanged: loading
-                  ? null
-                  : (MarkerType? newMarkerType) => setState(() => markerType = newMarkerType),
-              value: markerType,
-            ),
-            const SizedBox(height: 12),
-            if (errorMessage != null) Text(errorMessage),
-            if (loading)
-              const CircularProgressIndicator()
-            else
-              ElevatedButton(
-                onPressed: errorMessage == null ? send : null,
-                child: Text(l10n.send),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AddImagesWidget(
+                images,
+                loading ? null : (image) => setState(() => images.add(image)),
+                loading ? null : (index) => setState(() => images.removeAt(index)),
               ),
-            ErrorText(error, l10n.errorReporting),
-          ],
+              const SizedBox(
+                height: 12,
+                width: double.infinity, // to make the column have maximum width
+              ),
+              DropdownButton(
+                hint: Text(l10n.markerType),
+                items: MarkerType.values
+                    .where((element) => element != MarkerType.unknown)
+                    .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Row(children: [
+                          e.getThemedIcon(context),
+                          const SizedBox(width: 8),
+                          Text(e.getName(context))
+                        ])))
+                    .toList(growable: false),
+                onChanged: loading
+                    ? null
+                    : (MarkerType? newMarkerType) => setState(() => markerType = newMarkerType),
+                value: markerType,
+              ),
+              const SizedBox(height: 12),
+              if (errorMessage != null) Text(errorMessage),
+              if (loading)
+                const CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: errorMessage == null ? send : null,
+                  child: Text(l10n.send),
+                ),
+              ErrorText(error, l10n.errorReporting),
+            ],
+          ),
         ),
       ),
     );

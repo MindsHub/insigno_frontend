@@ -44,7 +44,6 @@ class _UserPageState extends State<UserPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: ((user == null)
                   ? <Widget>[
                       if (error == null)
@@ -58,7 +57,10 @@ class _UserPageState extends State<UserPage> {
                         style: theme.textTheme.titleMedium,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(
+                        height: 4,
+                        width: double.infinity, // to make the column have maximum width
+                      ),
                       Text(
                         l10n.points(user!.points),
                         style: theme.textTheme.bodyMedium,

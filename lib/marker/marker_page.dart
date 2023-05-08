@@ -2,13 +2,14 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/marker/add_images_widget.dart';
 import 'package:insigno_frontend/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/marker/resolve_page.dart';
-import 'package:insigno_frontend/networking/const.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
 import 'package:insigno_frontend/user/user_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
+import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
@@ -71,23 +72,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
-    final imageProviders = marker?.images.map((image) => Image.network(
-          "$insignoServerScheme://$insignoServer/map/image/$image",
-          height: 128,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            );
-          },
-        ));
+    final imageProviders = marker?.images
+        .map((image) => imageFromNetwork(imageId: image, height: AddImagesWidget.imageHeight));
 
     return Scaffold(
       appBar: AppBar(
@@ -158,15 +144,18 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 ErrorText(
                   widget.errorAddingImages,
                   l10n.errorUploadingReportImages,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
-                ErrorText(resolveError, l10n.errorUploadingResolveImages, spaceAbove: 16),
+                ErrorText(resolveError, l10n.errorUploadingResolveImages, topPadding: 16),
                 ErrorText(
                   reportAsInappropriateError,
                   l10n.errorReportingAsInappropriate,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(
+                  height: 16,
+                  width: double.infinity, // to make the column have maximum width
+                ),
                 if (marker == null || marker?.resolutionDate != null)
                   const SizedBox() // do not show any error if the marker is already resolved
                 else if (!isLoggedIn)

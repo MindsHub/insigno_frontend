@@ -2,6 +2,15 @@
 
 Flutter frontend for Insigno.
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/org.mindshub.insigno/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=org.mindshub.insigno)
+
+Or get the latest APK from the [Releases Section](https://github.com/MindsHub/insigno_frontend/releases/latest).
+
 ## Dependency injection
 
 Quando si aggiungono o spostano file di Dependency Injection (ad esempio, quelli contenenti `@singleton`, `@lazySingleton`, `@injectable` o `@module`), bisogna rigenerare il file di setup `lib/di/setup.config.dart` ([fonte](https://github.com/Milad-Akarie/injectable#run-the-generator)).

@@ -147,7 +147,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 ErrorText(
                   signupError,
                   formatSignupError ? l10n.signupFailed : (v) => v,
-                  spaceAbove: 16,
+                  topPadding: 16,
                 ),
                 const SizedBox(height: 16),
                 loading

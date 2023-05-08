@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
+import 'package:insigno_frontend/networking/data/marker_image.dart';
 import "package:insigno_frontend/util/nullable.dart";
 
 import 'data/marker_type.dart';
@@ -14,11 +15,16 @@ User userFromJson(dynamic u) {
 }
 
 AuthenticatedUser authenticatedUserFromJson(dynamic u) {
-  return AuthenticatedUser(u["id"], u["name"], u["points"]);
+  return AuthenticatedUser(u["id"], u["name"], u["points"], u["is_admin"]);
 }
 
 List<int> imageListFromJson(dynamic l) {
   return (l as List<dynamic>).map<int>((i) => i as int).toList();
+}
+
+MarkerType markerTypeFromJson(dynamic m) {
+  return MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
+      MarkerType.unknown;
 }
 
 MapMarker mapMarkerFromJson(dynamic m) {
@@ -28,8 +34,7 @@ MapMarker mapMarkerFromJson(dynamic m) {
     m["id"],
     point["y"] as double,
     point["x"] as double,
-    MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
-        MarkerType.unknown,
+    markerTypeFromJson(m),
     DateTime.parse(m["creation_date"]),
     (resolutionDate as String?).map(DateTime.parse), // might be null
     m["created_by"],
@@ -44,8 +49,7 @@ Marker markerFromJson(dynamic m) {
     m["id"],
     point["y"] as double,
     point["x"] as double,
-    MarkerType.values.firstWhereOrNull((type) => type.id == m["marker_types_id"]) ??
-        MarkerType.unknown,
+    markerTypeFromJson(m),
     DateTime.parse(m["creation_date"]),
     (resolutionDate as String?).map(DateTime.parse), // might be null
     userFromJson(m["created_by"]),
@@ -61,4 +65,8 @@ Pill pillFromJson(dynamic p) {
 
 MarkerUpdate markerUpdateFromJson(dynamic u) {
   return MarkerUpdate(u["id"], u["earned_points"]);
+}
+
+MarkerImage markerImageFromJson(dynamic u) {
+  return MarkerImage(u["id"], markerTypeFromJson(u));
 }
