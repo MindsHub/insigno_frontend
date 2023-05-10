@@ -314,7 +314,7 @@ packages:
     description:
       path: geolocator_android
       ref: use-all-providers
-      resolved-ref: b161598224fffc6a45fa3192c31986dab07ea8b5
+      resolved-ref: "13b99f38c36f58d9b0ed1be53a8f6853bff16ef6"
       url: "https://github.com/Stypox/flutter-geolocator.git"
     source: git
     version: "4.1.7"
