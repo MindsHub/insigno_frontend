@@ -192,5 +192,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "forgotPassword": "Forgot password?"
 }

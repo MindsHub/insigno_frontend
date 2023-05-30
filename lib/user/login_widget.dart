@@ -9,9 +9,11 @@ import '../networking/error.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
+  final Function() switchToForgotPasswordCallback;
   final bool justRegistered;
 
-  LoginWidget(this.switchToSignupCallback, this.justRegistered, {super.key});
+  LoginWidget(this.switchToSignupCallback, this.switchToForgotPasswordCallback, this.justRegistered,
+      {super.key});
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -135,6 +137,11 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                     )
                   ],
                 ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: widget.switchToForgotPasswordCallback,
+                  child: Text(l10n.forgotPassword),
+                )
               ],
             ),
           ),

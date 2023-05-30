@@ -13,11 +13,17 @@ class ProfilePersistentPage extends StatefulWidget with GetItStatefulWidgetMixin
   State<ProfilePersistentPage> createState() => _ProfilePersistentPageState();
 }
 
+enum _PageToShow {
+  login,
+  signup,
+  forgotPassword;
+}
+
 class _ProfilePersistentPageState extends State<ProfilePersistentPage>
     with
         AutomaticKeepAliveClientMixin<ProfilePersistentPage>,
         GetItStateMixin<ProfilePersistentPage> {
-  bool loginOrSignup = true; // start with login
+  _PageToShow pageToShow = _PageToShow.login; // start with login
   bool justRegistered = false;
 
   @override
@@ -32,7 +38,7 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         false;
     if (isLoggedIn) {
       // make sure the screen being shown after logout will be the login
-      loginOrSignup = true;
+      pageToShow = _PageToShow.login;
     }
 
     return Scaffold(
@@ -40,19 +46,24 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         centerTitle: true,
         title: Text(isLoggedIn
             ? l10n.yourProfile
-            : loginOrSignup
+            : pageToShow == _PageToShow.login
                 ? l10n.loginToInsigno
-                : l10n.signup),
+                : pageToShow == _PageToShow.signup
+                    ? l10n.signup
+                    : l10n.forgotPassword),
       ),
       body: Center(
         child: isLoggedIn
             ? ProfileWidget()
-            : loginOrSignup
-                ? LoginWidget(() => setState(() => loginOrSignup = false), justRegistered)
-                : SignupWidget((isJustRegistered) => setState(() {
-                      loginOrSignup = true;
-                      justRegistered = isJustRegistered;
-                    })),
+            : pageToShow == _PageToShow.login
+                ? LoginWidget(() => setState(() => pageToShow = _PageToShow.signup),
+                    () => setState(() => pageToShow = _PageToShow.forgotPassword), justRegistered)
+                : pageToShow == _PageToShow.signup
+                    ? SignupWidget((isJustRegistered) => setState(() {
+                          pageToShow = _PageToShow.login;
+                          justRegistered = isJustRegistered;
+                        }))
+                    : Placeholder(),
       ),
     );
   }

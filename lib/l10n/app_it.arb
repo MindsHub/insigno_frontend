@@ -93,5 +93,6 @@
   "verdictDeleteReport": "Segnala ed elimina",
   "verdictSkip": "Salta",
   "noImageToReview": "Nessuna immagine da revisionare rimasta",
-  "errorReviewing": "Errore nel revisionare: {error}"
+  "errorReviewing": "Errore nel revisionare: {error}",
+  "forgotPassword": "Password dimenticata?"
 }
