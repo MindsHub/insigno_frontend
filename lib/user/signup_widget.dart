@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/user/validators.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 import '../networking/error.dart';
@@ -17,13 +18,6 @@ class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
-  // taken from the HTML5 validation spec, except for the + at the end which used to be a *
-  static final emailValidator = RegExp(
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)+$");
-  static final nameValidator = RegExp(r'^[a-zA-Z0-9 _]*$');
-  static final passwordValidator =
-      RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$');
-
   String? email;
   String? name;
   String? password;
@@ -73,16 +67,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
               children: [
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.email),
-                  validator: (value) {
-                    final v = value?.trim() ?? "";
-                    if (v.isEmpty) {
-                      return l10n.insertEmail;
-                    } else if (!emailValidator.hasMatch(v)) {
-                      return l10n.insertValidEmail;
-                    } else {
-                      return null;
-                    }
-                  },
+                  validator: (value) => emailValidator(l10n, value),
                   onSaved: (value) => email = value,
                   autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
@@ -90,18 +75,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 const SizedBox(height: 8),
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.name),
-                  validator: (value) {
-                    final v = value?.trim() ?? "";
-                    if (v.isEmpty) {
-                      return l10n.insertName;
-                    } else if (v.length < 3 || v.length > 20) {
-                      return l10n.invalidNameLength;
-                    } else if (!nameValidator.hasMatch(v)) {
-                      return l10n.invalidNameCharacters;
-                    } else {
-                      return null;
-                    }
-                  },
+                  validator: (value) => nameValidator(l10n, value),
                   onSaved: (value) => name = value,
                   autofillHints: const [AutofillHints.username],
                   maxLength: 20,
@@ -111,18 +85,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 TextFormField(
                   controller: firstPasswordController,
                   decoration: InputDecoration(labelText: l10n.password),
-                  validator: (value) {
-                    final v = value ?? "";
-                    if (v.isEmpty) {
-                      return l10n.insertPassword;
-                    } else if (v.length < 8) {
-                      return l10n.invalidPasswordLength;
-                    } else if (!passwordValidator.hasMatch(v)) {
-                      return l10n.invalidPasswordCharacters;
-                    } else {
-                      return null;
-                    }
-                  },
+                  validator: (value) => passwordValidator(l10n, value),
                   onSaved: (value) => password = value,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
@@ -132,13 +95,8 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 const SizedBox(height: 8),
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.repeatPassword),
-                  validator: (value) {
-                    if (value != firstPasswordController.value.text) {
-                      return l10n.passwordsNotMatch;
-                    } else {
-                      return null;
-                    }
-                  },
+                  validator: (value) =>
+                      repeatPasswordValidator(l10n, value, firstPasswordController.value.text),
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                   autofillHints: const [AutofillHints.newPassword],
