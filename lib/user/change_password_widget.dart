@@ -152,7 +152,12 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                             ),
                           ),
                   ],
-                )
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.weWillSendEmail,
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),

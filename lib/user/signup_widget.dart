@@ -122,7 +122,12 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                         tooltip: l10n.signup,
                         child: const Icon(Icons.login),
                       ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.weWillSendEmail,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

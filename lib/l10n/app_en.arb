@@ -204,5 +204,6 @@
     }
   },
   "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here",
-  "newPassword": "New password"
+  "newPassword": "New password",
+  "weWillSendEmail": "We will send you an email with the instructions to proceed"
 }
