@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/user/change_password_widget.dart';
 import 'package:insigno_frontend/user/login_widget.dart';
 import 'package:insigno_frontend/user/profile_widget.dart';
 import 'package:insigno_frontend/user/signup_widget.dart';
@@ -13,18 +14,18 @@ class ProfilePersistentPage extends StatefulWidget with GetItStatefulWidgetMixin
   State<ProfilePersistentPage> createState() => _ProfilePersistentPageState();
 }
 
-enum _PageToShow {
+enum ProfilePages {
   login,
   signup,
-  forgotPassword;
+  changePassword;
 }
 
 class _ProfilePersistentPageState extends State<ProfilePersistentPage>
     with
         AutomaticKeepAliveClientMixin<ProfilePersistentPage>,
         GetItStateMixin<ProfilePersistentPage> {
-  _PageToShow pageToShow = _PageToShow.login; // start with login
-  bool justRegistered = false;
+  ProfilePages pageToShow = ProfilePages.login; // start with login
+  ProfilePages showMessageForCompletedPage = ProfilePages.login; // no message needs to be shown
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,8 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         false;
     if (isLoggedIn) {
       // make sure the screen being shown after logout will be the login
-      pageToShow = _PageToShow.login;
+      pageToShow = ProfilePages.login;
+      showMessageForCompletedPage = ProfilePages.login;
     }
 
     return Scaffold(
@@ -46,24 +48,34 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
         centerTitle: true,
         title: Text(isLoggedIn
             ? l10n.yourProfile
-            : pageToShow == _PageToShow.login
+            : pageToShow == ProfilePages.login
                 ? l10n.loginToInsigno
-                : pageToShow == _PageToShow.signup
+                : pageToShow == ProfilePages.signup
                     ? l10n.signup
                     : l10n.forgotPassword),
       ),
       body: Center(
         child: isLoggedIn
             ? ProfileWidget()
-            : pageToShow == _PageToShow.login
-                ? LoginWidget(() => setState(() => pageToShow = _PageToShow.signup),
-                    () => setState(() => pageToShow = _PageToShow.forgotPassword), justRegistered)
-                : pageToShow == _PageToShow.signup
-                    ? SignupWidget((isJustRegistered) => setState(() {
-                          pageToShow = _PageToShow.login;
-                          justRegistered = isJustRegistered;
+            : pageToShow == ProfilePages.login
+                ? LoginWidget(
+                    () => setState(() => pageToShow = ProfilePages.signup),
+                    () => setState(() => pageToShow = ProfilePages.changePassword),
+                    showMessageForCompletedPage,
+                  )
+                : pageToShow == ProfilePages.signup
+                    ? SignupWidget((signupRequestSent) => setState(() {
+                          pageToShow = ProfilePages.login;
+                          if (signupRequestSent) {
+                            showMessageForCompletedPage = ProfilePages.signup;
+                          }
                         }))
-                    : Placeholder(),
+                    : ChangePasswordWidget((changeRequestSent) => setState(() {
+                          pageToShow = ProfilePages.login;
+                          if (changeRequestSent) {
+                            showMessageForCompletedPage = ProfilePages.changePassword;
+                          }
+                        })),
       ),
     );
   }

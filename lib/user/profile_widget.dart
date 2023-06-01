@@ -7,6 +7,7 @@ import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/user/auth_user_provider.dart';
+import 'package:insigno_frontend/user/change_password_page.dart';
 import 'package:insigno_frontend/user/image_review_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
@@ -29,6 +30,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
   bool pillSentAtLeastOnce = false;
   String? pillSourceError;
   late AnimationController pillAnim;
+  bool changePasswordRequestSent = false;
 
   @override
   void initState() {
@@ -44,21 +46,29 @@ class _ProfileWidgetState extends State<ProfileWidget>
 
     // double.negativeInfinity is used just to signal that the user has not loaded yet
     final user = watchStream((AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
-                AuthenticatedUser(-1, "", double.negativeInfinity, false))
+                AuthenticatedUser(-1, "", double.negativeInfinity, false, ""))
             .data ??
-        AuthenticatedUser(-1, "", double.negativeInfinity, false);
-
-    final logoutButton = ElevatedButton(
-      onPressed: () => getIt<Authentication>().logout(),
-      child: Text(l10n.logout),
-    );
+        AuthenticatedUser(-1, "", double.negativeInfinity, false, "");
 
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: ((user.points == double.negativeInfinity)
+          children: (changePasswordRequestSent
+                  ? <Widget>[
+                      Text(
+                        l10n.confirmPasswordChange,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 32),
+                    ]
+                  : <Widget>[]) +
+              (user.points == double.negativeInfinity
                   ? <Widget>[
                       const CircularProgressIndicator(),
                     ]
@@ -80,7 +90,30 @@ class _ProfileWidgetState extends State<ProfileWidget>
                   height: 12,
                   width: double.infinity, // to make the column have maximum width
                 ),
-                logoutButton,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, ChangePasswordPage.routeName)
+                            .then((changeRequestSent) {
+                          if (changeRequestSent is bool && changeRequestSent) {
+                            setState(() {
+                              changePasswordRequestSent = true;
+                            });
+                          }
+                        });
+                      },
+                      child: Text(l10n.changePassword),
+                    ),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () => getIt<Authentication>().logout(),
+                      child: Text(l10n.logout),
+                    ),
+                  ],
+                ),
                 if (user.isAdmin) const Divider(height: 32, thickness: 1),
                 if (user.isAdmin)
                   ElevatedButton(
@@ -178,9 +211,9 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             SizeTransition(
                               sizeFactor: pillAnim,
                               axis: Axis.horizontal,
-                              child: Row(
+                              child: const Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: const [
+                                children: [
                                   SizedBox(width: 8),
                                   Icon(Icons.send),
                                 ],

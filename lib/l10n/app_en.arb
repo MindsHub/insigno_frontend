@@ -166,7 +166,7 @@
   "email": "Email",
   "insertEmail": "Insert an email",
   "insertValidEmail": "Insert a valid email",
-  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here",
+  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link we just sent to the email you provided, then login from here",
   "errorOccurred": "Oh no, error!",
   "copy": "Copy",
   "settings": "Settings",
@@ -193,5 +193,16 @@
       }
     }
   },
-  "forgotPassword": "Forgot password?"
+  "forgotPassword": "Forgot password?",
+  "changePassword": "Change password",
+  "passwordChangeFailed": "Changing the password failed: {error}",
+  "@passwordChangeFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here",
+  "newPassword": "New password"
 }

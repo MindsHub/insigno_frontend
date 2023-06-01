@@ -94,5 +94,9 @@
   "verdictSkip": "Salta",
   "noImageToReview": "Nessuna immagine da revisionare rimasta",
   "errorReviewing": "Errore nel revisionare: {error}",
-  "forgotPassword": "Password dimenticata?"
+  "forgotPassword": "Password dimenticata?",
+  "changePassword": "Cambio password",
+  "passwordChangeFailed": "Il cambio della password è fallito: {error}",
+  "confirmPasswordChange": "Per rendere effettivo il cambio password, clicca sul link inviato alla tua email, poi potrai fare il login da qui",
+  "newPassword": "Nuova password"
 }

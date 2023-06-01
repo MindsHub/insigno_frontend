@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/user/profile_persistent_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 import '../networking/error.dart';
@@ -10,9 +11,10 @@ import '../networking/error.dart';
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
   final Function() switchToForgotPasswordCallback;
-  final bool justRegistered;
+  final ProfilePages showMessageForCompletedPage;
 
-  LoginWidget(this.switchToSignupCallback, this.switchToForgotPasswordCallback, this.justRegistered,
+  LoginWidget(this.switchToSignupCallback, this.switchToForgotPasswordCallback,
+      this.showMessageForCompletedPage,
       {super.key});
 
   @override
@@ -66,16 +68,19 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (widget.justRegistered)
+                if (widget.showMessageForCompletedPage != ProfilePages.login)
                   Text(
-                    l10n.confirmEmail,
+                    widget.showMessageForCompletedPage == ProfilePages.signup
+                        ? l10n.confirmEmail
+                        : l10n.confirmPasswordChange,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                if (widget.justRegistered) const SizedBox(height: 16),
+                if (widget.showMessageForCompletedPage != ProfilePages.login)
+                  const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.email),
                   validator: (value) {

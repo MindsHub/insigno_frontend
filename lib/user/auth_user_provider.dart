@@ -15,13 +15,14 @@ class AuthUserProvider {
 
   AuthUserProvider(this._backend);
 
-  Future<void> requestAuthenticatedUser() async {
+  Future<AuthenticatedUser> requestAuthenticatedUser() async {
     if (_loadedUser == null) {
       final user = await _backend.getAuthenticatedUser();
       _loadedUser = user;
       _additionalPoints = 0;
       _streamController.add(user);
     }
+    return _loadedUser!;
   }
 
   /// Do not rely on this stream to detect whether a user is logged in, that's the job of
@@ -36,7 +37,7 @@ class AuthUserProvider {
     final u = _loadedUser;
     if (u != null) {
       _streamController
-          .add(AuthenticatedUser(u.id, u.name, u.points + _additionalPoints, u.isAdmin));
+          .add(AuthenticatedUser(u.id, u.name, u.points + _additionalPoints, u.isAdmin, u.email));
     }
   }
 

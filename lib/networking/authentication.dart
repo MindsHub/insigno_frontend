@@ -80,6 +80,18 @@ class Authentication {
     response.throwErrors();
   }
 
+  Future<void> changePassword(String email, String password) async {
+    final response = await _client.post(
+      _serverHostHandler.getUri("/change_password"),
+      body: {"email": email, "password": password},
+    );
+
+    if (response.statusCode == 401) {
+      throw UnauthorizedException(401, response.body);
+    }
+    response.throwErrors();
+  }
+
   /// also invalidates the loaded user (if any) of [AuthUserProvider]
   Future<void> removeStoredCookie() async {
     try {

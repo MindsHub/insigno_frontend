@@ -3,51 +3,72 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/user/auth_user_provider.dart';
 import 'package:insigno_frontend/user/validators.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 import '../networking/error.dart';
 
-class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
-  final Function(bool signupRequestSent) switchToLoginCallback;
+class ChangePasswordWidget extends StatefulWidget with GetItStatefulWidgetMixin {
+  final Function(bool changeRequestSent) finishCallback;
 
-  SignupWidget(this.switchToLoginCallback, {super.key});
+  ChangePasswordWidget(this.finishCallback, {super.key});
 
   @override
-  State<SignupWidget> createState() => _SignupWidgetState();
+  State<ChangePasswordWidget> createState() => _ChangePasswordWidgetState();
 }
 
-class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<SignupWidget> {
+class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
+    with GetItStateMixin<ChangePasswordWidget> {
   String? email;
-  String? name;
   String? password;
   bool loading = false;
-  String? signupError;
-  bool formatSignupError = true;
+  String? changePasswordError;
+  bool formatChangePasswordError = true;
 
+  late bool enableEmailField;
+  final emailController = TextEditingController();
   final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  void performSignup() async {
+  void performChangePassword() async {
     setState(() {
-      signupError = null;
+      changePasswordError = null;
       loading = true;
     });
 
-    get<Authentication>().signup(email!, name!, password!).then((_) {
-      widget.switchToLoginCallback(true);
+    get<Authentication>().changePassword(email!, password!).then((_) {
+      widget.finishCallback(true);
     }, onError: (e) {
       setState(() {
         if (e is UnauthorizedException && e.response.isNotEmpty) {
-          signupError = e.response;
-          formatSignupError = false;
+          changePasswordError = e.response;
+          formatChangePasswordError = false;
         } else {
-          signupError = e.toString();
-          formatSignupError = true;
+          changePasswordError = e.toString();
+          formatChangePasswordError = true;
         }
         loading = false;
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (get<Authentication>().isLoggedIn()) {
+      enableEmailField = false;
+      emailController.text = "...";
+      get<AuthUserProvider>().requestAuthenticatedUser().then((user) {
+        emailController.text = user.email;
+      }, onError: (e) {
+        setState(() {
+          enableEmailField = true;
+        });
+      });
+    } else {
+      enableEmailField = true;
+    }
   }
 
   @override
@@ -66,25 +87,18 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(labelText: l10n.email),
                   validator: (value) => emailValidator(l10n, value),
                   onSaved: (value) => email = value,
                   autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  decoration: InputDecoration(labelText: l10n.name),
-                  validator: (value) => nameValidator(l10n, value),
-                  onSaved: (value) => name = value,
-                  autofillHints: const [AutofillHints.username],
-                  maxLength: 20,
-                  textInputAction: TextInputAction.next,
+                  enabled: enableEmailField,
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: firstPasswordController,
-                  decoration: InputDecoration(labelText: l10n.password),
+                  decoration: InputDecoration(labelText: l10n.newPassword),
                   validator: (value) => passwordValidator(l10n, value),
                   onSaved: (value) => password = value,
                   keyboardType: TextInputType.visiblePassword,
@@ -103,37 +117,42 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   textInputAction: TextInputAction.done,
                 ),
                 ErrorText(
-                  signupError,
-                  formatSignupError ? l10n.signupFailed : (v) => v,
+                  changePasswordError,
+                  formatChangePasswordError ? l10n.passwordChangeFailed : (v) => v,
                   topPadding: 16,
                 ),
                 const SizedBox(height: 16),
-                loading
-                    ? const CircularProgressIndicator()
-                    : FloatingActionButton(
-                        onPressed: () {
-                          setState(() => signupError = null);
-                          if (formKey.currentState?.validate() ?? false) {
-                            formKey.currentState?.save();
-                            TextInput.finishAutofillContext();
-                            performSignup();
-                          }
-                        },
-                        tooltip: l10n.signup,
-                        child: const Icon(Icons.login),
-                      ),
-                const SizedBox(height: 8),
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(l10n.alreadyHaveAccount),
-                    const SizedBox(width: 4),
                     TextButton(
-                      onPressed: () => widget.switchToLoginCallback(false),
-                      child: Text(l10n.login),
-                    )
+                      onPressed: () => widget.finishCallback(false),
+                      child: Text(l10n.cancel),
+                    ),
+                    const SizedBox(width: 16),
+                    loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () {
+                              setState(() => changePasswordError = null);
+                              if (formKey.currentState?.validate() ?? false) {
+                                formKey.currentState?.save();
+                                TextInput.finishAutofillContext();
+                                performChangePassword();
+                              }
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(l10n.send),
+                                const SizedBox(width: 8),
+                                const Icon(Icons.send),
+                              ],
+                            ),
+                          ),
                   ],
-                ),
+                )
               ],
             ),
           ),
