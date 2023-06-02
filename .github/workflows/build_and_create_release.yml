@@ -49,7 +49,7 @@ jobs:
         id: get_release
         uses: joutvhu/get-release@v1
         with:
-          tag_name: v${{ env.VERSION }}
+          tag_name: robaacaso
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: here 1
@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "here 22"
       - name: here 3
-        if: ${{ steps.get_release.outputs.draft || (steps.get_release.outputs.draft == '') }}
+        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
         env:
           ROBAA1: ${{ join(steps.get_release.outputs) }}
           ROBAA2: ${{ join(steps.get_release.outputs.draft) }}
