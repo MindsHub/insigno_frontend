@@ -45,49 +45,6 @@ jobs:
           echo "Android home: $ANDROID_HOME" >> "$GITHUB_STEP_SUMMARY"
           echo "Chosen apksigner: $APKSIGNER" >> "$GITHUB_STEP_SUMMARY"
           echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs) >> "$GITHUB_STEP_SUMMARY"
-      - name: Make sure not to overwrite the APKs of a release that was already released
-        id: get_release
-        uses: joutvhu/get-release@v1
-        with:
-          tag_name: robaacaso
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: here 1
-        if: ${{ steps.get_release.outputs.draft }}
-        run: |
-          echo "here 1"
-      - name: here 11
-        if: ${{ steps.get_release.outputs.draft == 'true' }}
-        run: |
-          echo "here 11"
-      - name: here 2
-        if: ${{ steps.get_release.outputs.draft == '' }}
-        run: |
-          echo "here 2"
-      - name: here 22
-        if: ${{ join(steps.get_release.outputs.draft) == '' }}
-        run: |
-          echo "here 22"
-      - name: here 3
-        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
-        env:
-          ROBAA1: ${{ join(steps.get_release.outputs) }}
-          ROBAA2: ${{ join(steps.get_release.outputs.draft) }}
-          ROBAA3: ${{ join(steps.get_release.outputs.draft) == '' }}
-          ROBAA4: ${{ steps.get_release.outputs.draft == '' }}
-        run: |
-          echo "here 3"
-          echo a "$ROBAA1" a
-          echo b "$ROBAA2" b
-          echo a "$ROBAA3" a
-          echo b "$ROBAA4" b
-      - name: here 4
-        if: ${{ contains(steps.get_release.outputs, 'draft') }}
-        run: |
-          echo "here 4"
-      - name: exit
-        run: |
-          exit 1
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
@@ -145,8 +102,18 @@ jobs:
         with:
           name: apks
           path: apks
+      - name: Make sure not to overwrite the APKs of a release that was already released
+        id: get_release
+        uses: joutvhu/get-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create draft release
         id: create_release
+        # if the release exists and is a draft, or the release does not exists,
+        # proceed with uploading/overwriting artifacts
+        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
