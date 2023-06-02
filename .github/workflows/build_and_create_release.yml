@@ -53,13 +53,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: here 1
-        if: ${{ false == '' }}
+        if: ${{ steps.get_release.outputs.draft }}
         run: |
           echo "here 1"
+      - name: here 11
+        if: ${{ steps.get_release.outputs.draft == 'true' }}
+        run: |
+          echo "here 11"
       - name: here 2
-        if: ${{ 'false' == '' }}
+        if: ${{ steps.get_release.outputs.draft == '' }}
         run: |
           echo "here 2"
+      - name: here 22
+        if: ${{ join(steps.get_release.outputs.draft) == '' }}
+        run: |
+          echo "here 22"
       - name: here 3
         if: ${{ steps.get_release.outputs.draft || (steps.get_release.outputs.draft == '') }}
         env:
