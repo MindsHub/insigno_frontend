@@ -49,7 +49,7 @@ jobs:
         id: get_release
         uses: joutvhu/get-release@v1
         with:
-          tag_name: v${{ env.VERSION }}
+          tag_name: av${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: here 1
@@ -64,6 +64,10 @@ jobs:
         if: ${{ steps.get_release.outputs.draft || (steps.get_release.outputs.draft == '') }}
         run: |
           echo "here 3"
+      - name: here 4
+        if: ${{ contains(steps.get_release.outputs, 'draft') }}
+        run: |
+          echo "here 4"
       - name: exit
         run: |
           exit 1
