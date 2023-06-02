@@ -45,6 +45,19 @@ jobs:
           echo "Android home: $ANDROID_HOME" >> "$GITHUB_STEP_SUMMARY"
           echo "Chosen apksigner: $APKSIGNER" >> "$GITHUB_STEP_SUMMARY"
           echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs) >> "$GITHUB_STEP_SUMMARY"
+      - name: Make sure not to overwrite the APKs of a release that was already released
+        id: get_release
+        uses: joutvhu/get-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: echo roba
+        env:
+          ROBAA: ${{ steps.get_release.draft }}
+        run: |
+          echo "$ROBAA"
+          exit 1
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
