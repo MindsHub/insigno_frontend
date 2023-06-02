@@ -62,8 +62,13 @@ jobs:
           echo "here 2"
       - name: here 3
         if: ${{ steps.get_release.outputs.draft || (steps.get_release.outputs.draft == '') }}
+        env:
+          ROBAA1: ${{ join(steps.get_release.outputs) }}
+          ROBAA2: ${{ join(steps.get_release.outputs.draft) }}
         run: |
           echo "here 3"
+          echo a "$ROBAA1" a
+          echo b "$ROBAA2" b
       - name: here 4
         if: ${{ contains(steps.get_release.outputs, 'draft') }}
         run: |
