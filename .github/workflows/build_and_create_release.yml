@@ -49,7 +49,7 @@ jobs:
         id: get_release
         uses: joutvhu/get-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: echo roba
