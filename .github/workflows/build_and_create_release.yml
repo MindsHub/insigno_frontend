@@ -52,11 +52,20 @@ jobs:
           tag_name: v${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: echo roba
-        env:
-          ROBAA: ${{ steps.get_release.outputs.draft }}
+      - name: here 1
+        if: ${{ false == '' }}
         run: |
-          echo "$ROBAA"
+          echo "here 1"
+      - name: here 2
+        if: ${{ 'false' == '' }}
+        run: |
+          echo "here 2"
+      - name: here 3
+        if: ${{ steps.get_release.outputs.draft || (steps.get_release.outputs.draft == '') }}
+        run: |
+          echo "here 3"
+      - name: exit
+        run: |
           exit 1
       - name: Setup flutter
         run: |
