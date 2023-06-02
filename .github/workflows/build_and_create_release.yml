@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: echo roba
         env:
-          ROBAA: ${{ steps.get_release.draft }}
+          ROBAA: ${{ steps.get_release.outputs.draft }}
         run: |
           echo "$ROBAA"
           exit 1
