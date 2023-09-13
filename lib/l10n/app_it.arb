@@ -99,5 +99,9 @@
   "passwordChangeFailed": "Il cambio della password è fallito: {error}",
   "confirmPasswordChange": "Per rendere effettivo il cambio password, clicca sul link inviato alla tua email, poi potrai fare il login da qui",
   "newPassword": "Nuova password",
-  "weWillSendEmail": "Ti invieremo un'email con le istruzioni per procedere"
+  "weWillSendEmail": "Ti invieremo un'email con le istruzioni per procedere",
+  "iAmAdult": "Sono adulto",
+  "iAmUnderage": "Sono minorenne",
+  "areYouUnderage": "Sei minorenne?",
+  "adultDialogText": "Premendo \"{iAmAdult}\" dichiari di essere maggiorenne. Tranquillo, se sei minorenne potrai comunque usare Insigno, ma non ti verrà offerto di revisionare immagini altrui."
 }
