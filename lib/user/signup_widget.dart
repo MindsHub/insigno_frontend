@@ -34,7 +34,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
       loading = true;
     });
 
-    get<Authentication>().signup(email!, name!, password!).then((_) {
+    get<Authentication>().signup(email!, name!, password!, isAdult).then((_) {
       widget.switchToLoginCallback(true);
     }, onError: (e) {
       setState(() {

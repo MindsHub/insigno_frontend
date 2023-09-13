@@ -68,10 +68,10 @@ class Authentication {
     _streamController.add(true);
   }
 
-  Future<void> signup(String email, String name, String password) async {
+  Future<void> signup(String email, String name, String password, bool isAdult) async {
     final response = await _client.post(
       _serverHostHandler.getUri("/signup"),
-      body: {"email": email, "name": name, "password": password},
+      body: {"email": email, "name": name, "password": password, "is_adult": isAdult},
     );
 
     if (response.statusCode == 401) {
