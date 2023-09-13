@@ -102,7 +102,7 @@
   "reportAsInappropriate": "Report as inappropriate",
   "insertEcologyPill": "Insert an ecology pill",
   "insertPill": "Insert a pill",
-  "source": "Source (web address)",
+  "source": "Source (optional, web address)",
   "infoText": "Informational text",
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
