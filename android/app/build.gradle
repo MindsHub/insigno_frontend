@@ -54,6 +54,12 @@ android {
             }
         }
     }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+        }
+    }
 }
 
 flutter {

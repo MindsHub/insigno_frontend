@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
 import 'package:insigno_frontend/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/map/marker_widget.dart';
@@ -34,7 +35,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         GetItStateMixin<MapPersistentPage>,
         WidgetsBindingObserver,
         TickerProviderStateMixin {
-  static final LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
+  static const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
   static const double defaultInitialZoom = 16.0;
   static const double markersZoomThreshold = 14.0;
   static const Duration fabAnimDuration = Duration(milliseconds: 200);
@@ -52,6 +53,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
   bool lastLoadMarkersIncludeResolved = false;
   MarkerFilters markerFilters = MarkerFilters(Set.unmodifiable(MarkerType.values), false);
   List<MapMarker> markers = [];
+  PictureInfo? pictureInfo;
 
   String lastErrorMessage = "";
   late final AnimationController errorMessageAnim;
@@ -88,9 +90,19 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       loadMarkers(initialCoordinates);
     }
 
-    // check whether this version of insigno iscompatible with the backend, ignoring any errors
+    // check whether this version of insigno is compatible with the backend, ignoring any errors
     get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
         onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
+
+    loadPictureInfo();
+  }
+
+  void loadPictureInfo() async {
+    var thePictureInfo =
+        await vg.loadPicture(SvgAssetLoader("assets/icons/current_location.svg"), null);
+    setState(() {
+      pictureInfo = thePictureInfo;
+    });
   }
 
   void loadMarkers(final LatLng latLng) async {
@@ -171,6 +183,22 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       addMarkerAnim.forward();
     } else {
       addMarkerAnim.reverse();
+    }
+
+    var markers2 = <MapMarker>[];
+    for (int i = 0; i < 100; ++i) {
+      for (int j = 0; j < 100; ++j) {
+        markers2.add(MapMarker(
+          0,
+          45.7555 + .0004 * i,
+          11.0033 + .0004 * j,
+          MarkerType.values[(i+j) % MarkerType.values.length],
+          DateTime(2023),
+          DateTime(2023),
+          0,
+          0,
+        ));
+      }
     }
 
     return FlutterMap(
@@ -290,37 +318,39 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: const ['a', 'b', 'c'],
         ),
+        FastMarkersLayer(markers2),
         StreamBuilder<double>(
           stream: zoomStream,
           builder: (context, snapshot) {
             final zoom = snapshot.data ?? markersZoomThreshold;
             final showMarkers = zoom > markersZoomThreshold;
             final double markerSizeMultiplier =
-                showMarkers ? pow(zoom - markersZoomThreshold, 0.7) * 0.5 : 0;
+            showMarkers ? pow(zoom - markersZoomThreshold, 0.7) * 0.5 : 0;
 
             return MarkerLayer(
               markers: [position?.toLatLng()]
+                  .whereType<Null>()
                   .whereType<LatLng>()
                   .map((pos) => Marker(
-                        rotate: true,
-                        point: pos,
-                        builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                      ))
+                rotate: true,
+                point: pos,
+                builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+              ))
                   .followedBy((showMarkers ? markers : <MapMarker>[])
-                      .where((e) =>
-                          (markerFilters.includeResolved || !e.isResolved()) &&
-                          markerFilters.shownMarkers.contains(e.type))
-                      .map((e) => Marker(
-                            width: 36 * markerSizeMultiplier,
-                            height: 36 * markerSizeMultiplier,
-                            rotate: true,
-                            point: LatLng(e.latitude, e.longitude),
-                            builder: (ctx) => MarkerWidget(
-                              e,
-                              36 * markerSizeMultiplier,
-                              openMarkerPage,
-                            ),
-                          )))
+                  .where((e) =>
+              (markerFilters.includeResolved || !e.isResolved()) &&
+                  markerFilters.shownMarkers.contains(e.type))
+                  .map((e) => Marker(
+                width: 36 * markerSizeMultiplier,
+                height: 36 * markerSizeMultiplier,
+                rotate: true,
+                point: LatLng(e.latitude, e.longitude),
+                builder: (ctx) => MarkerWidget(
+                  e,
+                  36 * markerSizeMultiplier,
+                  openMarkerPage,
+                ),
+              )))
                   .toList(growable: false),
             );
           },
