@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/home/about_card_widget.dart';
 import 'package:insigno_frontend/home/server_host_widget.dart';
+import 'package:insigno_frontend/intro/intro_page.dart';
 
 class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   SettingsPage({Key? key}) : super(key: key);
@@ -25,6 +26,11 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            OutlinedButton(
+              onPressed: () => Navigator.pushNamed(context, IntroPage.routeName),
+              child: const Text("Vai alla intro_page"),
+            ),
+            const SizedBox(height: 16),
             AboutCardWidget(
               description: l10n.insignoDescription,
               svgAssetPath: "assets/icons/insigno_logo.svg",

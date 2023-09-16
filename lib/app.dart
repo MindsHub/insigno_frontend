@@ -13,6 +13,8 @@ import 'package:insigno_frontend/user/change_password_page.dart';
 import 'package:insigno_frontend/user/image_review_page.dart';
 import 'package:insigno_frontend/user/user_page.dart';
 
+import 'intro/intro_page.dart';
+
 class InsignoApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -45,6 +47,7 @@ class InsignoApp extends StatelessWidget {
             ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
             ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
             ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
+            IntroPage.routeName: (ctx) => const IntroPage(),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));
