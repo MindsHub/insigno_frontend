@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -70,9 +71,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
     mapController.mapEventStream
         .where((event) =>
-            event.zoom >= markersZoomThreshold &&
-            (lastLoadMarkersPos == null ||
-                distance.distance(lastLoadMarkersPos!, event.center) > 5000))
+    event.zoom >= markersZoomThreshold &&
+        (lastLoadMarkersPos == null ||
+            distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) => loadMarkers(event.center));
 
     prefs = get<SharedPreferences>();
@@ -82,8 +83,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
     zoomStream = Stream.value(initialZoom)
-        // use mapController.zoom instead of event.zoom since event.zoom is sometimes outdated
-        // (e.g. after repositioning)
+    // use mapController.zoom instead of event.zoom since event.zoom is sometimes outdated
+    // (e.g. after repositioning)
         .concatWith([mapController.mapEventStream.map((event) => mapController.zoom)]);
 
     if (initialZoom >= markersZoomThreshold) {
@@ -99,7 +100,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   void loadPictureInfo() async {
     var thePictureInfo =
-        await vg.loadPicture(SvgAssetLoader("assets/icons/current_location.svg"), null);
+    await vg.loadPicture(SvgAssetLoader("assets/icons/current_location.svg"), null);
     setState(() {
       pictureInfo = thePictureInfo;
     });
@@ -157,15 +158,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     final theme = Theme.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            get<LocationProvider>().lastLocationInfo())
+        get<LocationProvider>().lastLocationInfo())
         .data;
     final isLoggedIn = watchStream(
             (Authentication authentication) => authentication.getIsLoggedInStream(),
-            get<Authentication>().isLoggedIn())
+        get<Authentication>().isLoggedIn())
         .data;
 
     final String? errorMessage =
-        isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
+    isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
     if (errorMessage == null) {
       errorMessageAnim.reverse();
     } else {
@@ -185,10 +186,11 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       addMarkerAnim.reverse();
     }
 
-    var markers2 = <MapMarker>[];
+    // Uncomment to test the rendering performance with lots of markers
+    /*markers = <MapMarker>[];
     for (int i = 0; i < 100; ++i) {
       for (int j = 0; j < 100; ++j) {
-        markers2.add(MapMarker(
+        markers.add(MapMarker(
           0,
           45.7555 + .0009 * i,
           11.0033 + .0009 * j,
@@ -199,15 +201,32 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           0,
         ));
       }
-    }
+    }*/
 
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
-        interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-        center: initialCoordinates,
-        zoom: initialZoom,
-        maxZoom: 18.45, // OSM supports at most the zoom value 19
+          interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+          center: initialCoordinates,
+          zoom: initialZoom,
+          maxZoom: 18.45,
+          // OSM supports at most the zoom value 19
+          onTap: (tapPosition, tapLatLng) {
+            const distance = Distance();
+            final minMarker = minBy(
+              markers, (MapMarker marker) => distance(tapLatLng, marker.getLatLng()));
+            if (minMarker == null) {
+              return;
+            }
+
+            final markerScale = markerScaleFromMapZoom(mapController.zoom);
+            final screenPoint = mapController.latLngToScreenPoint(minMarker.getLatLng());
+            final dx = (tapPosition.global.dx - screenPoint.x).abs();
+            final dy = (tapPosition.global.dy - screenPoint.y).abs();
+            if (max(dx, dy) < markerScale * 0.7) {
+              openMarkerPage(minMarker);
+            }
+          }
       ),
       nonRotatedChildren: [
         const Align(
@@ -234,14 +253,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               ),
               AnimatedBuilder(
                 animation: repositionAnim,
-                builder: (_, child) => ClipRect(
-                  child: Align(
-                    alignment: Alignment.center,
-                    heightFactor: repositionAnim.value,
-                    widthFactor: repositionAnim.value,
-                    child: child,
-                  ),
-                ),
+                builder: (_, child) =>
+                    ClipRect(
+                      child: Align(
+                        alignment: Alignment.center,
+                        heightFactor: repositionAnim.value,
+                        widthFactor: repositionAnim.value,
+                        child: child,
+                      ),
+                    ),
                 child: ScaleTransition(
                   scale: repositionAnim,
                   child: Padding(
@@ -258,14 +278,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               ),
               AnimatedBuilder(
                 animation: addMarkerAnim,
-                builder: (_, child) => ClipRect(
-                  child: Align(
-                    alignment: Alignment.center,
-                    heightFactor: addMarkerAnim.value,
-                    widthFactor: repositionAnim.value,
-                    child: child,
-                  ),
-                ),
+                builder: (_, child) =>
+                    ClipRect(
+                      child: Align(
+                        alignment: Alignment.center,
+                        heightFactor: addMarkerAnim.value,
+                        widthFactor: repositionAnim.value,
+                        child: child,
+                      ),
+                    ),
                 child: ScaleTransition(
                   scale: addMarkerAnim,
                   child: Padding(
@@ -297,7 +318,10 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                       ),
                       padding: EdgeInsets.only(
                         left: 12,
-                        top: 8 + MediaQuery.of(context).padding.top,
+                        top: 8 + MediaQuery
+                            .of(context)
+                            .padding
+                            .top,
                         right: 12,
                         bottom: 12,
                       ),
@@ -318,43 +342,17 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: const ['a', 'b', 'c'],
         ),
-        FastMarkersLayer(markers2),
-        StreamBuilder<double>(
-          stream: zoomStream,
-          builder: (context, snapshot) {
-            final zoom = snapshot.data ?? markersZoomThreshold;
-            final showMarkers = zoom > markersZoomThreshold;
-            final double markerSizeMultiplier =
-            showMarkers ? pow(zoom - markersZoomThreshold, 0.7) * 0.5 : 0;
-
-            return MarkerLayer(
-              markers: [position?.toLatLng()]
-                  .whereType<Null>()
-                  .whereType<LatLng>()
-                  .map((pos) => Marker(
-                rotate: true,
-                point: pos,
-                builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-              ))
-                  .followedBy((showMarkers ? markers : <MapMarker>[])
-                  .where((e) =>
-              (markerFilters.includeResolved || !e.isResolved()) &&
-                  markerFilters.shownMarkers.contains(e.type))
-                  .map((e) => Marker(
-                width: 36 * markerSizeMultiplier,
-                height: 36 * markerSizeMultiplier,
-                rotate: true,
-                point: LatLng(e.latitude, e.longitude),
-                builder: (ctx) => MarkerWidget(
-                  e,
-                  36 * markerSizeMultiplier,
-                  openMarkerPage,
-                ),
-              )))
-                  .toList(growable: false),
-            );
-          },
+        MarkerLayer(
+            markers: [position?.toLatLng()]
+                .whereType<LatLng>()
+                .map((pos) =>
+                Marker(
+                  rotate: true,
+                  point: pos,
+                  builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                )).toList()
         ),
+        FastMarkersLayer(markers),
       ],
     );
   }

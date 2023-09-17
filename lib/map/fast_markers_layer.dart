@@ -11,6 +11,14 @@ import '../networking/data/map_marker.dart';
 const int atlasImageSize = 512;
 const double atlasImageSizeDouble = 512.0;
 
+double markerScaleFromMapZoom(double mapZoom) {
+  return 10 +
+      17.0 *
+          (mapZoom < 16.0
+              ? pow(2.0, mapZoom - 16.0)
+              : pow(mapZoom - 15.0, 0.7));
+}
+
 class FastMarkersLayer extends StatefulWidget {
   final List<MapMarker> markers;
 
@@ -89,15 +97,11 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
     }
 
     final mapState = FlutterMapState.of(context);
-    final fontSize = 10 +
-        17.0 *
-            (mapState.zoom < 16.0
-                ? pow(2.0, mapState.zoom - 16.0)
-                : pow(mapState.zoom - 15.0, 0.7));
+    final markerScale = markerScaleFromMapZoom(mapState.zoom);
 
     return RepaintBoundary(
       child: CustomPaint(
-        painter: _FastMarkerPainter(atlasImage!, mapState, widget.markers, fontSize),
+        painter: _FastMarkerPainter(atlasImage!, mapState, widget.markers, markerScale),
       ),
     );
   }
