@@ -9,13 +9,11 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/map/location_provider.dart';
 import 'package:insigno_frontend/map/marker_filters_dialog.dart';
-import 'package:insigno_frontend/map/marker_widget.dart';
 import 'package:insigno_frontend/marker/marker_page.dart';
 import 'package:insigno_frontend/marker/report_page.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
-import 'package:insigno_frontend/util/stream.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,7 +47,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   late LatLng initialCoordinates;
   late double initialZoom;
-  late Stream<double> zoomStream;
   LatLng? lastLoadMarkersPos;
   bool lastLoadMarkersIncludeResolved = false;
   MarkerFilters markerFilters = MarkerFilters(Set.unmodifiable(MarkerType.values), false);
@@ -82,10 +79,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       prefs.getDouble(lastMapLongitude) ?? defaultInitialCoordinates.longitude,
     );
     initialZoom = prefs.getDouble(lastMapZoom) ?? defaultInitialZoom;
-    zoomStream = Stream.value(initialZoom)
-    // use mapController.zoom instead of event.zoom since event.zoom is sometimes outdated
-    // (e.g. after repositioning)
-        .concatWith([mapController.mapEventStream.map((event) => mapController.zoom)]);
 
     if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
@@ -94,16 +87,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     // check whether this version of insigno is compatible with the backend, ignoring any errors
     get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
         onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
-
-    loadPictureInfo();
-  }
-
-  void loadPictureInfo() async {
-    var thePictureInfo =
-    await vg.loadPicture(SvgAssetLoader("assets/icons/current_location.svg"), null);
-    setState(() {
-      pictureInfo = thePictureInfo;
-    });
   }
 
   void loadMarkers(final LatLng latLng) async {
