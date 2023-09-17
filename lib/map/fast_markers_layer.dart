@@ -30,32 +30,55 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
   }
 
   void prepareAtlasImage() async {
-    final pictureRecorder = ui.PictureRecorder();
-    final canvas = Canvas(pictureRecorder);
+    var pictureRecorder = ui.PictureRecorder();
+    var canvas = Canvas(pictureRecorder);
 
-    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(
-      children: MarkerType.values
-          .map((markerType) => TextSpan(
-                text: String.fromCharCode(markerType.icon.codePoint),
-                style: TextStyle(
-                  fontSize: atlasImageSizeDouble,
-                  fontFamily: markerType.icon.fontFamily,
-                  color: markerType.color,
-                ),
-              ))
-          .toList(),
+    for (int i = 0; i < MarkerType.values.length; ++i) {
+      final markerType = MarkerType.values[i];
+      TextPainter textPainter = TextPainter(textDirection: TextDirection.ltr);
+      textPainter.text = TextSpan(
+        text: String.fromCharCode(markerType.icon.codePoint),
+        style: TextStyle(
+          fontSize: atlasImageSizeDouble * 0.8,
+          fontFamily: markerType.icon.fontFamily,
+          color: markerType.color,
+        ),
+      );
+
+      textPainter.layout();
+      textPainter.paint(
+        canvas,
+        Offset(atlasImageSizeDouble * (0.1 + i), atlasImageSizeDouble * 0.1),
+      );
+    }
+
+    var picture = pictureRecorder.endRecording();
+    final imageWithoutShadow =
+        await picture.toImage(atlasImageSize * MarkerType.values.length, atlasImageSize);
+
+    pictureRecorder = ui.PictureRecorder();
+    canvas = Canvas(pictureRecorder);
+
+    canvas.drawImage(
+      imageWithoutShadow,
+      Offset.zero,
+      Paint()
+        ..colorFilter = const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
+        ..imageFilter = ui.ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
     );
-    textPainter.layout();
+    canvas.drawImage(
+        imageWithoutShadow,
+        Offset.zero,
+        Paint()
+          ..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+    );
 
-    print("prepareAtlasImage done, size: ${textPainter.width}x${textPainter.height}");
+    picture = pictureRecorder.endRecording();
+    final imageWithShadow =
+        await picture.toImage(atlasImageSize * MarkerType.values.length, atlasImageSize);
 
-    textPainter.paint(canvas, Offset.zero);
-
-    final picture = pictureRecorder.endRecording();
-    final image = await picture.toImage(atlasImageSize * MarkerType.values.length, atlasImageSize);
     setState(() {
-      atlasImage = image;
+      atlasImage = imageWithShadow;
     });
   }
 
@@ -93,11 +116,11 @@ class _FastMarkerPainter extends CustomPainter {
     canvas.drawAtlas(
       atlasImage,
       markers.map((marker) {
-        final pos = mapState.project(LatLng(marker.latitude, marker.longitude))
-            - mapState.pixelOrigin;
+        final pos =
+            mapState.project(LatLng(marker.latitude, marker.longitude)) - mapState.pixelOrigin;
         return RSTransform.fromComponents(
           rotation: 0.0,
-          scale: scale / atlasImageSizeDouble,
+          scale: scale / atlasImageSizeDouble / 0.8,
           anchorX: atlasImageSizeDouble / 2,
           anchorY: atlasImageSizeDouble / 2,
           translateX: pos.x,

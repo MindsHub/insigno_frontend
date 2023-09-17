@@ -186,12 +186,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     }
 
     var markers2 = <MapMarker>[];
-    for (int i = 0; i < 200; ++i) {
-      for (int j = 0; j < 200; ++j) {
+    for (int i = 0; i < 100; ++i) {
+      for (int j = 0; j < 100; ++j) {
         markers2.add(MapMarker(
           0,
-          45.7555 + .0004 * i,
-          11.0033 + .0004 * j,
+          45.7555 + .0009 * i,
+          11.0033 + .0009 * j,
           MarkerType.values[(i+j) % MarkerType.values.length],
           DateTime(2023),
           DateTime(2023),

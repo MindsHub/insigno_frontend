@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 enum MarkerType {
   // the comments have the alternative icons
   // useful icons for the future: oil_barrel
-  unknown(1, Colors.grey, Icons.help),
+  unknown(1, Colors.grey, Icons.help_outline),
   plastic(2, Colors.indigo, Icons.recycling),
   paper(3, Colors.yellow, Icons.newspaper),
   undifferentiated(4, Colors.red, Icons.sync_disabled), // cleaning_services, celebration
-  glass(5, Colors.green, Icons.liquor),
+  glass(5, Colors.green, Icons.liquor_outlined),
   compost(6, Colors.brown, Icons.compost),
   electronics(7, Colors.purple, Icons.fax); // electric_bolt
 
