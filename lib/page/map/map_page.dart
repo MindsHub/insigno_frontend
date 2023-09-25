@@ -12,7 +12,9 @@ import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/page/map/map_controls_widget.dart';
 import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
+import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
@@ -24,24 +26,19 @@ class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPersistentPage({super.key});
 
   @override
-  State<MapPersistentPage> createState() => _MapPersistentPageState();
+  State<MapPersistentPage> createState() => _MapPageState();
 }
 
-class _MapPersistentPageState extends State<MapPersistentPage>
-    with
-        GetItStateMixin<MapPersistentPage>,
-        WidgetsBindingObserver,
-        TickerProviderStateMixin {
-  static const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
-  static const double defaultInitialZoom = 16.0;
-  static const double markersZoomThreshold = 14.0;
-  static const Duration fabAnimDuration = Duration(milliseconds: 200);
+const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
+const double defaultInitialZoom = 16.0;
+const double markersZoomThreshold = 14.0;
+const Duration fabAnimDuration = Duration(milliseconds: 200);
 
+class _MapPageState extends State<MapPersistentPage>
+    with GetItStateMixin<MapPersistentPage>, WidgetsBindingObserver, TickerProviderStateMixin {
   late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
-  late final AnimationController repositionAnim;
-  late final AnimationController addMarkerAnim;
 
   late LatLng initialCoordinates;
   late double initialZoom;
@@ -60,8 +57,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
 
-    repositionAnim = AnimationController(vsync: this, duration: fabAnimDuration);
-    addMarkerAnim = AnimationController(vsync: this, duration: fabAnimDuration);
     errorMessageAnim = AnimationController(vsync: this, duration: fabAnimDuration);
 
     mapController.mapEventStream
@@ -154,18 +149,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       errorMessageAnim.forward();
     }
 
-    if (position?.position == null) {
-      repositionAnim.reverse();
-    } else {
-      repositionAnim.forward();
-    }
-
-    if (errorMessage == null) {
-      addMarkerAnim.forward();
-    } else {
-      addMarkerAnim.reverse();
-    }
-
     // Uncomment to test the rendering performance with lots of markers
     /*markers = <MapMarker>[];
     for (int i = 0; i < 100; ++i) {
@@ -189,8 +172,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
           center: initialCoordinates,
           zoom: initialZoom,
-          maxZoom: 18.45,
           // OSM supports at most the zoom value 19
+          maxZoom: 18.45,
           onTap: (tapPosition, tapLatLng) {
             const distance = Distance();
             final minMarker =
@@ -209,75 +192,36 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           }),
       nonRotatedChildren: [
         const Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.bottomCenter,
           child: Text(
             " © OpenStreetMap contributors",
             style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
           ),
         ),
         Align(
+          alignment: Alignment.topRight,
+          child: MapControlsWidget(mapController),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: SettingsControlsWidget(openMarkerFiltersDialog),
+        ),
+        Align(
           alignment: Alignment.bottomRight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // see https://stackoverflow.com/q/56315392 for why we can't use SizeTransition
-              Padding(
-                padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
-                child: FloatingActionButton(
-                  heroTag: "filter",
-                  onPressed: openMarkerFiltersDialog,
-                  tooltip: l10n.filterMarkers,
-                  child: const Icon(Icons.filter_alt),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: repositionAnim,
-                builder: (_, child) => ClipRect(
-                  child: Align(
-                    alignment: Alignment.center,
-                    heightFactor: repositionAnim.value,
-                    widthFactor: repositionAnim.value,
-                    child: child,
-                  ),
-                ),
-                child: ScaleTransition(
-                  scale: repositionAnim,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
-                    child: FloatingActionButton(
-                      heroTag: "reposition",
-                      onPressed: () =>
-                          mapController.move(position!.toLatLng()!, defaultInitialZoom),
-                      tooltip: l10n.goToPosition,
-                      child: const Icon(Icons.filter_tilt_shift),
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: addMarkerAnim,
-                builder: (_, child) => ClipRect(
-                  child: Align(
-                    alignment: Alignment.center,
-                    heightFactor: addMarkerAnim.value,
-                    widthFactor: repositionAnim.value,
-                    child: child,
-                  ),
-                ),
-                child: ScaleTransition(
-                  scale: addMarkerAnim,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, bottom: 16, right: 16),
-                    child: FloatingActionButton(
-                      heroTag: "addMarker",
-                      onPressed: openReportPage,
-                      tooltip: l10n.report,
-                      child: const Icon(Icons.add),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16, bottom: 16),
+            child: FloatingActionButton(
+              heroTag: "addMarker",
+              onPressed: errorMessage == null ? openReportPage : null,
+              tooltip: l10n.report,
+              backgroundColor: errorMessage == null
+                  ? null
+                  : theme.colorScheme.primaryContainer.withOpacity(0.38),
+              foregroundColor: errorMessage == null
+                  ? null
+                  : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
+              child: const Icon(Icons.add),
+            ),
           ),
         ),
         SizeTransition(

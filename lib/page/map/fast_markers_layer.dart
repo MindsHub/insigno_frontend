@@ -15,7 +15,7 @@ double markerScaleFromMapZoom(double mapZoom) {
 }
 
 class FastMarkersLayer extends StatefulWidget {
-  final List<MapMarker> markers;
+  final Iterable<MapMarker> markers;
 
   const FastMarkersLayer(this.markers, {super.key});
 
@@ -104,7 +104,7 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
 class _FastMarkerPainter extends CustomPainter {
   final ui.Image atlasImage;
   final FlutterMapState mapState;
-  final List<MapMarker> markers;
+  final Iterable<MapMarker> markers;
   final double scale;
 
   const _FastMarkerPainter(this.atlasImage, this.mapState, this.markers, this.scale);

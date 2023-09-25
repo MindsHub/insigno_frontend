@@ -22,6 +22,7 @@ class InsignoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         title: "Insigno",
         theme: ThemeData(

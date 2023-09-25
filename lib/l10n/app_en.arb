@@ -73,6 +73,7 @@
   "login": "Login",
   "signup": "Signup",
   "goToPosition": "Go to your position",
+  "alignNorth": "Align north",
   "repeatPassword": "Repeat password",
   "insertName": "Insert a name",
   "insertPassword": "Insert a password",
