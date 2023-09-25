@@ -2,7 +2,7 @@
   "map": "Map",
   "user": "User",
   "loginToInsigno": "Login to Insigno!",
-  "name": "Name",
+  "name": "Nickname",
   "password": "Password",
   "wrongUserOrPassword": "Wrong user or password: {error}",
   "@wrongUserOrPassword": {

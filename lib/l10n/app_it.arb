@@ -2,7 +2,7 @@
   "map": "Mappa",
   "user": "Utente",
   "loginToInsigno": "Accedi ad Insigno!",
-  "name": "Nome",
+  "name": "Nickname",
   "password": "Password",
   "wrongUserOrPassword": "Utente o password errati: {error}",
   "logout": "Esci",
