@@ -224,6 +224,18 @@ class _MapPageState extends State<MapPersistentPage>
             ),
           ),
         ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, bottom: 16),
+            child: FloatingActionButton(
+              heroTag: "user",
+              onPressed: isLoggedIn == true ? () => {} : () => {},
+              tooltip: isLoggedIn == true ? l10n.user : l10n.login,
+              child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
+            ),
+          ),
+        ),
         SizeTransition(
           sizeFactor: errorMessageAnim,
           child: Wrap(
