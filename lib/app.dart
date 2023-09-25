@@ -9,6 +9,7 @@ import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
 import 'package:insigno_frontend/page/marker/resolve_page.dart';
 import 'package:insigno_frontend/page/pill_page.dart';
+import 'package:insigno_frontend/page/settings/settings_page.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
 import 'package:insigno_frontend/page/user/image_review_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
@@ -46,6 +47,7 @@ class InsignoApp extends StatelessWidget {
             ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
             ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
             ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
+            SettingsPage.routeName: (ctx) => const SettingsPage(),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));
