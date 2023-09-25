@@ -6,20 +6,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/map/fast_markers_layer.dart';
-import 'package:insigno_frontend/map/location_provider.dart';
-import 'package:insigno_frontend/map/marker_filters_dialog.dart';
-import 'package:insigno_frontend/marker/marker_page.dart';
-import 'package:insigno_frontend/marker/report_page.dart';
+import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
+import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
+import 'package:insigno_frontend/page/marker/marker_page.dart';
+import 'package:insigno_frontend/page/marker/report_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../networking/authentication.dart';
-import '../networking/backend.dart';
-import '../networking/data/map_marker.dart';
 
 class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   MapPersistentPage({super.key});
@@ -68,9 +67,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
     mapController.mapEventStream
         .where((event) =>
-    event.zoom >= markersZoomThreshold &&
-        (lastLoadMarkersPos == null ||
-            distance.distance(lastLoadMarkersPos!, event.center) > 5000))
+            event.zoom >= markersZoomThreshold &&
+            (lastLoadMarkersPos == null ||
+                distance.distance(lastLoadMarkersPos!, event.center) > 5000))
         .forEach((event) => loadMarkers(event.center));
 
     prefs = get<SharedPreferences>();
@@ -141,15 +140,15 @@ class _MapPersistentPageState extends State<MapPersistentPage>
     final theme = Theme.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
-        get<LocationProvider>().lastLocationInfo())
+            get<LocationProvider>().lastLocationInfo())
         .data;
     final isLoggedIn = watchStream(
             (Authentication authentication) => authentication.getIsLoggedInStream(),
-        get<Authentication>().isLoggedIn())
+            get<Authentication>().isLoggedIn())
         .data;
 
     final String? errorMessage =
-    isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
+        isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
     if (errorMessage == null) {
       errorMessageAnim.reverse();
     } else {
@@ -196,8 +195,8 @@ class _MapPersistentPageState extends State<MapPersistentPage>
           // OSM supports at most the zoom value 19
           onTap: (tapPosition, tapLatLng) {
             const distance = Distance();
-            final minMarker = minBy(
-              markers, (MapMarker marker) => distance(tapLatLng, marker.getLatLng()));
+            final minMarker =
+                minBy(markers, (MapMarker marker) => distance(tapLatLng, marker.getLatLng()));
             if (minMarker == null) {
               return;
             }
@@ -209,8 +208,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
             if (max(dx, dy) < markerScale * 0.7) {
               openMarkerPage(minMarker);
             }
-          }
-      ),
+          }),
       nonRotatedChildren: [
         const Align(
           alignment: Alignment.bottomLeft,
@@ -236,15 +234,14 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               ),
               AnimatedBuilder(
                 animation: repositionAnim,
-                builder: (_, child) =>
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.center,
-                        heightFactor: repositionAnim.value,
-                        widthFactor: repositionAnim.value,
-                        child: child,
-                      ),
-                    ),
+                builder: (_, child) => ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    heightFactor: repositionAnim.value,
+                    widthFactor: repositionAnim.value,
+                    child: child,
+                  ),
+                ),
                 child: ScaleTransition(
                   scale: repositionAnim,
                   child: Padding(
@@ -261,15 +258,14 @@ class _MapPersistentPageState extends State<MapPersistentPage>
               ),
               AnimatedBuilder(
                 animation: addMarkerAnim,
-                builder: (_, child) =>
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.center,
-                        heightFactor: addMarkerAnim.value,
-                        widthFactor: repositionAnim.value,
-                        child: child,
-                      ),
-                    ),
+                builder: (_, child) => ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    heightFactor: addMarkerAnim.value,
+                    widthFactor: repositionAnim.value,
+                    child: child,
+                  ),
+                ),
                 child: ScaleTransition(
                   scale: addMarkerAnim,
                   child: Padding(
@@ -301,10 +297,7 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                       ),
                       padding: EdgeInsets.only(
                         left: 12,
-                        top: 8 + MediaQuery
-                            .of(context)
-                            .padding
-                            .top,
+                        top: 8 + MediaQuery.of(context).padding.top,
                         right: 12,
                         bottom: 12,
                       ),
@@ -328,13 +321,12 @@ class _MapPersistentPageState extends State<MapPersistentPage>
         MarkerLayer(
             markers: [position?.toLatLng()]
                 .whereType<LatLng>()
-                .map((pos) =>
-                Marker(
-                  rotate: true,
-                  point: pos,
-                  builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                )).toList()
-        ),
+                .map((pos) => Marker(
+                      rotate: true,
+                      point: pos,
+                      builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                    ))
+                .toList()),
         FastMarkersLayer(markers),
       ],
     );

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
-import 'package:insigno_frontend/user/change_password_widget.dart';
-import 'package:insigno_frontend/user/login_widget.dart';
-import 'package:insigno_frontend/user/profile_widget.dart';
-import 'package:insigno_frontend/user/signup_widget.dart';
+import 'package:insigno_frontend/page/user/change_password_widget.dart';
+import 'package:insigno_frontend/page/user/login_widget.dart';
+import 'package:insigno_frontend/page/user/profile_widget.dart';
+import 'package:insigno_frontend/page/user/signup_widget.dart';
 
 class ProfilePersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
   ProfilePersistentPage({super.key});

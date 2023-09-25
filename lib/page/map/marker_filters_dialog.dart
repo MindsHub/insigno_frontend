@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../networking/data/marker_type.dart';
+import 'package:insigno_frontend/networking/data/marker_type.dart';
 
 class MarkerFilters {
   final Set<MarkerType> shownMarkers;

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/home/about_card_widget.dart';
-import 'package:insigno_frontend/home/server_host_widget.dart';
+import 'package:insigno_frontend/page/about_card_widget.dart';
+import 'package:insigno_frontend/page/server_host_widget.dart';
 
 class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   SettingsPage({Key? key}) : super(key: key);

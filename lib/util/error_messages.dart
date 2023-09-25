@@ -1,5 +1,5 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:insigno_frontend/map/location_info.dart';
+import 'package:insigno_frontend/page/map/location_info.dart';
 
 String? getErrorMessage(AppLocalizations l10n, bool? isLoggedIn, LocationInfo? position,
     {String? Function()? whilePositionLoading, String? Function()? afterPositionLoaded}) {

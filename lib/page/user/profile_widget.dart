@@ -3,15 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:http/http.dart' as http;
 import 'package:insigno_frontend/di/setup.dart';
+import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/error.dart';
-import 'package:insigno_frontend/user/auth_user_provider.dart';
-import 'package:insigno_frontend/user/change_password_page.dart';
-import 'package:insigno_frontend/user/image_review_page.dart';
+import 'package:insigno_frontend/page/user/auth_user_provider.dart';
+import 'package:insigno_frontend/page/user/change_password_page.dart';
+import 'package:insigno_frontend/page/user/image_review_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
-
-import '../networking/authentication.dart';
 
 class ProfileWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   ProfileWidget({Key? key}) : super(key: key);

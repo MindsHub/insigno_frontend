@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/networking/data/user.dart';
 import 'package:insigno_frontend/util/error_text.dart';
-
-import '../networking/data/user.dart';
 
 class UserPage extends StatefulWidget {
   static const routeName = "/userPage";

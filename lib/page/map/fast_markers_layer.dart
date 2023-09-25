@@ -3,20 +3,15 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../networking/data/map_marker.dart';
 
 const int atlasImageSize = 512;
 const double atlasImageSizeDouble = 512.0;
 
 double markerScaleFromMapZoom(double mapZoom) {
-  return 10 +
-      17.0 *
-          (mapZoom < 16.0
-              ? pow(2.0, mapZoom - 16.0)
-              : pow(mapZoom - 15.0, 0.7));
+  return 10 + 17.0 * (mapZoom < 16.0 ? pow(2.0, mapZoom - 16.0) : pow(mapZoom - 15.0, 0.7));
 }
 
 class FastMarkersLayer extends StatefulWidget {
@@ -75,10 +70,9 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
         ..imageFilter = ui.ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
     );
     canvas.drawImage(
-        imageWithoutShadow,
-        Offset.zero,
-        Paint()
-          ..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+      imageWithoutShadow,
+      Offset.zero,
+      Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
     );
 
     picture = pictureRecorder.endRecording();

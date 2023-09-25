@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:insigno_frontend/app.dart';
 import 'package:insigno_frontend/di/setup.dart';
-import 'package:insigno_frontend/home/error_page.dart';
+import 'package:insigno_frontend/page/error_page.dart';
 
 void main() async {
   final navigatorKey = GlobalKey<NavigatorState>();

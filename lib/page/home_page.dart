@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/home/pill_page.dart';
-import 'package:insigno_frontend/home/settings_page.dart';
-import 'package:insigno_frontend/map/map_persistent_page.dart';
 import 'package:insigno_frontend/networking/backend.dart';
-import 'package:insigno_frontend/user/profile_persistent_page.dart';
-
-import '../networking/data/pill.dart';
+import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/page/map/map_page.dart';
+import 'package:insigno_frontend/page/pill_page.dart';
+import 'package:insigno_frontend/page/settings_page.dart';
+import 'package:insigno_frontend/page/user/profile_persistent_page.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   HomePage({super.key});

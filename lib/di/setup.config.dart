@@ -12,17 +12,17 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:http/http.dart' as _i3;
 import 'package:injectable/injectable.dart' as _i2;
-import 'package:insigno_frontend/map/location_provider.dart' as _i5;
 import 'package:insigno_frontend/networking/authentication.dart' as _i8;
 import 'package:insigno_frontend/networking/backend.dart' as _i9;
 import 'package:insigno_frontend/networking/client.dart' as _i4;
 import 'package:insigno_frontend/networking/server_host_handler.dart' as _i7;
+import 'package:insigno_frontend/page/map/location_provider.dart' as _i5;
+import 'package:insigno_frontend/page/user/auth_user_provider.dart' as _i10;
 import 'package:insigno_frontend/pref/preferences.dart' as _i11;
-import 'package:insigno_frontend/user/auth_user_provider.dart' as _i10;
 import 'package:shared_preferences/shared_preferences.dart' as _i6;
 
 extension GetItInjectableX on _i1.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
+// initializes the registration of main-scope dependencies inside of GetIt
   Future<_i1.GetIt> init({
     String? environment,
     _i2.EnvironmentFilter? environmentFilter,

@@ -1,17 +1,17 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:insigno_frontend/home/error_page.dart';
-import 'package:insigno_frontend/home/home_page.dart';
-import 'package:insigno_frontend/home/pill_page.dart';
-import 'package:insigno_frontend/marker/marker_page.dart';
-import 'package:insigno_frontend/marker/report_page.dart';
-import 'package:insigno_frontend/marker/resolve_page.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
-import 'package:insigno_frontend/user/change_password_page.dart';
-import 'package:insigno_frontend/user/image_review_page.dart';
-import 'package:insigno_frontend/user/user_page.dart';
+import 'package:insigno_frontend/page/error_page.dart';
+import 'package:insigno_frontend/page/home_page.dart';
+import 'package:insigno_frontend/page/marker/marker_page.dart';
+import 'package:insigno_frontend/page/marker/report_page.dart';
+import 'package:insigno_frontend/page/marker/resolve_page.dart';
+import 'package:insigno_frontend/page/pill_page.dart';
+import 'package:insigno_frontend/page/user/change_password_page.dart';
+import 'package:insigno_frontend/page/user/image_review_page.dart';
+import 'package:insigno_frontend/page/user/user_page.dart';
 
 class InsignoApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;

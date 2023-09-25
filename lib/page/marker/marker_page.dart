@@ -2,20 +2,19 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/marker/add_images_widget.dart';
-import 'package:insigno_frontend/marker/report_as_inappropriate_dialog.dart';
-import 'package:insigno_frontend/marker/resolve_page.dart';
+import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
-import 'package:insigno_frontend/user/user_page.dart';
+import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/page/marker/add_images_widget.dart';
+import 'package:insigno_frontend/page/marker/report_as_inappropriate_dialog.dart';
+import 'package:insigno_frontend/page/marker/resolve_page.dart';
+import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
-
-import '../map/location_provider.dart';
-import '../networking/authentication.dart';
-import '../networking/backend.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
   static const routeName = '/markerPage';

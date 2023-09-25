@@ -7,7 +7,7 @@ import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/networking/server_host_handler.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
-import 'package:insigno_frontend/user/auth_user_provider.dart';
+import 'package:insigno_frontend/page/user/auth_user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @lazySingleton

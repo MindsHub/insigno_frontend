@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:insigno_frontend/user/change_password_widget.dart';
+import 'package:insigno_frontend/page/user/change_password_widget.dart';
 
 class ChangePasswordPage extends StatelessWidget {
   static const routeName = "/changePasswordPage";

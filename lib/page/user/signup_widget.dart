@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
-import 'package:insigno_frontend/user/validators.dart';
+import 'package:insigno_frontend/networking/error.dart';
+import 'package:insigno_frontend/page/user/validators.dart';
 import 'package:insigno_frontend/util/error_text.dart';
-
-import '../networking/error.dart';
 
 class SignupWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function(bool signupRequestSent) switchToLoginCallback;
