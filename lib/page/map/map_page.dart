@@ -325,7 +325,9 @@ class _MapPersistentPageState extends State<MapPersistentPage>
                       builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
                     ))
                 .toList()),
-        FastMarkersLayer(markers),
+        FastMarkersLayer(markers.where((e) =>
+            (markerFilters.includeResolved || !e.isResolved()) &&
+            markerFilters.shownMarkers.contains(e.type))),
       ],
     );
   }
