@@ -20,38 +20,34 @@ class InsignoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      return MaterialApp(
-        navigatorKey: navigatorKey,
-        title: "Insigno",
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: lightDynamic ??
-              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light),
-        ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          colorScheme: darkDynamic ??
-              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
-        ),
-        home: HomePage(),
-        onGenerateRoute: (RouteSettings settings) {
-          var routes = <String, WidgetBuilder>{
-            ReportPage.routeName: (ctx) => ReportPage(),
-            MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
-            ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
-            PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
-            UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
-            ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
-            ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
-            ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
-          };
-          WidgetBuilder builder = routes[settings.name]!;
-          return MaterialPageRoute(builder: (ctx) => builder(ctx));
-        },
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      );
-    });
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      title: "Insigno",
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900, brightness: Brightness.light),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900, brightness: Brightness.dark),
+      ),
+      home: HomePage(),
+      onGenerateRoute: (RouteSettings settings) {
+        var routes = <String, WidgetBuilder>{
+          ReportPage.routeName: (ctx) => ReportPage(),
+          MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
+          ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
+          PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
+          UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
+          ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
+          ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
+          ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
+        };
+        WidgetBuilder builder = routes[settings.name]!;
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
+      },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+    );
   }
 }
