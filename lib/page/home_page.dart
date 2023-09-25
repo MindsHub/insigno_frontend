@@ -6,7 +6,7 @@ import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/map/map_page.dart';
 import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/settings_page.dart';
-import 'package:insigno_frontend/page/user/profile_persistent_page.dart';
+import 'package:insigno_frontend/page/user/profile_page.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   HomePage({super.key});

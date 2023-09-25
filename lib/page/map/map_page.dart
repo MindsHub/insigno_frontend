@@ -29,7 +29,6 @@ class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _MapPersistentPageState extends State<MapPersistentPage>
     with
-        AutomaticKeepAliveClientMixin<MapPersistentPage>,
         GetItStateMixin<MapPersistentPage>,
         WidgetsBindingObserver,
         TickerProviderStateMixin {
@@ -135,7 +134,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -331,9 +329,6 @@ class _MapPersistentPageState extends State<MapPersistentPage>
       ],
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   void openMarkerPage(MapMarker m, [String? errorAddingImages]) {
     Navigator.pushNamed(

@@ -21,15 +21,12 @@ enum ProfilePages {
 }
 
 class _ProfilePersistentPageState extends State<ProfilePersistentPage>
-    with
-        AutomaticKeepAliveClientMixin<ProfilePersistentPage>,
-        GetItStateMixin<ProfilePersistentPage> {
+    with GetItStateMixin<ProfilePersistentPage> {
   ProfilePages pageToShow = ProfilePages.login; // start with login
   ProfilePages showMessageForCompletedPage = ProfilePages.login; // no message needs to be shown
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final l10n = AppLocalizations.of(context)!;
 
     final bool isLoggedIn = watchStream(
@@ -79,7 +76,4 @@ class _ProfilePersistentPageState extends State<ProfilePersistentPage>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
