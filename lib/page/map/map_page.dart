@@ -220,6 +220,7 @@ class _MapPageState extends State<MapPersistentPage>
               foregroundColor: errorMessage == null
                   ? null
                   : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
+              disabledElevation: 0,
               child: const Icon(Icons.add),
             ),
           ),
