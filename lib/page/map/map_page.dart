@@ -10,6 +10,7 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_controls_widget.dart';
@@ -22,6 +23,7 @@ import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:marquee_text/marquee_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -50,6 +52,10 @@ class _MapPageState extends State<MapPersistentPage>
   List<MapMarker> markers = [];
   PictureInfo? pictureInfo;
 
+  Pill? pill;
+  late AnimationController pillAnimationController;
+  late Animation<double> pillAnimation;
+
   String lastErrorMessage = "";
   late final AnimationController errorMessageAnim;
   bool isVersionCompatible = true;
@@ -60,6 +66,12 @@ class _MapPageState extends State<MapPersistentPage>
     WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
 
     errorMessageAnim = AnimationController(vsync: this, duration: fabAnimDuration);
+    pillAnimationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    pillAnimation = CurvedAnimation(
+      parent: pillAnimationController,
+      curve: Curves.linear,
+    );
 
     mapController.mapEventStream
         .where((event) =>
@@ -79,9 +91,20 @@ class _MapPageState extends State<MapPersistentPage>
       loadMarkers(initialCoordinates);
     }
 
+    final backend = get<Backend>();
+
     // check whether this version of insigno is compatible with the backend, ignoring any errors
-    get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
+    backend.isCompatible().then((value) => setState(() => isVersionCompatible = value),
         onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
+
+    backend.loadRandomPill().then((value) {
+      setState(() {
+        pill = value;
+        pillAnimationController.forward();
+      });
+    }, onError: (_) {
+      // ignore errors when loading pills
+    });
   }
 
   void loadMarkers(final LatLng latLng) async {
@@ -243,30 +266,37 @@ class _MapPageState extends State<MapPersistentPage>
           ),
         ),
         SizeTransition(
-          sizeFactor: errorMessageAnim,
+          sizeFactor: pillAnimation,
           child: Wrap(
             children: [
               Align(
-                child: Wrap(
-                  direction: Axis.vertical,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.background,
-                        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.background,
+                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                  ),
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top,
+                  ),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width - 112,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: MarqueeText(
+                          speed: 25,
+                          text: TextSpan(text: "   ${pill?.text ?? ""}   "),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      padding: EdgeInsets.only(
-                        left: 12,
-                        top: 8 + MediaQuery.of(context).padding.top,
-                        right: 12,
-                        bottom: 12,
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.close),
                       ),
-                      child: Text(
-                        lastErrorMessage,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
