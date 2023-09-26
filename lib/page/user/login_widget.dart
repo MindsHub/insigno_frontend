@@ -4,13 +4,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/error.dart';
-import 'package:insigno_frontend/page/user/profile_page.dart';
+import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 class LoginWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final Function() switchToSignupCallback;
   final Function() switchToForgotPasswordCallback;
-  final ProfilePages showMessageForCompletedPage;
+  final LoginFlowPages showMessageForCompletedPage;
 
   LoginWidget(this.switchToSignupCallback, this.switchToForgotPasswordCallback,
       this.showMessageForCompletedPage,
@@ -36,8 +36,8 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
     });
 
     get<Authentication>().login(email!, password!).then((_) {
-      // if login has succeeded, whoever instantiated this widget will know about it thanks to
-      // Authentication's isLoggedInStream
+      // pop the login flow page
+      Navigator.pop(context);
     }, onError: (e) {
       setState(() {
         if (e is UnauthorizedException && e.response.isNotEmpty) {
@@ -67,9 +67,9 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (widget.showMessageForCompletedPage != ProfilePages.login)
+                if (widget.showMessageForCompletedPage != LoginFlowPages.login)
                   Text(
-                    widget.showMessageForCompletedPage == ProfilePages.signup
+                    widget.showMessageForCompletedPage == LoginFlowPages.signup
                         ? l10n.confirmEmail
                         : l10n.confirmPasswordChange,
                     textAlign: TextAlign.center,
@@ -78,7 +78,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                         .bodyMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                if (widget.showMessageForCompletedPage != ProfilePages.login)
+                if (widget.showMessageForCompletedPage != LoginFlowPages.login)
                   const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(labelText: l10n.email),

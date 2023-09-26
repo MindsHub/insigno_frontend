@@ -6,7 +6,7 @@ import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/map/map_page.dart';
 import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/settings/settings_page.dart';
-import 'package:insigno_frontend/page/user/profile_page.dart';
+import 'package:insigno_frontend/page/user/login_flow_page.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   HomePage({super.key});
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage>
       // ignore errors when loading pills
     });
 
-    _tabs = <Widget>[ProfilePersistentPage(), MapPersistentPage(), SettingsPage()];
+    _tabs = <Widget>[LoginFlowPage(), MapPersistentPage(), SettingsPage()];
     _tabController = TabController(initialIndex: 1, length: _tabs.length, vsync: this);
     _tabController.addListener(() => setState(() {})); // <- update page when the tab is changed
   }

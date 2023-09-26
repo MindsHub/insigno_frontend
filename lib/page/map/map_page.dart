@@ -17,6 +17,8 @@ import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
+import 'package:insigno_frontend/page/user/login_flow_page.dart';
+import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
@@ -231,7 +233,10 @@ class _MapPageState extends State<MapPersistentPage>
             padding: const EdgeInsets.only(left: 16, bottom: 16),
             child: FloatingActionButton(
               heroTag: "user",
-              onPressed: isLoggedIn == true ? () => {} : () => {},
+              onPressed: isLoggedIn == null
+                  ? null
+                  : () => Navigator.pushNamed(context,
+                      isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
               tooltip: isLoggedIn == true ? l10n.user : l10n.login,
               child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
             ),

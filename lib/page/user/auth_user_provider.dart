@@ -30,6 +30,10 @@ class AuthUserProvider {
     return _streamController.stream;
   }
 
+  AuthenticatedUser? getAuthenticatedUserOrNull() {
+    return _loadedUser;
+  }
+
   void addPoints(double points) {
     _additionalPoints += points;
 

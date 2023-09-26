@@ -12,6 +12,8 @@ import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/settings/settings_page.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
 import 'package:insigno_frontend/page/user/image_review_page.dart';
+import 'package:insigno_frontend/page/user/login_flow_page.dart';
+import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
 
 class InsignoApp extends StatelessWidget {
@@ -48,6 +50,8 @@ class InsignoApp extends StatelessWidget {
             ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
             ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
             SettingsPage.routeName: (ctx) => const SettingsPage(),
+            LoginFlowPage.routeName: (ctx) => LoginFlowPage(),
+            ProfilePage.routeName: (ctx) => ProfilePage(),
           };
           WidgetBuilder builder = routes[settings.name]!;
           return MaterialPageRoute(builder: (ctx) => builder(ctx));
