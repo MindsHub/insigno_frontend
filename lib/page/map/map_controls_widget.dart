@@ -48,6 +48,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
           Padding(
             padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
             child: FloatingActionButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               heroTag: "north",
               onPressed: () => widget.mapController.rotate(0),
               tooltip: l10n.alignNorth,
@@ -70,6 +71,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
               child: Padding(
                 padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 16),
                 child: FloatingActionButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   heroTag: "reposition",
                   onPressed: () =>
                       widget.mapController.move(position!.toLatLng()!, defaultInitialZoom),

@@ -23,7 +23,6 @@ import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:marquee_text/marquee_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -156,6 +155,7 @@ class _MapPageState extends State<MapPersistentPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -270,32 +270,27 @@ class _MapPageState extends State<MapPersistentPage>
           child: Wrap(
             children: [
               Align(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.background,
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-                  ),
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                  ),
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width - 112,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: MarqueeText(
-                          speed: 25,
-                          text: TextSpan(text: "   ${pill?.text ?? ""}   "),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
+                child: Padding(
+                  padding: EdgeInsets.only(top: mediaQuery.padding.top + 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.background,
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    constraints: BoxConstraints(
+                      maxWidth: mediaQuery.size.width -
+                          112 -
+                          mediaQuery.padding.right -
+                          mediaQuery.padding.left,
+                    ),
+                    child: Text(
+                      pill?.text ?? "",
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(height: 1.3),
+                    ),
                   ),
                 ),
               ),

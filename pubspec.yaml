@@ -46,7 +46,6 @@ dependencies:
   easy_image_viewer: ^1.2.0
   flutter_svg: ^2.0.5
   flutter_svg_provider: ^1.0.6
-  marquee_text: ^2.5.0+1
 
   # core functionality
   geolocator: ^10.0.1 # used to load location

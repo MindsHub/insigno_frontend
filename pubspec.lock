@@ -590,14 +590,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  marquee_text:
-    dependency: "direct main"
-    description:
-      name: marquee_text
-      sha256: "2f667fc3870af19b58ad5204e15d5f1627807585ed049800e48133601905554e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0+1"
   matcher:
     dependency: transitive
     description:

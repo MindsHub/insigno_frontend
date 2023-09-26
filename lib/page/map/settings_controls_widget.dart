@@ -21,6 +21,7 @@ class SettingsControlsWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: FloatingActionButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               heroTag: "settings",
               onPressed: () => Navigator.pushNamed(context, SettingsPage.routeName),
               tooltip: l10n.settings,
@@ -31,6 +32,7 @@ class SettingsControlsWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: FloatingActionButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               heroTag: "filter",
               onPressed: onFilterPressed,
               tooltip: l10n.filterMarkers,
