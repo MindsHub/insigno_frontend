@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/error_page.dart';
-import 'package:insigno_frontend/page/home_page.dart';
+import 'package:insigno_frontend/page/map/map_page.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
 import 'package:insigno_frontend/page/marker/resolve_page.dart';
@@ -38,7 +38,7 @@ class InsignoApp extends StatelessWidget {
           colorScheme: darkDynamic ??
               ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
         ),
-        home: HomePage(),
+        home: MapPage(),
         onGenerateRoute: (RouteSettings settings) {
           var routes = <String, WidgetBuilder>{
             ReportPage.routeName: (ctx) => ReportPage(),
@@ -50,7 +50,7 @@ class InsignoApp extends StatelessWidget {
             ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
             ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
             SettingsPage.routeName: (ctx) => const SettingsPage(),
-            LoginFlowPage.routeName: (ctx) => LoginFlowPage(),
+            LoginFlowPage.routeName: (ctx) => const LoginFlowPage(),
             ProfilePage.routeName: (ctx) => ProfilePage(),
           };
           WidgetBuilder builder = routes[settings.name]!;

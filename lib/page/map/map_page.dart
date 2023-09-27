@@ -26,11 +26,11 @@ import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MapPersistentPage extends StatefulWidget with GetItStatefulWidgetMixin {
-  MapPersistentPage({super.key});
+class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
+  MapPage({super.key});
 
   @override
-  State<MapPersistentPage> createState() => _MapPageState();
+  State<MapPage> createState() => _MapPageState();
 }
 
 const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
@@ -38,8 +38,8 @@ const double defaultInitialZoom = 16.0;
 const double markersZoomThreshold = 14.0;
 const Duration fabAnimDuration = Duration(milliseconds: 200);
 
-class _MapPageState extends State<MapPersistentPage>
-    with GetItStateMixin<MapPersistentPage>, WidgetsBindingObserver, TickerProviderStateMixin {
+class _MapPageState extends State<MapPage>
+    with GetItStateMixin<MapPage>, WidgetsBindingObserver, TickerProviderStateMixin {
   late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
@@ -192,140 +192,142 @@ class _MapPageState extends State<MapPersistentPage>
       }
     }*/
 
-    return FlutterMap(
-      mapController: mapController,
-      options: MapOptions(
-          interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-          center: initialCoordinates,
-          zoom: initialZoom,
-          // OSM supports at most the zoom value 19
-          maxZoom: 18.45,
-          onTap: (tapPosition, tapLatLng) {
-            const distance = Distance();
-            final minMarker =
-                minBy(markers, (MapMarker marker) => distance(tapLatLng, marker.getLatLng()));
-            if (minMarker == null) {
-              return;
-            }
+    return Scaffold(
+      body: FlutterMap(
+        mapController: mapController,
+        options: MapOptions(
+            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+            center: initialCoordinates,
+            zoom: initialZoom,
+            // OSM supports at most the zoom value 19
+            maxZoom: 18.45,
+            onTap: (tapPosition, tapLatLng) {
+              const distance = Distance();
+              final minMarker =
+                  minBy(markers, (MapMarker marker) => distance(tapLatLng, marker.getLatLng()));
+              if (minMarker == null) {
+                return;
+              }
 
-            final markerScale = markerScaleFromMapZoom(mapController.zoom);
-            final screenPoint = mapController.latLngToScreenPoint(minMarker.getLatLng());
-            final dx = (tapPosition.global.dx - screenPoint.x).abs();
-            final dy = (tapPosition.global.dy - screenPoint.y).abs();
-            if (max(dx, dy) < markerScale * 0.7) {
-              openMarkerPage(minMarker);
-            }
-          }),
-      nonRotatedChildren: [
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child: Text(
-            " © OpenStreetMap contributors",
-            style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
-          ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: MapControlsWidget(mapController),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SettingsControlsWidget(openMarkerFiltersDialog),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16, bottom: 16),
-            child: FloatingActionButton(
-              heroTag: "addMarker",
-              onPressed: errorMessage == null ? openReportPage : null,
-              tooltip: l10n.report,
-              backgroundColor: errorMessage == null
-                  ? null
-                  : theme.colorScheme.primaryContainer.withOpacity(0.38),
-              foregroundColor: errorMessage == null
-                  ? null
-                  : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
-              disabledElevation: 0,
-              child: const Icon(Icons.add),
+              final markerScale = markerScaleFromMapZoom(mapController.zoom);
+              final screenPoint = mapController.latLngToScreenPoint(minMarker.getLatLng());
+              final dx = (tapPosition.global.dx - screenPoint.x).abs();
+              final dy = (tapPosition.global.dy - screenPoint.y).abs();
+              if (max(dx, dy) < markerScale * 0.7) {
+                openMarkerPage(minMarker);
+              }
+            }),
+        nonRotatedChildren: [
+          const Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              " © OpenStreetMap contributors",
+              style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 16),
-            child: FloatingActionButton(
-              heroTag: "user",
-              onPressed: isLoggedIn == null
-                  ? null
-                  : () => Navigator.pushNamed(context,
-                      isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
-              tooltip: isLoggedIn == true ? l10n.user : l10n.login,
-              child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
+          Align(
+            alignment: Alignment.topRight,
+            child: MapControlsWidget(mapController),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SettingsControlsWidget(openMarkerFiltersDialog),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16, bottom: 16),
+              child: FloatingActionButton(
+                heroTag: "addMarker",
+                onPressed: errorMessage == null ? openReportPage : null,
+                tooltip: l10n.report,
+                backgroundColor: errorMessage == null
+                    ? null
+                    : theme.colorScheme.primaryContainer.withOpacity(0.38),
+                foregroundColor: errorMessage == null
+                    ? null
+                    : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
+                disabledElevation: 0,
+                child: const Icon(Icons.add),
+              ),
             ),
           ),
-        ),
-        SizeTransition(
-          sizeFactor: pillAnimation,
-          child: Wrap(
-            children: [
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.only(top: mediaQuery.padding.top + 8, bottom: 16),
-                  child: Material(
-                    borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    color: theme.colorScheme.background,
-                    elevation: 6, // just like FABs
-                    child: InkWell(
-                      onTap: () {
-                        if (pill != null) {
-                          pillAnimationController.reverse();
-                          Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        constraints: BoxConstraints(
-                          maxWidth: mediaQuery.size.width -
-                              112 -
-                              mediaQuery.padding.right -
-                              mediaQuery.padding.left,
-                        ),
-                        child: Text(
-                          pill?.text ?? "",
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(height: 1.3),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 16),
+              child: FloatingActionButton(
+                heroTag: "user",
+                onPressed: isLoggedIn == null
+                    ? null
+                    : () => Navigator.pushNamed(context,
+                        isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
+                tooltip: isLoggedIn == true ? l10n.user : l10n.login,
+                child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
+              ),
+            ),
+          ),
+          SizeTransition(
+            sizeFactor: pillAnimation,
+            child: Wrap(
+              children: [
+                Align(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: mediaQuery.padding.top + 8, bottom: 16),
+                    child: Material(
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      color: theme.colorScheme.background,
+                      elevation: 6, // just like FABs
+                      child: InkWell(
+                        onTap: () {
+                          if (pill != null) {
+                            pillAnimationController.reverse();
+                            Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          constraints: BoxConstraints(
+                            maxWidth: mediaQuery.size.width -
+                                112 -
+                                mediaQuery.padding.right -
+                                mediaQuery.padding.left,
+                          ),
+                          child: Text(
+                            pill?.text ?? "",
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(height: 1.3),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-      children: [
-        TileLayer(
-          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: const ['a', 'b', 'c'],
-        ),
-        MarkerLayer(
-            markers: [position?.toLatLng()]
-                .whereType<LatLng>()
-                .map((pos) => Marker(
-                      rotate: true,
-                      point: pos,
-                      builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                    ))
-                .toList()),
-        FastMarkersLayer(markers.where((e) =>
-            (markerFilters.includeResolved || !e.isResolved()) &&
-            markerFilters.shownMarkers.contains(e.type))),
-      ],
+        ],
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: const ['a', 'b', 'c'],
+          ),
+          MarkerLayer(
+              markers: [position?.toLatLng()]
+                  .whereType<LatLng>()
+                  .map((pos) => Marker(
+                        rotate: true,
+                        point: pos,
+                        builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
+                      ))
+                  .toList()),
+          FastMarkersLayer(markers.where((e) =>
+              (markerFilters.includeResolved || !e.isResolved()) &&
+              markerFilters.shownMarkers.contains(e.type))),
+        ],
+      ),
     );
   }
 
