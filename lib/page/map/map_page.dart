@@ -134,6 +134,7 @@ class _MapPageState extends State<MapPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -213,7 +214,7 @@ class _MapPageState extends State<MapPage>
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
-              padding: const EdgeInsets.only(right: 16, bottom: 16),
+              padding: EdgeInsets.only(right: 16 + mediaQuery.padding.right, bottom: 16 + mediaQuery.padding.bottom,),
               child: FloatingActionButton(
                 heroTag: "addMarker",
                 onPressed: errorMessage == null ? openReportPage : null,
@@ -232,7 +233,7 @@ class _MapPageState extends State<MapPage>
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 16),
+              padding: EdgeInsets.only(left: 16 + mediaQuery.padding.left, bottom: 16 + mediaQuery.padding.bottom,),
               child: FloatingActionButton(
                 heroTag: "user",
                 onPressed: isLoggedIn == null

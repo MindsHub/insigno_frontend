@@ -28,6 +28,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final mediaQuery = MediaQuery.of(context);
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
         .data;
@@ -39,14 +40,12 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
     }
 
     return Padding(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-        right: MediaQuery.of(context).padding.right,
-      ),
+      // the right padding is handled by children to allow the AnimatedBuilder shadow to expand
+      padding: EdgeInsets.only(top: mediaQuery.padding.top),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+            padding: EdgeInsets.only(left: 8, top: 8, right: 8 + mediaQuery.padding.right),
             child: FloatingActionButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               heroTag: "north",
@@ -69,7 +68,12 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
             child: ScaleTransition(
               scale: repositionAnim,
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 16),
+                padding: EdgeInsets.only(
+                  left: 8,
+                  top: 8,
+                  right: 8 + mediaQuery.padding.right,
+                  bottom: 16,
+                ),
                 child: FloatingActionButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   heroTag: "reposition",
