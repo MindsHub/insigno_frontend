@@ -18,6 +18,7 @@ import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
+import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
@@ -217,7 +218,7 @@ class _MapPageState extends State<MapPersistentPage>
           }),
       nonRotatedChildren: [
         const Align(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.bottomLeft,
           child: Text(
             " © OpenStreetMap contributors",
             style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)), // theme-independent grey
@@ -271,25 +272,34 @@ class _MapPageState extends State<MapPersistentPage>
             children: [
               Align(
                 child: Padding(
-                  padding: EdgeInsets.only(top: mediaQuery.padding.top + 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.background,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    constraints: BoxConstraints(
-                      maxWidth: mediaQuery.size.width -
-                          112 -
-                          mediaQuery.padding.right -
-                          mediaQuery.padding.left,
-                    ),
-                    child: Text(
-                      pill?.text ?? "",
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(height: 1.3),
+                  padding: EdgeInsets.only(top: mediaQuery.padding.top + 8, bottom: 16),
+                  child: Material(
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    color: theme.colorScheme.background,
+                    elevation: 6, // just like FABs
+                    child: InkWell(
+                      onTap: () {
+                        if (pill != null) {
+                          pillAnimationController.reverse();
+                          Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        constraints: BoxConstraints(
+                          maxWidth: mediaQuery.size.width -
+                              112 -
+                              mediaQuery.padding.right -
+                              mediaQuery.padding.left,
+                        ),
+                        child: Text(
+                          pill?.text ?? "",
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(height: 1.3),
+                        ),
+                      ),
                     ),
                   ),
                 ),
