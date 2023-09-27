@@ -10,15 +10,14 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
-import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_controls_widget.dart';
 import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
+import 'package:insigno_frontend/page/map/pill_widget.dart';
 import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
-import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
@@ -52,10 +51,6 @@ class _MapPageState extends State<MapPage>
   List<MapMarker> markers = [];
   PictureInfo? pictureInfo;
 
-  Pill? pill;
-  late AnimationController pillAnimationController;
-  late Animation<double> pillAnimation;
-
   String lastErrorMessage = "";
   late final AnimationController errorMessageAnim;
   bool isVersionCompatible = true;
@@ -66,12 +61,6 @@ class _MapPageState extends State<MapPage>
     WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
 
     errorMessageAnim = AnimationController(vsync: this, duration: fabAnimDuration);
-    pillAnimationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    pillAnimation = CurvedAnimation(
-      parent: pillAnimationController,
-      curve: Curves.linear,
-    );
 
     mapController.mapEventStream
         .where((event) =>
@@ -91,20 +80,9 @@ class _MapPageState extends State<MapPage>
       loadMarkers(initialCoordinates);
     }
 
-    final backend = get<Backend>();
-
     // check whether this version of insigno is compatible with the backend, ignoring any errors
-    backend.isCompatible().then((value) => setState(() => isVersionCompatible = value),
+    get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
         onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
-
-    backend.loadRandomPill().then((value) {
-      setState(() {
-        pill = value;
-        pillAnimationController.forward();
-      });
-    }, onError: (_) {
-      // ignore errors when loading pills
-    });
   }
 
   void loadMarkers(final LatLng latLng) async {
@@ -156,7 +134,6 @@ class _MapPageState extends State<MapPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
 
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
@@ -267,46 +244,9 @@ class _MapPageState extends State<MapPage>
               ),
             ),
           ),
-          SizeTransition(
-            sizeFactor: pillAnimation,
-            child: Wrap(
-              children: [
-                Align(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: mediaQuery.padding.top + 8, bottom: 16),
-                    child: Material(
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      color: theme.colorScheme.background,
-                      elevation: 6, // just like FABs
-                      child: InkWell(
-                        onTap: () {
-                          if (pill != null) {
-                            pillAnimationController.reverse();
-                            Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          constraints: BoxConstraints(
-                            maxWidth: mediaQuery.size.width -
-                                112 -
-                                mediaQuery.padding.right -
-                                mediaQuery.padding.left,
-                          ),
-                          child: Text(
-                            pill?.text ?? "",
-                            maxLines: 3,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(height: 1.3),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: PillWidget(),
           ),
         ],
         children: [
