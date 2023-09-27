@@ -2,14 +2,13 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/page/map/bottom_controls_widget.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_controls_widget.dart';
@@ -18,10 +17,7 @@ import 'package:insigno_frontend/page/map/pill_widget.dart';
 import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
-import 'package:insigno_frontend/page/user/login_flow_page.dart';
-import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
-import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,10 +31,9 @@ class MapPage extends StatefulWidget with GetItStatefulWidgetMixin {
 const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
 const double defaultInitialZoom = 16.0;
 const double markersZoomThreshold = 14.0;
-const Duration fabAnimDuration = Duration(milliseconds: 200);
 
 class _MapPageState extends State<MapPage>
-    with GetItStateMixin<MapPage>, WidgetsBindingObserver, TickerProviderStateMixin {
+    with GetItStateMixin<MapPage>, WidgetsBindingObserver {
   late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
@@ -51,16 +46,10 @@ class _MapPageState extends State<MapPage>
   List<MapMarker> markers = [];
   PictureInfo? pictureInfo;
 
-  String lastErrorMessage = "";
-  late final AnimationController errorMessageAnim;
-  bool isVersionCompatible = true;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
-
-    errorMessageAnim = AnimationController(vsync: this, duration: fabAnimDuration);
 
     mapController.mapEventStream
         .where((event) =>
@@ -79,10 +68,6 @@ class _MapPageState extends State<MapPage>
     if (initialZoom >= markersZoomThreshold) {
       loadMarkers(initialCoordinates);
     }
-
-    // check whether this version of insigno is compatible with the backend, ignoring any errors
-    get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
-        onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
   }
 
   void loadMarkers(final LatLng latLng) async {
@@ -132,26 +117,9 @@ class _MapPageState extends State<MapPage>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
-
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
             get<LocationProvider>().lastLocationInfo())
         .data;
-    final isLoggedIn = watchStream(
-            (Authentication authentication) => authentication.getIsLoggedInStream(),
-            get<Authentication>().isLoggedIn())
-        .data;
-
-    final String? errorMessage =
-        isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
-    if (errorMessage == null) {
-      errorMessageAnim.reverse();
-    } else {
-      lastErrorMessage = errorMessage;
-      errorMessageAnim.forward();
-    }
 
     // Uncomment to test the rendering performance with lots of markers
     /*markers = <MapMarker>[];
@@ -212,38 +180,8 @@ class _MapPageState extends State<MapPage>
             child: SettingsControlsWidget(openMarkerFiltersDialog),
           ),
           Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 16 + mediaQuery.padding.right, bottom: 16 + mediaQuery.padding.bottom,),
-              child: FloatingActionButton(
-                heroTag: "addMarker",
-                onPressed: errorMessage == null ? openReportPage : null,
-                tooltip: l10n.report,
-                backgroundColor: errorMessage == null
-                    ? null
-                    : theme.colorScheme.primaryContainer.withOpacity(0.38),
-                foregroundColor: errorMessage == null
-                    ? null
-                    : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
-                disabledElevation: 0,
-                child: const Icon(Icons.add),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 16 + mediaQuery.padding.left, bottom: 16 + mediaQuery.padding.bottom,),
-              child: FloatingActionButton(
-                heroTag: "user",
-                onPressed: isLoggedIn == null
-                    ? null
-                    : () => Navigator.pushNamed(context,
-                        isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
-                tooltip: isLoggedIn == true ? l10n.user : l10n.login,
-                child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
-              ),
-            ),
+            alignment: Alignment.bottomCenter,
+            child: BottomControlsWidget(openReportPage),
           ),
           Align(
             alignment: Alignment.topCenter,
