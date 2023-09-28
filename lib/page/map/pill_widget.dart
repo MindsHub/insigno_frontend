@@ -43,7 +43,7 @@ class _PillWidgetState extends State<PillWidget>
         padding: EdgeInsets.only(top: mediaQuery.padding.top + 8),
         child: Material(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.secondaryContainer,
           elevation: 6, // just like FABs
           child: InkWell(
             onTap: () {
@@ -65,7 +65,10 @@ class _PillWidgetState extends State<PillWidget>
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(height: 1.3),
+                style: TextStyle(
+                    height: 1.3,
+                    color: theme.colorScheme.onSecondaryContainer,
+                ),
               ),
             ),
           ),

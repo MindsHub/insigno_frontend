@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
@@ -23,42 +22,57 @@ class InsignoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        title: "Insigno",
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: lightDynamic ??
-              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light),
+    final lightYellowTheme = ColorScheme.fromSeed(
+      seedColor: Colors.yellow,
+      brightness: Brightness.light,
+    );
+    final darkYellowTheme = ColorScheme.fromSeed(
+      seedColor: Colors.yellow,
+      brightness: Brightness.dark,
+    );
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
+      title: "Insigno",
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
+          tertiaryContainer: lightYellowTheme.primaryContainer,
+          onTertiaryContainer: lightYellowTheme.onPrimaryContainer,
         ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          colorScheme: darkDynamic ??
-              ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.dark,
+          tertiaryContainer: darkYellowTheme.primaryContainer,
+          onTertiaryContainer: darkYellowTheme.onPrimaryContainer,
         ),
-        home: MapPage(),
-        onGenerateRoute: (RouteSettings settings) {
-          var routes = <String, WidgetBuilder>{
-            ReportPage.routeName: (ctx) => ReportPage(),
-            MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
-            ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
-            PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
-            UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
-            ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
-            ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
-            ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
-            SettingsPage.routeName: (ctx) => const SettingsPage(),
-            LoginFlowPage.routeName: (ctx) => const LoginFlowPage(),
-            ProfilePage.routeName: (ctx) => ProfilePage(),
-          };
-          WidgetBuilder builder = routes[settings.name]!;
-          return MaterialPageRoute(builder: (ctx) => builder(ctx));
-        },
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      );
-    });
+      ),
+      home: MapPage(),
+      onGenerateRoute: (RouteSettings settings) {
+        var routes = <String, WidgetBuilder>{
+          ReportPage.routeName: (ctx) => ReportPage(),
+          MarkerPage.routeName: (ctx) => MarkerPage(settings.arguments as MarkerPageArgs),
+          ResolvePage.routeName: (ctx) => ResolvePage(settings.arguments as MapMarker),
+          PillPage.routeName: (ctx) => PillPage(settings.arguments as Pill),
+          UserPage.routeName: (ctx) => UserPage(settings.arguments as int),
+          ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
+          ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
+          ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
+          SettingsPage.routeName: (ctx) => const SettingsPage(),
+          LoginFlowPage.routeName: (ctx) => const LoginFlowPage(),
+          ProfilePage.routeName: (ctx) => ProfilePage(),
+        };
+        WidgetBuilder builder = routes[settings.name]!;
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
+      },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+    );
   }
 }
