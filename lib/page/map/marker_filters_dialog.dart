@@ -44,11 +44,16 @@ class _MarkerFiltersDialogState extends State<MarkerFiltersDialog> {
               children: MarkerType.values
                   .map<Widget>((markerType) => CheckboxListTile(
                         title: Row(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             markerType.getThemedIcon(context),
                             const SizedBox(width: 8),
-                            Text(markerType.getName(context)),
+                            Expanded(
+                              child: Text(
+                                markerType.getName(context),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                         value: shownMarkers.contains(markerType),
