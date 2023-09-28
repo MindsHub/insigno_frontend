@@ -72,7 +72,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
               child: AnimatedList(
                 key: _listKey,
                 shrinkWrap: true,
-                initialItemCount: (errorMessage == null ? 0 : 1) + 0,
+                initialItemCount: (errorMessage == null ? 0 : 1) + 1,
                 itemBuilder: _buildMessage,
               ),
             ),
@@ -108,7 +108,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     if (errorMessage != prevErrorMessage) {
       if (prevErrorMessage != null) {
         _listKey.currentState!.removeItem(
-            0, (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage!));
+            0, (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage));
       }
       if (errorMessage != null) {
         _listKey.currentState!.insertItem(0);
@@ -120,7 +120,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     if (errorMessage != null && index == 0) {
       return _buildErrorMessage(context, animation, errorMessage!);
     } else {
-      return const Placeholder();
+      return _buildReviewMessage(context, animation);
     }
   }
 
@@ -145,6 +145,37 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
             style: TextStyle(
               height: 1.3,
               color: theme.colorScheme.onErrorContainer,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReviewMessage(BuildContext context, Animation<double> animation) {
+    final theme = Theme.of(context);
+
+    return SizeTransition(
+      sizeFactor: animation,
+      child: Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.tertiaryContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              "Review in 14 minutes!",
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                height: 1.3,
+                color: theme.colorScheme.onTertiaryContainer,
+              ),
             ),
           ),
         ),
