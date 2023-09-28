@@ -7,6 +7,8 @@ class AnimatedMessageBox extends AnimatedWidget {
   final Color containerColor;
   final Color onContainerColor;
   final VoidCallback? onTap;
+  final int maxLines;
+  final double paddingTop;
 
   const AnimatedMessageBox(
       {super.key,
@@ -14,7 +16,9 @@ class AnimatedMessageBox extends AnimatedWidget {
       required this.message,
       required this.containerColor,
       required this.onContainerColor,
-      this.onTap})
+      this.onTap,
+      this.maxLines = 2,
+      this.paddingTop = 4})
       : super(listenable: animation);
 
   Animation<double> get animation => listenable as Animation<double>;
@@ -24,9 +28,9 @@ class AnimatedMessageBox extends AnimatedWidget {
     return FadeTransition(
       opacity: animation,
       child: Align(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: EdgeInsets.only(top: paddingTop),
           child: Material(
             color: containerColor,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -44,7 +48,7 @@ class AnimatedMessageBox extends AnimatedWidget {
                     padding: const EdgeInsets.all(8),
                     child: Text(
                       message,
-                      maxLines: 2,
+                      maxLines: maxLines,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/pill_page.dart';
 
 class PillWidget extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -37,42 +38,25 @@ class _PillWidgetState extends State<PillWidget>
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
 
-    return FadeTransition(
-      opacity: pillAnim,
-      child: Padding(
-        padding: EdgeInsets.only(top: mediaQuery.padding.top + 8),
-        child: Material(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          color: theme.colorScheme.secondaryContainer,
-          elevation: 6, // just like FABs
-          child: InkWell(
-            onTap: () {
-              if (pill != null) {
-                pillAnim.reverse();
-                Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              constraints: BoxConstraints(
-                maxWidth: mediaQuery.size.width -
-                    112 -
-                    mediaQuery.padding.right -
-                    mediaQuery.padding.left,
-              ),
-              child: Text(
-                pill?.text ?? "",
-                maxLines: 3,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    height: 1.3,
-                    color: theme.colorScheme.onSecondaryContainer,
-                ),
-              ),
-            ),
-          ),
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 8 + mediaQuery.padding.top,
+        right: 56 + mediaQuery.padding.right,
+        left: 56 + mediaQuery.padding.left,
+      ),
+      child: AnimatedMessageBox(
+        animation: pillAnim,
+        message: pill?.text ?? "",
+        containerColor: theme.colorScheme.secondaryContainer,
+        onContainerColor: theme.colorScheme.onSecondaryContainer,
+        maxLines: 3,
+        paddingTop: 0,
+        onTap: () {
+          if (pill != null) {
+            pillAnim.reverse();
+            Navigator.pushNamed(context, PillPage.routeName, arguments: pill!);
+          }
+        },
       ),
     );
   }
