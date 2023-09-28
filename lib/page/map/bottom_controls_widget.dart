@@ -129,20 +129,23 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
 
     return SizeTransition(
       sizeFactor: animation,
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.errorContainer,
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Text(
-          message,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            height: 1.3,
-            color: theme.colorScheme.onErrorContainer,
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer,
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            message,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              height: 1.3,
+              color: theme.colorScheme.onErrorContainer,
+            ),
           ),
         ),
       ),
