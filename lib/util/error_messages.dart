@@ -2,7 +2,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/page/map/location_info.dart';
 
 String? getErrorMessage(AppLocalizations l10n, bool? isLoggedIn, LocationInfo? position,
-    {String? Function()? whilePositionLoading, String? Function()? afterPositionLoaded}) {
+    {String? Function()? whilePositionLoading,
+    bool includeErrorForPositionLoading = true,
+    String? Function()? afterPositionLoaded}) {
   if (!(isLoggedIn ?? false)) {
     return l10n.loginRequired;
   } else if (position?.permissionGranted == false) {
@@ -18,7 +20,7 @@ String? getErrorMessage(AppLocalizations l10n, bool? isLoggedIn, LocationInfo? p
     }
   }
 
-  if (position?.position == null) {
+  if (includeErrorForPositionLoading && position?.position == null) {
     return l10n.locationIsLoading;
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -22,6 +24,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   String? errorMessage;
   bool isVersionCompatible = true;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  late final Timer appOpenedTimer;
 
   @override
   void initState() {
@@ -32,6 +35,12 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       isVersionCompatible = value;
       _updateError();
     }, onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
+
+    // show errors about the location being loaded only after 2 seconds since the app is started
+    // to avoid useless appearing and disappearing popups
+    appOpenedTimer = Timer(const Duration(seconds: 2), () {
+      _updateError();
+    });
 
     get<LocationProvider>().getLocationStream().forEach((_) => _updateError());
     get<Authentication>().getIsLoggedInStream().forEach((_) => _updateError());
@@ -100,7 +109,11 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     final prevErrorMessage = errorMessage;
     if (isVersionCompatible) {
       errorMessage = getErrorMessage(
-          l10n, get<Authentication>().isLoggedIn(), get<LocationProvider>().lastLocationInfo());
+        l10n,
+        get<Authentication>().isLoggedIn(),
+        get<LocationProvider>().lastLocationInfo(),
+        includeErrorForPositionLoading: !appOpenedTimer.isActive,
+      );
     } else {
       errorMessage = l10n.oldVersion;
     }
