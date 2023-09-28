@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
@@ -140,64 +141,21 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
 
   Widget _buildErrorMessage(BuildContext context, Animation<double> animation, String message) {
     final theme = Theme.of(context);
-
-    return FadeTransition(
-      opacity: animation,
-      child: Material(
-        color: theme.colorScheme.errorContainer,
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        elevation: 6,
-        child: SizeTransition(
-          sizeFactor: animation,
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                message,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1.3,
-                  color: theme.colorScheme.onErrorContainer,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return AnimatedMessageBox(
+      animation: animation,
+      message: message,
+      containerColor: theme.colorScheme.errorContainer,
+      onContainerColor: theme.colorScheme.onErrorContainer,
     );
   }
 
   Widget _buildReviewMessage(BuildContext context, Animation<double> animation) {
     final theme = Theme.of(context);
-
-    return SizeTransition(
-      sizeFactor: animation,
-      child: Align(
-        alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.tertiaryContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-            ),
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              "Review in 14 minutes!",
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                height: 1.3,
-                color: theme.colorScheme.onTertiaryContainer,
-              ),
-            ),
-          ),
-        ),
-      ),
+    return AnimatedMessageBox(
+      animation: animation,
+      message: "Review in 14 minutes!",
+      containerColor: theme.colorScheme.tertiaryContainer,
+      onContainerColor: theme.colorScheme.onTertiaryContainer,
     );
   }
 }
