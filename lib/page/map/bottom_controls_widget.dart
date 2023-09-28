@@ -19,21 +19,22 @@ class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin 
 
 class _BottomControlsWidgetState extends State<BottomControlsWidget>
     with GetItStateMixin<BottomControlsWidget>, TickerProviderStateMixin<BottomControlsWidget> {
-  static const Duration errorMessageAnimDuration = Duration(milliseconds: 200);
-
-  String lastErrorMessage = "";
-  late final AnimationController errorMessageAnim;
+  String? errorMessage;
   bool isVersionCompatible = true;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
 
-    errorMessageAnim = AnimationController(vsync: this, duration: errorMessageAnimDuration);
-
     // check whether this version of insigno is compatible with the backend, ignoring any errors
-    get<Backend>().isCompatible().then((value) => setState(() => isVersionCompatible = value),
-        onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
+    get<Backend>().isCompatible().then((value) {
+      isVersionCompatible = value;
+      _updateError();
+    }, onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
+
+    get<LocationProvider>().getLocationStream().forEach((_) => _updateError());
+    get<Authentication>().getIsLoggedInStream().forEach((_) => _updateError());
   }
 
   @override
@@ -42,22 +43,10 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
 
-    final position = watchStream((LocationProvider location) => location.getLocationStream(),
-            get<LocationProvider>().lastLocationInfo())
-        .data;
     final isLoggedIn = watchStream(
             (Authentication authentication) => authentication.getIsLoggedInStream(),
             get<Authentication>().isLoggedIn())
         .data;
-
-    final String? errorMessage =
-        isVersionCompatible ? getErrorMessage(l10n, isLoggedIn, position) : l10n.oldVersion;
-    if (errorMessage == null) {
-      errorMessageAnim.reverse();
-    } else {
-      lastErrorMessage = errorMessage;
-      errorMessageAnim.forward();
-    }
 
     return Padding(
       padding: EdgeInsets.only(
@@ -80,28 +69,11 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (errorMessage != null)
-                    Container(
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.errorContainer,
-                        borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        errorMessage,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          height: 1.3,
-                          color: theme.colorScheme.onErrorContainer,
-                        ),
-                      ),
-                    ),
-                ],
+              child: AnimatedList(
+                key: _listKey,
+                shrinkWrap: true,
+                initialItemCount: (errorMessage == null ? 0 : 1) + 0,
+                itemBuilder: _buildMessage,
               ),
             ),
           ),
@@ -118,6 +90,61 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
             child: const Icon(Icons.add),
           ),
         ],
+      ),
+    );
+  }
+
+  void _updateError() {
+    final l10n = AppLocalizations.of(context)!;
+
+    final prevErrorMessage = errorMessage;
+    if (isVersionCompatible) {
+      errorMessage = getErrorMessage(
+          l10n, get<Authentication>().isLoggedIn(), get<LocationProvider>().lastLocationInfo());
+    } else {
+      errorMessage = l10n.oldVersion;
+    }
+
+    if (errorMessage != prevErrorMessage) {
+      if (prevErrorMessage != null) {
+        _listKey.currentState!.removeItem(
+            0, (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage!));
+      }
+      if (errorMessage != null) {
+        _listKey.currentState!.insertItem(0);
+      }
+    }
+  }
+
+  Widget _buildMessage(BuildContext context, int index, Animation<double> animation) {
+    if (errorMessage != null && index == 0) {
+      return _buildErrorMessage(context, animation, errorMessage!);
+    } else {
+      return const Placeholder();
+    }
+  }
+
+  Widget _buildErrorMessage(BuildContext context, Animation<double> animation, String message) {
+    final theme = Theme.of(context);
+
+    return SizeTransition(
+      sizeFactor: animation,
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.errorContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          message,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            height: 1.3,
+            color: theme.colorScheme.onErrorContainer,
+          ),
+        ),
       ),
     );
   }
