@@ -44,17 +44,6 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
       padding: EdgeInsets.only(top: mediaQuery.padding.top),
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: 8, top: 8, right: 8 + mediaQuery.padding.right),
-            child: FloatingActionButton(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              heroTag: "north",
-              onPressed: () => widget.mapController.rotate(0),
-              tooltip: l10n.alignNorth,
-              mini: true,
-              child: const Icon(Icons.explore),
-            ),
-          ),
           AnimatedBuilder(
             animation: repositionAnim,
             builder: (_, child) => ClipRect(
