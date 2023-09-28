@@ -79,6 +79,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: AnimatedList(
+                physics: const NeverScrollableScrollPhysics(),
                 key: _listKey,
                 shrinkWrap: true,
                 initialItemCount: (errorMessage == null ? 0 : 1) + 1,
@@ -119,12 +120,12 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
 
     if (errorMessage != prevErrorMessage) {
-      if (prevErrorMessage != null) {
-        _listKey.currentState!.removeItem(
-            0, (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage));
-      }
       if (errorMessage != null) {
         _listKey.currentState!.insertItem(0);
+      }
+      if (prevErrorMessage != null) {
+        _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
+            (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage));
       }
     }
   }
@@ -140,24 +141,28 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   Widget _buildErrorMessage(BuildContext context, Animation<double> animation, String message) {
     final theme = Theme.of(context);
 
-    return SizeTransition(
-      sizeFactor: animation,
-      child: Align(
-        alignment: Alignment.center,
-        child: Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.errorContainer,
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            message,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              height: 1.3,
-              color: theme.colorScheme.onErrorContainer,
+    return FadeTransition(
+      opacity: animation,
+      child: Material(
+        color: theme.colorScheme.errorContainer,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        elevation: 6,
+        child: SizeTransition(
+          sizeFactor: animation,
+          child: Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                message,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  height: 1.3,
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ),
             ),
           ),
         ),
