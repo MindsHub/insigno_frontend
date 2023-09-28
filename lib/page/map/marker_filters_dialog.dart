@@ -36,54 +36,50 @@ class _MarkerFiltersDialogState extends State<MarkerFiltersDialog> {
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
+          shrinkWrap: true,
           children: [
-            ListView(
-              shrinkWrap: true,
-              children: MarkerType.values
-                  .map<Widget>((markerType) => CheckboxListTile(
-                        title: Row(
-                          children: [
-                            markerType.getThemedIcon(context),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                markerType.getName(context),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        value: shownMarkers.contains(markerType),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              if (value) {
-                                shownMarkers.add(markerType);
-                              } else {
-                                shownMarkers.remove(markerType);
-                              }
-                            });
-                          }
-                        },
-                      ))
-                  .followedBy([
-                const Divider(
-                  height: 4,
-                  thickness: 1,
-                ),
-                CheckboxListTile(
-                  title: Text(l10n.includeResolved),
-                  value: includeResolved,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() => includeResolved = value);
-                    }
-                  },
-                ),
-              ]).toList(growable: false),
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: MarkerType.values.map<Widget>((markerType) {
+                  return FilterChip(
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: EdgeInsets.zero,
+                    labelPadding: const EdgeInsets.only(right: 8),
+                    label: Text(markerType.getName(context)),
+                    avatar: markerType.getThemedIcon(context),
+                    selected: shownMarkers.contains(markerType),
+                    onSelected: (value) {
+                      setState(() {
+                        if (value) {
+                          shownMarkers.add(markerType);
+                        } else {
+                          shownMarkers.remove(markerType);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            const Divider(
+              height: 4,
+              thickness: 1,
+            ),
+            CheckboxListTile(
+              title: Text(l10n.includeResolved),
+              value: includeResolved,
+              visualDensity: VisualDensity.compact,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => includeResolved = value);
+                }
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 8, right: 8),
