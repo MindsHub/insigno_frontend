@@ -156,6 +156,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       message: "Review in 14 minutes!",
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
+      onTap: () => {},
     );
   }
 }
