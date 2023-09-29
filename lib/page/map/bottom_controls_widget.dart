@@ -10,6 +10,7 @@ import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
+import 'package:insigno_frontend/util/time.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final VoidCallback onAddWidgetPressed;
@@ -173,7 +174,8 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
   }
 
-  Widget _buildErrorMessage(BuildContext context, Animation<double> animation, ErrorMessage message) {
+  Widget _buildErrorMessage(
+      BuildContext context, Animation<double> animation, ErrorMessage message) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -186,14 +188,18 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   }
 
   Widget _buildVerifyMessage(BuildContext context, Animation<double> animation, DateTime time) {
-    final inThePast = time.isBefore(DateTime.now());
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final inThePast = time.isBefore(DateTime.now());
+
     return AnimatedMessageBox(
       animation: animation,
-      message: inThePast ? "Verify images!" : "Wait ${time.difference(DateTime.now())}",
+      message: inThePast
+          ? l10n.verifyImages
+          : l10n.verifyImagesIn(formatDuration(time.difference(DateTime.now()))),
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: inThePast ? () => { } : null,
+      onTap: inThePast ? () => {} : null,
     );
   }
 }

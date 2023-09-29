@@ -216,5 +216,14 @@
         "type": "String"
       }
     }
+  },
+  "verifyImages": "Review images",
+  "verifyImagesIn": "Come back to review in {time}!",
+  "@verifyImagesIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }
