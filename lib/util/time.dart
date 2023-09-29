@@ -4,8 +4,8 @@ String formatDuration(Duration duration) {
     duration = -duration;
   }
 
-  final hours = (duration.inHours == 0) ? "" : "${duration.inHours.toString().padLeft(0, '2')}:";
-  final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+  final hours = (duration.inHours == 0) ? "" : "${duration.inHours.toString()}:";
+  final minutes = duration.inMinutes.remainder(60).toString();
   final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-  return "${negative ? "-" : ""}$hours$minutes:$seconds";
+  return "${negative ? "-" : ""}$hours${duration.inHours == 0 ? minutes : minutes.padLeft(2, '0')}:$seconds";
 }
