@@ -77,7 +77,7 @@ class Backend {
     final response = await _client.send(request);
     if (response.statusCode == 401) {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
-      _auth.removeStoredCookie();
+      //_auth.removeStoredCookie();
     }
     response.throwErrors();
     return response;
@@ -166,5 +166,10 @@ class Backend {
 
   Future<void> review(int imageId, ReviewVerdict verdict) {
     return _postAuthenticated("/map/image/review/$imageId", fields: {"verdict": verdict.verdict});
+  }
+
+  Future<DateTime> getNextVerifyTime() async {
+    final utcDateTime = await _getJsonAuthenticated("/verify/get_next_verify_time");
+    return DateTime.parse(utcDateTime);
   }
 }

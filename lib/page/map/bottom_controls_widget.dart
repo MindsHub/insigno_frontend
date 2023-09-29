@@ -24,8 +24,10 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     with GetItStateMixin<BottomControlsWidget>, TickerProviderStateMixin<BottomControlsWidget> {
   String? errorMessage;
   bool isVersionCompatible = true;
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  DateTime? nextVerifyTime;
+
   late final Timer appOpenedTimer;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
   void initState() {
@@ -34,21 +36,27 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     // check whether this version of insigno is compatible with the backend, ignoring any errors
     get<Backend>().isCompatible().then((value) {
       isVersionCompatible = value;
-      _updateError();
+      _updateErrorMessage();
     }, onError: (e) => debugPrint("Could not check whether this version is compatible: $e"));
 
     // show errors about the location being loaded only after 2 seconds since the app is started
     // to avoid useless appearing and disappearing popups
     appOpenedTimer = Timer(const Duration(seconds: 2), () {
-      _updateError();
+      _updateErrorMessage();
     });
 
-    get<LocationProvider>().getLocationStream().forEach((_) => _updateError());
-    get<Authentication>().getIsLoggedInStream().forEach((_) => _updateError());
+    get<LocationProvider>().getLocationStream().forEach((_) => _updateErrorMessage());
+    get<Authentication>().getIsLoggedInStream().forEach((isLoggedIn) {
+      _updateErrorMessage();
+      _updateVerifyMessage(isLoggedIn);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _updateErrorMessage();
+    _updateVerifyMessage(get<Authentication>().isLoggedIn());
+
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
@@ -83,7 +91,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
                 physics: const NeverScrollableScrollPhysics(),
                 key: _listKey,
                 shrinkWrap: true,
-                initialItemCount: (errorMessage == null ? 0 : 1) + 1,
+                initialItemCount: (errorMessage == null ? 0 : 1) + (nextVerifyTime == null ? 0 : 1),
                 itemBuilder: _buildMessage,
               ),
             ),
@@ -105,8 +113,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     );
   }
 
-  void _updateError() {
-    final l10n = AppLocalizations.of(context)!;
+  void _updateErrorMessage() {
+    final AppLocalizations l10n;
+    try {
+      l10n = AppLocalizations.of(context)!;
+    } catch (e) {
+      return; // build() not called yet, so it is not possible to access localizations
+    }
 
     final prevErrorMessage = errorMessage;
     if (isVersionCompatible) {
@@ -120,7 +133,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       errorMessage = l10n.oldVersion;
     }
 
-    if (errorMessage != prevErrorMessage) {
+    if (_listKey.currentState != null && errorMessage != prevErrorMessage) {
       if (errorMessage != null) {
         _listKey.currentState!.insertItem(0);
       }
@@ -131,11 +144,36 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
   }
 
+  void _updateVerifyMessage(bool isLoggedIn) {
+    if (isLoggedIn) {
+      if (nextVerifyTime == null) {
+        get<Backend>().getNextVerifyTime().then((value) {
+          if (get<Authentication>().isLoggedIn() && nextVerifyTime == null) {
+            nextVerifyTime = value;
+            if (_listKey.currentState != null) {
+              _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
+            }
+          }
+        }, onError: (e) {});
+      }
+    } else {
+      var prevNextVerifyTime = nextVerifyTime;
+      nextVerifyTime = null;
+      if (prevNextVerifyTime != null && _listKey.currentState != null) {
+        _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
+            (context, animation) => _buildVerifyMessage(context, animation, prevNextVerifyTime));
+      }
+    }
+  }
+
   Widget _buildMessage(BuildContext context, int index, Animation<double> animation) {
     if (errorMessage != null && index == 0) {
       return _buildErrorMessage(context, animation, errorMessage!);
+    } else if (nextVerifyTime != null) {
+      return _buildVerifyMessage(context, animation, nextVerifyTime!);
     } else {
-      return _buildReviewMessage(context, animation);
+      // should be unreachable
+      return const SizedBox.shrink();
     }
   }
 
@@ -149,14 +187,15 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     );
   }
 
-  Widget _buildReviewMessage(BuildContext context, Animation<double> animation) {
+  Widget _buildVerifyMessage(BuildContext context, Animation<double> animation, DateTime time) {
+    final inThePast = time.isBefore(DateTime.now());
     final theme = Theme.of(context);
     return AnimatedMessageBox(
       animation: animation,
-      message: "Review in 14 minutes!",
+      message: inThePast ? "Verify images!" : "Wait ${time.difference(DateTime.now())}",
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: () => {},
+      onTap: inThePast ? () => { } : null,
     );
   }
 }
