@@ -52,13 +52,12 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
         .data;
 
     final errorMessage = getErrorMessage(
-      l10n,
       isLoggedIn,
       position,
-      whilePositionLoading: () => images.isEmpty ? l10n.addImage : null,
+      whilePositionLoading: () => images.isEmpty ? ErrorMessage.addImage : null,
       afterPositionLoaded: () => (position?.position?.map(marker.isNearEnoughToResolve) ?? false)
           ? null
-          : l10n.tooFarToResolve,
+          : ErrorMessage.tooFarToResolve,
     );
 
     return Scaffold(
@@ -80,7 +79,7 @@ class _ResolvePageState extends State<ResolvePage> with GetItStateMixin<ResolveP
                 height: 12,
                 width: double.infinity, // to make the column have maximum width
               ),
-              if (errorMessage != null) Text(errorMessage),
+              if (errorMessage != null) Text(errorMessage.toLocalizedString(l10n)),
               if (loading)
                 const CircularProgressIndicator()
               else

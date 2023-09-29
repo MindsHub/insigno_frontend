@@ -48,14 +48,13 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
         .data;
 
     final errorMessage = getErrorMessage(
-      l10n,
       isLoggedIn,
       position,
       whilePositionLoading: () {
         if (images.isEmpty) {
-          return l10n.addImage;
+          return ErrorMessage.addImage;
         } else if (markerType == null) {
-          return l10n.selectMarkerType;
+          return ErrorMessage.selectMarkerType;
         } else {
           return null;
         }
@@ -99,7 +98,7 @@ class _ReportPageState extends State<ReportPage> with GetItStateMixin<ReportPage
                 value: markerType,
               ),
               const SizedBox(height: 12),
-              if (errorMessage != null) Text(errorMessage),
+              if (errorMessage != null) Text(errorMessage.toLocalizedString(l10n)),
               if (loading)
                 const CircularProgressIndicator()
               else

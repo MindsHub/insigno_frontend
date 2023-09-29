@@ -22,7 +22,7 @@ class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin 
 
 class _BottomControlsWidgetState extends State<BottomControlsWidget>
     with GetItStateMixin<BottomControlsWidget>, TickerProviderStateMixin<BottomControlsWidget> {
-  String? errorMessage;
+  ErrorMessage? errorMessage;
   bool isVersionCompatible = true;
   DateTime? nextVerifyTime;
 
@@ -41,7 +41,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
 
     // show errors about the location being loaded only after 2 seconds since the app is started
     // to avoid useless appearing and disappearing popups
-    appOpenedTimer = Timer(const Duration(seconds: 2), () {
+    appOpenedTimer = Timer(const Duration(seconds: 0), () {
       _updateErrorMessage();
     });
 
@@ -50,13 +50,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       _updateErrorMessage();
       _updateVerifyMessage(isLoggedIn);
     });
+
+    _updateErrorMessage();
+    _updateVerifyMessage(get<Authentication>().isLoggedIn());
   }
 
   @override
   Widget build(BuildContext context) {
-    _updateErrorMessage();
-    _updateVerifyMessage(get<Authentication>().isLoggedIn());
-
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
@@ -114,23 +114,19 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   }
 
   void _updateErrorMessage() {
-    final AppLocalizations l10n;
-    try {
-      l10n = AppLocalizations.of(context)!;
-    } catch (e) {
-      return; // build() not called yet, so it is not possible to access localizations
-    }
-
     final prevErrorMessage = errorMessage;
     if (isVersionCompatible) {
       errorMessage = getErrorMessage(
-        l10n,
         get<Authentication>().isLoggedIn(),
         get<LocationProvider>().lastLocationInfo(),
-        includeErrorForPositionLoading: !appOpenedTimer.isActive,
       );
+
+      if (appOpenedTimer.isActive && errorMessage == ErrorMessage.locationIsLoading) {
+        // do not show "Location is loading" for the first two seconds, since it might load faster
+        errorMessage = null;
+      }
     } else {
-      errorMessage = l10n.oldVersion;
+      errorMessage = ErrorMessage.oldVersion;
     }
 
     if (_listKey.currentState != null && errorMessage != prevErrorMessage) {
@@ -177,11 +173,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
   }
 
-  Widget _buildErrorMessage(BuildContext context, Animation<double> animation, String message) {
+  Widget _buildErrorMessage(BuildContext context, Animation<double> animation, ErrorMessage message) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+
     return AnimatedMessageBox(
       animation: animation,
-      message: message,
+      message: message.toLocalizedString(l10n),
       containerColor: theme.colorScheme.errorContainer,
       onContainerColor: theme.colorScheme.onErrorContainer,
     );
