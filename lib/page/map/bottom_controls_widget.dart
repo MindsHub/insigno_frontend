@@ -144,14 +144,14 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   void _updateVerifyMessage(bool isLoggedIn) {
     if (isLoggedIn) {
       if (nextVerifyTime == null) {
-        get<Backend>().getNextVerifyTime().then((value) {
+        /*get<Backend>().getNextVerifyTime().then((value) {
           if (get<Authentication>().isLoggedIn() && nextVerifyTime == null) {
             nextVerifyTime = value;
             if (_listKey.currentState != null) {
               _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
             }
           }
-        }, onError: (e) {});
+        }, onError: (e) {});*/
       }
     } else {
       var prevNextVerifyTime = nextVerifyTime;
