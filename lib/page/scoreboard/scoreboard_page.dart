@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
@@ -68,6 +69,22 @@ class _ScoreboardPageState extends State<ScoreboardPage>
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     child: Row(
                       children: [
+                        if (index == 0)
+                          const Icon(Icons.looks_one, color: Color(0xffffd700))
+                        else if (index == 1)
+                          const Icon(Icons.looks_two, color: Color(0xffb0b0b0))
+                        else if (index == 2)
+                          const Icon(Icons.looks_3, color: Color(0xffcd7f32))
+                        else
+                          Container(
+                            constraints: const BoxConstraints(minWidth: 24),
+                            alignment: Alignment.center,
+                            child: Text(
+                              (index + 1).toString(),
+                              textScaleFactor: 1.2,
+                            ),
+                          ),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             user.name,
