@@ -225,5 +225,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "scoreboard": "Scoreboard",
+  "global": "Global",
+  "km1": "1km",
+  "km10": "10km",
+  "km100": "100km"
 }

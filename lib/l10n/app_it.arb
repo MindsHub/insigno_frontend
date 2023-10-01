@@ -105,5 +105,10 @@
   "areYouUnderage": "Sei minorenne?",
   "adultDialogText": "Premendo \"{iAmAdult}\" dichiari di essere maggiorenne. Tranquillo, se sei minorenne potrai comunque usare Insigno, ma non ti verrà offerto di revisionare immagini altrui.",
   "verifyImages": "Verifica immagini",
-  "verifyImagesIn": "Torna per verificare fra {time}!"
+  "verifyImagesIn": "Torna per verificare fra {time}!",
+  "scoreboard": "Classifica",
+  "global": "Globale",
+  "km1": "1km",
+  "km10": "10km",
+  "km100": "100km"
 }
