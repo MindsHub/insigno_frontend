@@ -172,4 +172,19 @@ class Backend {
     final utcDateTime = await _getJsonAuthenticated("/verify/get_next_verify_time");
     return DateTime.parse(utcDateTime);
   }
+
+  Future<List<User>> getGlobalScoreboard() async {
+    return _getJson("/scoreboard/global") //
+        .map((users) => users.map<User>(userFromJson).toList());
+  }
+
+  Future<List<User>> getGeographicalScoreboard(
+      double latitude, double longitude, double radius) async {
+    return _getJson("/scoreboard/geographical", params: {
+      "y": latitude.toString(),
+      "x": longitude.toString(),
+      "srid": "4326", // gps
+      "radius": radius.toString(),
+    }).map((users) => users.map<User>(userFromJson).toList());
+  }
 }
