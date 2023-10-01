@@ -54,7 +54,11 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
             child: FloatingActionButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               heroTag: "scoreboard",
-              onPressed: () => Navigator.pushNamed(context, ScoreboardPage.routeName, arguments: widget.mapController.center),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ScoreboardPage.routeName,
+                arguments: position?.toLatLng() ?? widget.mapController.center,
+              ),
               tooltip: l10n.scoreboard,
               mini: true,
               child: const Icon(Icons.emoji_events),
