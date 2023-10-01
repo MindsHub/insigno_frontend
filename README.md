@@ -24,8 +24,8 @@ flutter pub run build_runner watch
 
 ## TODOs
 
-- [ ] Optimize performance of map when there are many markers to display
-
+- [x] Optimize performance of map when there are many markers to display
+- [ ] Improve error handling
 
 ## Flutter getting started
 
