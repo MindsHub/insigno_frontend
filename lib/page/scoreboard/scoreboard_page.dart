@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/user.dart';
+import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:latlong2/latlong.dart';
 
 class ScoreboardPage extends StatefulWidget {
@@ -52,7 +53,7 @@ class _ScoreboardPageState extends State<ScoreboardPage>
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               itemCount: _scoreboard?.length ?? 0,
               itemBuilder: (context, index) {
                 final user = _scoreboard?[index];
@@ -61,20 +62,23 @@ class _ScoreboardPageState extends State<ScoreboardPage>
                   return const SizedBox();
                 }
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          user.name,
-                          maxLines: 1,
-                          softWrap: false,
-                          overflow: TextOverflow.fade,
+                return InkWell(
+                  onTap: () => Navigator.pushNamed(context, UserPage.routeName, arguments: user.id),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            user.name,
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      Text(l10n.points(user.points)),
-                    ],
+                        Text(l10n.points(user.points)),
+                      ],
+                    ),
                   ),
                 );
               },
