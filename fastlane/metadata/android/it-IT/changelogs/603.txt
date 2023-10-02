@@ -1,0 +1,5 @@
+Novità
+• L'interfaccia grafica è stata rivisitata completamente
+
+Miglioramenti
+• Il rendering dei segnalini della spazzatura sulla mappa è ora molto più veloce, risolvendo i problemi di lag nelle aree ad alta densità di segnalini

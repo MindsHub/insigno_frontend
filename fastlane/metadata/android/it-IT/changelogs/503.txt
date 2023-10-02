@@ -1,1 +1,2 @@
-L'interfaccia grafica è stata rivisitata completamente
+Novità
+• L'interfaccia grafica è stata rivisitata completamente

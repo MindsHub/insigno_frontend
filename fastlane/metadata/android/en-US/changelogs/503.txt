@@ -1,1 +1,2 @@
-The graphical interface was overhauled completely
+New
+• The graphical interface was overhauled completely
