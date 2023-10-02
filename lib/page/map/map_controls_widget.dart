@@ -45,7 +45,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
       padding: EdgeInsets.only(top: mediaQuery.padding.top),
       child: Column(
         children: [
-          Padding(
+          /*Padding(
             padding: EdgeInsets.only(
               left: 8,
               top: 8,
@@ -63,7 +63,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
               mini: true,
               child: const Icon(Icons.emoji_events),
             ),
-          ),
+          ),*/
           AnimatedBuilder(
             animation: repositionAnim,
             builder: (_, child) => ClipRect(

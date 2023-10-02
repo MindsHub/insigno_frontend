@@ -144,11 +144,12 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                           if (formKey.currentState?.validate() ?? false) {
                             formKey.currentState?.save();
                             TextInput.finishAutofillContext();
-                            showIsAdultDialog(l10n).then((isAdult) {
+                            performSignup(false);
+                            /*showIsAdultDialog(l10n).then((isAdult) {
                               if (isAdult != null) {
                                 performSignup(isAdult);
                               }
-                            });
+                            });*/
                           }
                         },
                         tooltip: l10n.signup,

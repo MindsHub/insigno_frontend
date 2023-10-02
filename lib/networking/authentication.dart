@@ -71,7 +71,7 @@ class Authentication {
   Future<void> signup(String email, String name, String password, bool isAdult) async {
     final response = await _client.post(
       _serverHostHandler.getUri("/signup"),
-      body: {"email": email, "name": name, "password": password, "is_adult": isAdult.toString()},
+      body: {"email": email, "name": name, "password": password/*, "is_adult": isAdult.toString()*/},
     );
 
     if (response.statusCode == 401) {
