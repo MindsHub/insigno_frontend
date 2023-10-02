@@ -59,7 +59,7 @@ dependencies:
   collection: ^1.17.1
   url_launcher: ^6.1.10
   os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
-  package_info_plus: ^4.1.0
+  package_info_plus: ^3.1.2 # DO NOT UPDATE the latest version increases minSdk to Android API 19
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
