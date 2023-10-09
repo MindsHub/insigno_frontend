@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
+import 'package:insigno_frontend/page/user/auth_user_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 
@@ -147,6 +148,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
               i += 1;
             });
           } else {
+            get<AuthUserProvider>().addPoints(awardedPoints);
             Navigator.pop(context);
           }
     }, onError: (e) {
