@@ -7,11 +7,10 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/page/map/verify_message_box.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
-import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
-import 'package:insigno_frontend/util/time.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final VoidCallback onAddWidgetPressed;
@@ -189,20 +188,6 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   }
 
   Widget _buildVerifyMessage(BuildContext context, Animation<double> animation, DateTime time) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final inThePast = time.isBefore(DateTime.now());
-
-    return AnimatedMessageBox(
-      animation: animation,
-      message: inThePast
-          ? l10n.verifyImages
-          : l10n.verifyImagesIn(formatDuration(time.difference(DateTime.now()))),
-      containerColor: theme.colorScheme.tertiaryContainer,
-      onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: inThePast //
-          ? () => {Navigator.pushNamed(context, ImageVerificationPage.routeName)}
-          : null,
-    );
+    return VerifyMessageBox(animation, time);
   }
 }
