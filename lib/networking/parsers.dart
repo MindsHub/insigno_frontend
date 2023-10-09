@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
+import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
 import 'package:insigno_frontend/networking/data/marker_image.dart';
@@ -69,4 +70,11 @@ MarkerUpdate markerUpdateFromJson(dynamic u) {
 
 MarkerImage markerImageFromJson(dynamic u) {
   return MarkerImage(u["id"], markerTypeFromJson(u));
+}
+
+List<ImageVerification> sessionFromJson(dynamic u) {
+  return (u as List<dynamic>)
+      .map<ImageVerification>((e) => ImageVerification(e["image_id"], e["marker_id"], e["verdict"],
+          markerTypeFromJson(e), imageListFromJson(e["all_marker_images"])))
+      .toList();
 }

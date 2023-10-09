@@ -4,6 +4,7 @@ import "package:http_parser/http_parser.dart";
 import "package:injectable/injectable.dart";
 import "package:insigno_frontend/networking/authentication.dart";
 import "package:insigno_frontend/networking/data/authenticated_user.dart";
+import "package:insigno_frontend/networking/data/image_verification.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
 import "package:insigno_frontend/networking/data/marker_image.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
@@ -173,13 +174,17 @@ class Backend {
     return DateTime.parse(utcDateTime);
   }
 
-  Future<List<User>> getGlobalScoreboard() async {
+  Future<List<ImageVerification>> getVerifySession() {
+    return _getJsonAuthenticated("/verify/get_session").map(sessionFromJson);
+  }
+
+  Future<List<User>> getGlobalScoreboard() {
     return _getJson("/scoreboard/global") //
         .map((users) => users.map<User>(userFromJson).toList());
   }
 
   Future<List<User>> getGeographicalScoreboard(
-      double latitude, double longitude, double radius) async {
+      double latitude, double longitude, double radius) {
     return _getJson("/scoreboard/geographical", params: {
       "y": latitude.toString(),
       "x": longitude.toString(),
