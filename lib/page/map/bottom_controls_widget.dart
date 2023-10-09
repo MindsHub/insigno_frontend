@@ -9,6 +9,7 @@ import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
+import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 import 'package:insigno_frontend/util/time.dart';
 
@@ -144,14 +145,14 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   void _updateVerifyMessage(bool isLoggedIn) {
     if (isLoggedIn) {
       if (nextVerifyTime == null) {
-        /*get<Backend>().getNextVerifyTime().then((value) {
+        get<Backend>().getNextVerifyTime().then((value) {
           if (get<Authentication>().isLoggedIn() && nextVerifyTime == null) {
             nextVerifyTime = value;
             if (_listKey.currentState != null) {
               _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
             }
           }
-        }, onError: (e) {});*/
+        }, onError: (e) {});
       }
     } else {
       var prevNextVerifyTime = nextVerifyTime;
@@ -199,7 +200,9 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
           : l10n.verifyImagesIn(formatDuration(time.difference(DateTime.now()))),
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: inThePast ? () => {} : null,
+      onTap: inThePast //
+          ? () => {Navigator.pushNamed(context, ImageVerificationPage.routeName)}
+          : null,
     );
   }
 }

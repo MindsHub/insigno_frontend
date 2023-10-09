@@ -11,6 +11,7 @@ import 'package:insigno_frontend/page/marker/add_images_widget.dart';
 import 'package:insigno_frontend/page/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/page/marker/resolve_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
+import 'package:insigno_frontend/page/util/marker_type_app_bar_title.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/iterable.dart';
@@ -76,17 +77,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
 
     return Scaffold(
       appBar: AppBar(
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(mapMarker.type.getName(context)),
-              const SizedBox(width: 12),
-              mapMarker.type.getThemedIcon(context)
-            ],
-          ),
-        ),
+        title: MarkerTypeAppBarTitle(mapMarker.type),
         actions: isLoggedIn && (marker?.canBeReported ?? false)
             ? [
                 IconButton(

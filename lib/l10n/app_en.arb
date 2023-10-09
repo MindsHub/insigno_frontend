@@ -181,6 +181,7 @@
   "onlyHttpsAccepted": "Only HTTPS URLs are accepted",
   "reviewImages": "Review images",
   "verdictOk": "Ok!",
+  "verdictBad": "Bad",
   "verdictDelete": "Delete",
   "verdictDeleteReport": "Report and delete",
   "verdictSkip": "Skip",

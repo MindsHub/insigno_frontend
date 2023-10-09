@@ -11,10 +11,11 @@ import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/scoreboard/scoreboard_page.dart';
 import 'package:insigno_frontend/page/settings/settings_page.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
-import 'package:insigno_frontend/page/user/image_review_page.dart';
+import 'package:insigno_frontend/page/verification/image_review_page.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
+import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:latlong2/latlong.dart';
 
 class InsignoApp extends StatelessWidget {
@@ -70,6 +71,7 @@ class InsignoApp extends StatelessWidget {
           LoginFlowPage.routeName: (ctx) => const LoginFlowPage(),
           ProfilePage.routeName: (ctx) => ProfilePage(),
           ScoreboardPage.routeName: (ctx) => ScoreboardPage(settings.arguments as LatLng),
+          ImageVerificationPage.routeName: (ctx) => ImageVerificationPage(),
         };
         WidgetBuilder builder = routes[settings.name]!;
         return MaterialPageRoute(builder: (ctx) => builder(ctx));

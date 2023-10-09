@@ -9,7 +9,7 @@ import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/page/user/auth_user_provider.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
-import 'package:insigno_frontend/page/user/image_review_page.dart';
+import 'package:insigno_frontend/page/verification/image_review_page.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 class ProfilePage extends StatefulWidget with GetItStatefulWidgetMixin {

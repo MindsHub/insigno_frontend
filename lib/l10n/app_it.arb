@@ -89,6 +89,7 @@
   "onlyHttpsAccepted": "Solo URL HTTPS sono accettati",
   "reviewImages": "Revisiona immagini",
   "verdictOk": "A posto!",
+  "verdictBad": "Non va bene",
   "verdictDelete": "Elimina",
   "verdictDeleteReport": "Segnala ed elimina",
   "verdictSkip": "Salta",
