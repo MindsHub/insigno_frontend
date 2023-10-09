@@ -11,7 +11,8 @@ class AuthUserProvider {
   AuthenticatedUser? _loadedUser;
   double _additionalPoints = 0;
 
-  final StreamController<AuthenticatedUser> _streamController = StreamController.broadcast();
+  final StreamController<AuthenticatedUser> _userStreamController = StreamController.broadcast();
+  final StreamController<double> _additionalPointsStreamController = StreamController.broadcast();
 
   AuthUserProvider(this._backend);
 
@@ -20,7 +21,7 @@ class AuthUserProvider {
       final user = await _backend.getAuthenticatedUser();
       _loadedUser = user;
       _additionalPoints = 0;
-      _streamController.add(user);
+      _userStreamController.add(user);
     }
     return _loadedUser!;
   }
@@ -28,7 +29,11 @@ class AuthUserProvider {
   /// Do not rely on this stream to detect whether a user is logged in, that's the job of
   /// [Authentication.getIsLoggedInStream]!
   Stream<AuthenticatedUser> getAuthenticatedUserStream() {
-    return _streamController.stream;
+    return _userStreamController.stream;
+  }
+
+  Stream<double> getAdditionalPointsStream() {
+    return _additionalPointsStreamController.stream;
   }
 
   AuthenticatedUser? getAuthenticatedUserOrNull() {
@@ -38,10 +43,11 @@ class AuthUserProvider {
 
   void addPoints(double points) {
     _additionalPoints += points;
+    _additionalPointsStreamController.add(points);
 
     final u = _loadedUser;
     if (u != null) {
-      _streamController
+      _userStreamController
           .add(AuthenticatedUser(u.id, u.name, u.points + _additionalPoints, u.isAdmin, u.email));
     }
   }
@@ -54,6 +60,9 @@ class AuthUserProvider {
 
   @disposeMethod
   Future<void> dispose() {
-    return _streamController.close();
+    return Future.wait([
+      _userStreamController.close(),
+      _additionalPointsStreamController.close(),
+    ]);
   }
 }
