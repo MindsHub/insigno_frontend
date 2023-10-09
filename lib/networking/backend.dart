@@ -178,6 +178,14 @@ class Backend {
     return _getJsonAuthenticated("/verify/get_session").map(sessionFromJson);
   }
 
+  // returns the awarded points iff the session has ended
+  Future<double?> setVerifyVerdict(int imageId, bool verdict) {
+    return _postJsonAuthenticated("/verify/set_verdict", fields: {
+      "image_id": imageId.toString(),
+      "verdict": verdict.toString(),
+    }).map((p0) => p0 as double?);
+  }
+
   Future<List<User>> getGlobalScoreboard() {
     return _getJson("/scoreboard/global") //
         .map((users) => users.map<User>(userFromJson).toList());

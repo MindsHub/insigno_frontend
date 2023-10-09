@@ -113,9 +113,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
               const SizedBox(width: 16),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    sendVerdict(true);
-                  },
+                  onPressed: () => sendVerdict(verification.imageId, true),
                   child: Text(
                     l10n.verdictBad,
                     textAlign: TextAlign.center,
@@ -125,9 +123,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
               const SizedBox(width: 12),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    sendVerdict(false);
-                  },
+                  onPressed: () => sendVerdict(verification.imageId, false),
                   child: Text(
                     l10n.verdictOk,
                     textAlign: TextAlign.center,
@@ -143,7 +139,18 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
     );
   }
 
-  void sendVerdict(bool verdict) {
-
+  void sendVerdict(int imageId, bool verdict) {
+    get<Backend>().setVerifyVerdict(imageId, verdict)
+        .then((awardedPoints) {
+          if (awardedPoints == null) {
+            setState(() {
+              i += 1;
+            });
+          } else {
+            Navigator.pop(context);
+          }
+    }, onError: (e) {
+      errorReviewing = e.toString();
+    });
   }
 }
