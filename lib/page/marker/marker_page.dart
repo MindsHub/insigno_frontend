@@ -93,6 +93,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (marker?.images.isNotEmpty == true)
                   ImageListWidget(marker!.images.map((image) =>
@@ -132,6 +133,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 if (marker != null) const SizedBox(height: 8),
                 if (marker != null)
                   OverflowBar(
+                    overflowAlignment: OverflowBarAlignment.center,
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pushNamed(context, UserPage.routeName,
