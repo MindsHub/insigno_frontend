@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_page.dart';
-import 'package:insigno_frontend/page/scoreboard/scoreboard_page.dart';
 
 class MapControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final MapController mapController;
@@ -86,8 +85,9 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
                 child: FloatingActionButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   heroTag: "reposition",
-                  onPressed: () =>
-                      widget.mapController.move(position!.toLatLng()!, defaultInitialZoom),
+                  onPressed: () {
+                    widget.mapController.move(position!.toLatLng()!, defaultInitialZoom);
+                  },
                   tooltip: l10n.goToPosition,
                   mini: true,
                   child: const Icon(Icons.filter_tilt_shift),

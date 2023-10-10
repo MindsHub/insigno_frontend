@@ -8,6 +8,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
+import 'package:insigno_frontend/page/map/additional_points_widget.dart';
 import 'package:insigno_frontend/page/map/bottom_controls_widget.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
@@ -186,6 +187,10 @@ class _MapPageState extends State<MapPage>
           Align(
             alignment: Alignment.topCenter,
             child: PillWidget(),
+          ),
+          const Align(
+            alignment: Alignment.bottomLeft,
+            child: AdditionalPointsWidget(),
           ),
         ],
         children: [

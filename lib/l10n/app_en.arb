@@ -231,5 +231,14 @@
   "global": "Global",
   "km1": "1km",
   "km10": "10km",
-  "km100": "100km"
+  "km100": "100km",
+  "additional_points": "+{points}",
+  "@additional_points": {
+    "placeholders": {
+      "points": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  }
 }
