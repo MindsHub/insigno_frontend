@@ -114,7 +114,10 @@ class _AdditionalPointsWidgetState extends State<AdditionalPointsWidget>
             elevation: 6,
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: Text(l10n.additional_points(_lastAdditionalPoints)),
+              child: Text(
+                l10n.additional_points(_lastAdditionalPoints),
+                style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
+              ),
             ),
           ),
         ),
