@@ -1,4 +1,3 @@
-import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -8,13 +7,13 @@ import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/marker/add_images_widget.dart';
+import 'package:insigno_frontend/page/marker/image_list_widget.dart';
 import 'package:insigno_frontend/page/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/page/marker/resolve_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:insigno_frontend/page/util/marker_type_app_bar_title.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
-import 'package:insigno_frontend/util/iterable.dart';
 import 'package:insigno_frontend/util/nullable.dart';
 
 class MarkerPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -72,9 +71,6 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
     final bool nearEnoughToResolve =
         position?.position?.map(mapMarker.isNearEnoughToResolve) ?? false;
 
-    final imageProviders = marker?.images
-        .map((image) => imageFromNetwork(imageId: image, height: AddImagesWidget.imageHeight));
-
     return Scaffold(
       appBar: AppBar(
         title: MarkerTypeAppBarTitle(mapMarker.type),
@@ -99,37 +95,8 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (marker?.images.isNotEmpty == true)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: imageProviders!
-                          .expandIndexed(
-                            (index, image) => [
-                              if (index == 0) const SizedBox(width: 16),
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    var imageProvider = MultiImageProvider(
-                                      imageProviders.map((e) => e.image).toList(growable: false),
-                                      initialIndex: index,
-                                    );
-                                    showImageViewerPager(
-                                      context,
-                                      imageProvider,
-                                      closeButtonTooltip: l10n.close,
-                                      doubleTapZoomable: true,
-                                    );
-                                  },
-                                  child: image,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                            ],
-                          )
-                          .toList(growable: false),
-                    ),
-                  ),
+                  ImageListWidget(marker!.images.map((image) =>
+                      imageFromNetwork(imageId: image, height: AddImagesWidget.imageHeight))),
                 ErrorText(markerError, l10n.errorLoading),
                 ErrorText(
                   widget.errorAddingImages,
