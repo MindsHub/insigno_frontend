@@ -197,4 +197,10 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
         () => Navigator.pushNamed(context, ImageVerificationPage.routeName)
             .then((value) => _updateVerifyMessage(get<Authentication>().isLoggedIn())));
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    appOpenedTimer.cancel();
+  }
 }

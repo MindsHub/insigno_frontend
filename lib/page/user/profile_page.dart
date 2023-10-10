@@ -48,9 +48,9 @@ class _ProfilePageState extends State<ProfilePage>
     // double.negativeInfinity is used just to signal that the user has not loaded yet
     final user = watchStream((AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
                 get<AuthUserProvider>().getAuthenticatedUserOrNull() ??
-                    AuthenticatedUser(-1, "", double.negativeInfinity, false, ""))
+                    AuthenticatedUser(-1, "", double.negativeInfinity, false, "", null))
             .data ??
-        AuthenticatedUser(-1, "", double.negativeInfinity, false, "");
+        AuthenticatedUser(-1, "", double.negativeInfinity, false, "", null);
 
     return Scaffold(
       appBar: AppBar(title: Text(user.points == double.negativeInfinity ? l10n.user : user.name)),

@@ -16,7 +16,8 @@ User userFromJson(dynamic u) {
 }
 
 AuthenticatedUser authenticatedUserFromJson(dynamic u) {
-  return AuthenticatedUser(u["id"], u["name"], u["points"], u["is_admin"], u["email"]);
+  return AuthenticatedUser(
+      u["id"], u["name"], u["points"], u["is_admin"], u["email"], u["accepted_to_review"]);
 }
 
 List<int> imageListFromJson(dynamic l) {
