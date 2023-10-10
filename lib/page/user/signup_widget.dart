@@ -27,13 +27,13 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
   final firstPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  void performSignup(bool isAdult) async {
+  void performSignup() async {
     setState(() {
       signupError = null;
       loading = true;
     });
 
-    get<Authentication>().signup(email!, name!, password!, isAdult).then((_) {
+    get<Authentication>().signup(email!, name!, password!).then((_) {
       widget.switchToLoginCallback(true);
     }, onError: (e) {
       setState(() {
@@ -47,35 +47,6 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
         loading = false;
       });
     });
-  }
-
-  Future<bool?> showIsAdultDialog(AppLocalizations l10n) async {
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.areYouUnderage),
-          content: SingleChildScrollView(
-            child: Text(l10n.adultDialogText(l10n.iAmAdult)),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(l10n.iAmAdult),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-            TextButton(
-              child: Text(l10n.iAmUnderage),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -144,11 +115,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                           if (formKey.currentState?.validate() ?? false) {
                             formKey.currentState?.save();
                             TextInput.finishAutofillContext();
-                            showIsAdultDialog(l10n).then((isAdult) {
-                              if (isAdult != null) {
-                                performSignup(isAdult);
-                              }
-                            });
+                            performSignup();
                           }
                         },
                         tooltip: l10n.signup,
@@ -168,7 +135,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                     TextButton(
                       onPressed: () => widget.switchToLoginCallback(false),
                       child: Text(l10n.login),
-                    )
+                    ),
                   ],
                 ),
               ],
