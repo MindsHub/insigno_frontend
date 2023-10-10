@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/util/time.dart';
 
 class VerifyMessageBox extends StatefulWidget {
   final Animation<double> animation;
-  final DateTime time;
+  final VerifyTime verifyTime;
   final void Function() onTap;
 
-  const VerifyMessageBox(this.animation, this.time, this.onTap, {super.key});
+  const VerifyMessageBox(this.animation, this.verifyTime, this.onTap, {super.key});
 
   @override
   State<VerifyMessageBox> createState() => _VerifyMessageBoxState();
@@ -18,22 +19,21 @@ class VerifyMessageBox extends StatefulWidget {
 
 class _VerifyMessageBoxState extends State<VerifyMessageBox> {
   Timer? _timer;
-  DateTime? _lastTimerTime;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     // .subtract(Duration(days: 190, hours: 18))
-    final inThePast = widget.time.isBefore(DateTime.now());
-    
-    if (inThePast) {
+    final canVerifyNow = widget.verifyTime.canVerifyNow();
+
+    if (canVerifyNow) {
       if (_timer != null) {
         _timer?.cancel();
         _timer = null;
       }
     } else {
-      if (_timer == null || _timer?.isActive != true || _lastTimerTime != widget.time) {
+      if (_timer == null || _timer?.isActive != true) {
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {});
@@ -43,12 +43,13 @@ class _VerifyMessageBoxState extends State<VerifyMessageBox> {
 
     return AnimatedMessageBox(
       animation: widget.animation,
-      message: inThePast
+      message: canVerifyNow
           ? l10n.verifyImages
-          : l10n.verifyImagesIn(formatDuration(widget.time.difference(DateTime.now()))),
+          : l10n.verifyImagesIn(
+              formatDuration(widget.verifyTime.dateTime!.difference(DateTime.now()))),
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: inThePast ? widget.onTap : null,
+      onTap: canVerifyNow ? widget.onTap : null,
     );
   }
 

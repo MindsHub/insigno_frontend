@@ -112,5 +112,16 @@
   "km1": "1km",
   "km10": "10km",
   "km100": "100km",
-  "additional_points": "+{points}"
+  "additional_points": "+{points}",
+  "yes": "Sì",
+  "no": "No",
+  "acceptToReviewDialogTitle": "Vuoi aiutare a verificare le immagini?",
+  "acceptToReviewDialogText": "Revisionare le immagini caricate da altri utenti può farti guadagnare punti periodicamente. Potresti però venire esposto a immagini non moderate con contenuto delicato. Premendo su \"{yes}\" dichiari di ESSERE ADULTO e di ESSERE CONSAPEVOLE DEI RISCHI.",
+  "@acceptToReviewDialogText": {
+    "placeholders": {
+      "yes": {
+        "type": "String"
+      }
+    }
+  }
 }

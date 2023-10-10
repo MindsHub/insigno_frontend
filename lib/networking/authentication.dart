@@ -56,7 +56,7 @@ class Authentication {
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
     }
-    response.throwErrors();
+    await response.throwErrors();
 
     final authCookie = response.headers["set-cookie"]?.split("; ")[0];
     if (authCookie == null) {
@@ -77,7 +77,7 @@ class Authentication {
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
     }
-    response.throwErrors();
+    await response.throwErrors();
   }
 
   Future<void> changePassword(String email, String password) async {
@@ -89,7 +89,7 @@ class Authentication {
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
     }
-    response.throwErrors();
+    await response.throwErrors();
   }
 
   /// also invalidates the loaded user (if any) of [AuthUserProvider]

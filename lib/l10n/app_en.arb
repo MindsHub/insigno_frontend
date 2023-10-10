@@ -240,5 +240,16 @@
         "format": "compact"
       }
     }
+  },
+  "yes": "Yes",
+  "no": "No",
+  "acceptToReviewDialogTitle": "Do you want to participate in reviewing images?",
+  "acceptToReviewDialogText": "Reviewing images posted by other users allows you to earn some points periodically. However you might be exposed to unmoderated images with sensitive content. Therefore by tapping on \"{yes}\" you declare that YOU ARE ADULT and that YOU ARE AWARE OF THE RISKS.",
+  "@acceptToReviewDialogText": {
+    "placeholders": {
+      "yes": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/verify_message_box.dart';
@@ -26,7 +27,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     with GetItStateMixin<BottomControlsWidget>, TickerProviderStateMixin<BottomControlsWidget> {
   ErrorMessage? errorMessage;
   bool isVersionCompatible = true;
-  DateTime? nextVerifyTime;
+  VerifyTime nextVerifyTime = VerifyTime.notAcceptedYet(false);
 
   late final Timer appOpenedTimer;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
@@ -93,7 +94,8 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
                 physics: const NeverScrollableScrollPhysics(),
                 key: _listKey,
                 shrinkWrap: true,
-                initialItemCount: (errorMessage == null ? 0 : 1) + (nextVerifyTime == null ? 0 : 1),
+                initialItemCount:
+                    (errorMessage != null ? 1 : 0) + (nextVerifyTime.shouldShowMessage() ? 1 : 0),
                 itemBuilder: _buildMessage,
               ),
             ),
@@ -102,9 +104,10 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
             heroTag: "addMarker",
             onPressed: errorMessage == null ? widget.onAddWidgetPressed : null,
             tooltip: l10n.report,
-            backgroundColor:
-                errorMessage == null ? null : theme.colorScheme.primaryContainer.withOpacity(0.38),
-            foregroundColor: errorMessage == null
+            backgroundColor: errorMessage == null //
+                ? null
+                : theme.colorScheme.primaryContainer.withOpacity(0.38),
+            foregroundColor: errorMessage == null //
                 ? null
                 : theme.colorScheme.onPrimaryContainer.withOpacity(0.38),
             disabledElevation: 0,
@@ -142,35 +145,40 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
   }
 
-  void _updateVerifyMessage(bool isLoggedIn) {
+  void _updateVerifyMessage(bool isLoggedIn) async {
+    var newVerifyTime = VerifyTime.notAcceptedYet(false);
     if (isLoggedIn) {
-      get<Backend>().getNextVerifyTime().then((value) {
-        if (get<Authentication>().isLoggedIn()) {
-          if (nextVerifyTime == null && _listKey.currentState != null) {
-            nextVerifyTime = value;
-            _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
-          } else {
-            setState(() {
-              nextVerifyTime = value;
-            });
-          }
-        }
-      }, onError: (e) {});
-    } else {
-      var prevNextVerifyTime = nextVerifyTime;
-      nextVerifyTime = null;
-      if (prevNextVerifyTime != null && _listKey.currentState != null) {
-        _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
-            (context, animation) => _buildVerifyMessage(context, animation, prevNextVerifyTime));
+      var verifyTimeFromNetwork = await get<Backend>()
+          .getNextVerifyTime()
+          // ignore errors
+          .onError((error, stackTrace) => VerifyTime.notAcceptedYet(false));
+      if (get<Authentication>().isLoggedIn()) {
+        newVerifyTime = verifyTimeFromNetwork;
       }
+    }
+
+    var oldVerifyTime = nextVerifyTime;
+    if (_listKey.currentState != null &&
+        oldVerifyTime.shouldShowMessage() != newVerifyTime.shouldShowMessage()) {
+      nextVerifyTime = newVerifyTime;
+      if (newVerifyTime.shouldShowMessage()) {
+        _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
+      } else {
+        _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
+            (context, animation) => _buildVerifyMessage(context, animation, oldVerifyTime));
+      }
+    } else {
+      setState(() {
+        nextVerifyTime = newVerifyTime;
+      });
     }
   }
 
   Widget _buildMessage(BuildContext context, int index, Animation<double> animation) {
     if (errorMessage != null && index == 0) {
       return _buildErrorMessage(context, animation, errorMessage!);
-    } else if (nextVerifyTime != null) {
-      return _buildVerifyMessage(context, animation, nextVerifyTime!);
+    } else if (nextVerifyTime.shouldShowMessage()) {
+      return _buildVerifyMessage(context, animation, nextVerifyTime);
     } else {
       // should be unreachable
       return const SizedBox.shrink();
@@ -190,12 +198,45 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     );
   }
 
-  Widget _buildVerifyMessage(BuildContext context, Animation<double> animation, DateTime time) {
-    return VerifyMessageBox(
-        animation,
-        time,
-        () => Navigator.pushNamed(context, ImageVerificationPage.routeName)
-            .then((value) => _updateVerifyMessage(get<Authentication>().isLoggedIn())));
+  Widget _buildVerifyMessage(
+      BuildContext context, Animation<double> animation, VerifyTime verifyTime) {
+    return VerifyMessageBox(animation, verifyTime, () {
+      if (verifyTime.dateTime != null) {
+        Navigator.pushNamed(context, ImageVerificationPage.routeName)
+            .then((value) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
+      } else {
+        assert(verifyTime.isAcceptingToReviewPending == true);
+        _openAcceptToReviewDialog(AppLocalizations.of(context)!);
+      }
+    });
+  }
+
+  Future<bool?> _openAcceptToReviewDialog(AppLocalizations l10n) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.acceptToReviewDialogTitle),
+          content: SingleChildScrollView(
+            child: Text(l10n.acceptToReviewDialogText(l10n.yes)),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(l10n.yes),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+            TextButton(
+              child: Text(l10n.no),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

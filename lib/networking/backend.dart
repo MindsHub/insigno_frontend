@@ -51,7 +51,7 @@ class Backend {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
       _auth.removeStoredCookie();
     }
-    return response.throwErrors().mapParseJson();
+    return (await response.throwErrors()).mapParseJson();
   }
 
   Future<http.StreamedResponse> _postAuthenticated(String path,
@@ -80,8 +80,7 @@ class Backend {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
       //_auth.removeStoredCookie();
     }
-    response.throwErrors();
-    return response;
+    return await response.throwErrors();
   }
 
   Future<dynamic> _postJsonAuthenticated(String path,
@@ -169,9 +168,23 @@ class Backend {
     return _postAuthenticated("/map/image/review/$imageId", fields: {"verdict": verdict.verdict});
   }
 
-  Future<DateTime> getNextVerifyTime() async {
-    final utcDateTime = await _getJsonAuthenticated("/verify/get_next_verify_time");
-    return DateTime.parse(utcDateTime);
+  Future<VerifyTime> getNextVerifyTime() async {
+    try {
+      final utcDateTime = await _getJsonAuthenticated("/verify/get_next_verify_time");
+      return VerifyTime.date(DateTime.parse(utcDateTime));
+    } on UnauthorizedException catch (e) {
+      if (e.statusCode != 403) {
+        rethrow;
+      }
+      switch (e.response) {
+        case "accepted_to_review_pending":
+          return VerifyTime.notAcceptedYet(true);
+        case "accepted_to_review_refused":
+          return VerifyTime.notAcceptedYet(false);
+        default:
+          rethrow;
+      }
+    }
   }
 
   Future<List<ImageVerification>> getVerifySession() {
