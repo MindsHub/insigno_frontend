@@ -51,4 +51,10 @@ class _VerifyMessageBoxState extends State<VerifyMessageBox> {
       onTap: inThePast ? widget.onTap : null,
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
+  }
 }
