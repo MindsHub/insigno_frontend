@@ -10,6 +10,7 @@ import 'package:insigno_frontend/page/map/location_provider.dart';
 import 'package:insigno_frontend/page/map/verify_message_box.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
+import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -143,16 +144,18 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
 
   void _updateVerifyMessage(bool isLoggedIn) {
     if (isLoggedIn) {
-      if (nextVerifyTime == null) {
-        get<Backend>().getNextVerifyTime().then((value) {
-          if (get<Authentication>().isLoggedIn() && nextVerifyTime == null) {
+      get<Backend>().getNextVerifyTime().then((value) {
+        if (get<Authentication>().isLoggedIn()) {
+          if (nextVerifyTime == null && _listKey.currentState != null) {
             nextVerifyTime = value;
-            if (_listKey.currentState != null) {
-              _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
-            }
+            _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
+          } else {
+            setState(() {
+              nextVerifyTime = value;
+            });
           }
-        }, onError: (e) {});
-      }
+        }
+      }, onError: (e) {});
     } else {
       var prevNextVerifyTime = nextVerifyTime;
       nextVerifyTime = null;
@@ -188,6 +191,10 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   }
 
   Widget _buildVerifyMessage(BuildContext context, Animation<double> animation, DateTime time) {
-    return VerifyMessageBox(animation, time);
+    return VerifyMessageBox(
+        animation,
+        time,
+        () => Navigator.pushNamed(context, ImageVerificationPage.routeName)
+            .then((value) => _updateVerifyMessage(get<Authentication>().isLoggedIn())));
   }
 }

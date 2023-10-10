@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
-import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:insigno_frontend/util/time.dart';
 
 class VerifyMessageBox extends StatefulWidget {
   final Animation<double> animation;
   final DateTime time;
+  final void Function() onTap;
 
-  const VerifyMessageBox(this.animation, this.time, {super.key});
+  const VerifyMessageBox(this.animation, this.time, this.onTap, {super.key});
 
   @override
   State<VerifyMessageBox> createState() => _VerifyMessageBoxState();
@@ -48,9 +48,7 @@ class _VerifyMessageBoxState extends State<VerifyMessageBox> {
           : l10n.verifyImagesIn(formatDuration(widget.time.difference(DateTime.now()))),
       containerColor: theme.colorScheme.tertiaryContainer,
       onContainerColor: theme.colorScheme.onTertiaryContainer,
-      onTap: inThePast //
-          ? () => Navigator.pushNamed(context, ImageVerificationPage.routeName)
-          : null,
+      onTap: inThePast ? widget.onTap : null,
     );
   }
 }
