@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
+import 'package:insigno_frontend/page/marker/image_list_widget.dart';
 import 'package:insigno_frontend/page/user/auth_user_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
@@ -56,11 +57,11 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
           child: theVerifications != null //
               ? Text(l10n.mindshubDescription)
               : theLoadError == null
-                  ? const CircularProgressIndicator()
-                  : Text(
-                      theLoadError,
-                      style: TextStyle(color: theme.colorScheme.error),
-                    ),
+              ? const CircularProgressIndicator()
+              : Text(
+            theLoadError,
+            style: TextStyle(color: theme.colorScheme.error),
+          ),
         ),
       );
     }
@@ -70,6 +71,8 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
       imageId: verification.imageId,
       fit: BoxFit.contain,
     );
+
+    final otherImages = verification.markerImages.where((e) => e != verification.imageId).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -102,6 +105,11 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
               child: mainImage,
             ),
           ),
+          if (otherImages.isNotEmpty)
+            const SizedBox(height: 8),
+          if (otherImages.isNotEmpty)
+            ImageListWidget(otherImages.map((image) =>
+                imageFromNetwork(imageId: image, height: 64))),
           ErrorText(
             errorReviewing,
             l10n.errorReviewing,
@@ -143,14 +151,14 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
   void sendVerdict(int imageId, bool verdict) {
     get<Backend>().setVerifyVerdict(imageId, verdict)
         .then((awardedPoints) {
-          if (awardedPoints == null) {
-            setState(() {
-              i += 1;
-            });
-          } else {
-            get<AuthUserProvider>().addPoints(awardedPoints);
-            Navigator.pop(context);
-          }
+      if (awardedPoints == null) {
+        setState(() {
+          i += 1;
+        });
+      } else {
+        get<AuthUserProvider>().addPoints(awardedPoints);
+        Navigator.pop(context);
+      }
     }, onError: (e) {
       errorReviewing = e.toString();
     });
