@@ -187,6 +187,11 @@ class Backend {
     }
   }
 
+  Future<void> setAcceptedToReview(bool acceptedToReview) {
+    return _postAuthenticated("/verify/set_accepted_to_review",
+        fields: {"accepted_to_review": acceptedToReview.toString()});
+  }
+
   Future<List<ImageVerification>> getVerifySession() {
     return _getJsonAuthenticated("/verify/get_session").map(sessionFromJson);
   }

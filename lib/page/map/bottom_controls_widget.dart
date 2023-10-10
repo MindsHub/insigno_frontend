@@ -203,10 +203,21 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     return VerifyMessageBox(animation, verifyTime, () {
       if (verifyTime.dateTime != null) {
         Navigator.pushNamed(context, ImageVerificationPage.routeName)
-            .then((value) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
+            .then((_) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
       } else {
         assert(verifyTime.isAcceptingToReviewPending == true);
-        _openAcceptToReviewDialog(AppLocalizations.of(context)!);
+        _openAcceptToReviewDialog(AppLocalizations.of(context)!).then((accepted) {
+          if (accepted != null) {
+            get<Backend>().setAcceptedToReview(accepted).then((_) {
+              if (accepted) {
+                Navigator.pushNamed(context, ImageVerificationPage.routeName)
+                    .then((_) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
+              } else {
+                _updateVerifyMessage(get<Authentication>().isLoggedIn());
+              }
+            });
+          }
+        });
       }
     });
   }
