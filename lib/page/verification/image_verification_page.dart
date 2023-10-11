@@ -57,11 +57,11 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
           child: theVerifications != null //
               ? Text(l10n.mindshubDescription)
               : theLoadError == null
-              ? const CircularProgressIndicator()
-              : Text(
-            theLoadError,
-            style: TextStyle(color: theme.colorScheme.error),
-          ),
+                  ? const CircularProgressIndicator()
+                  : Text(
+                      theLoadError,
+                      style: TextStyle(color: theme.colorScheme.error),
+                    ),
         ),
       );
     }
@@ -88,69 +88,69 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
           ),
         ],
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                showImageViewerPager(
-                  context,
-                  SingleImageProvider(mainImage.image),
-                  closeButtonTooltip: l10n.close,
-                  doubleTapZoomable: true,
-                );
-              },
-              child: mainImage,
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  showImageViewerPager(
+                    context,
+                    SingleImageProvider(mainImage.image),
+                    closeButtonTooltip: l10n.close,
+                    doubleTapZoomable: true,
+                  );
+                },
+                child: mainImage,
+              ),
             ),
-          ),
-          if (otherImages.isNotEmpty)
-            const SizedBox(height: 8),
-          if (otherImages.isNotEmpty)
-            ImageListWidget(otherImages.map((image) =>
-                imageFromNetwork(imageId: image, height: 64))),
-          ErrorText(
-            errorReviewing,
-            l10n.errorReviewing,
-            topPadding: 16,
-            horizontalPadding: 16,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              const SizedBox(width: 16),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => sendVerdict(verification.imageId, true),
-                  child: Text(
-                    l10n.verdictBad,
-                    textAlign: TextAlign.center,
+            if (otherImages.isNotEmpty) const SizedBox(height: 8),
+            if (otherImages.isNotEmpty)
+              ImageListWidget(
+                  otherImages.map((image) => imageFromNetwork(imageId: image, height: 64))),
+            ErrorText(
+              errorReviewing,
+              l10n.errorReviewing,
+              topPadding: 16,
+              horizontalPadding: 16,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const SizedBox(width: 16),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => sendVerdict(verification.imageId, true),
+                    child: Text(
+                      l10n.verdictBad,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => sendVerdict(verification.imageId, false),
-                  child: Text(
-                    l10n.verdictOk,
-                    textAlign: TextAlign.center,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => sendVerdict(verification.imageId, false),
+                    child: Text(
+                      l10n.verdictOk,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-            ],
-          ),
-          const SizedBox(height: 16),
-        ],
+                const SizedBox(width: 16),
+              ],
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
 
   void sendVerdict(int imageId, bool verdict) {
-    get<Backend>().setVerifyVerdict(imageId, verdict)
-        .then((awardedPoints) {
+    get<Backend>().setVerifyVerdict(imageId, verdict).then((awardedPoints) {
       if (awardedPoints == null) {
         setState(() {
           i += 1;

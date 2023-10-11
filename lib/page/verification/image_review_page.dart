@@ -91,99 +91,101 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
               ),
             ]),
       ),
-      body: Center(
-        child: loading
-            ? const CircularProgressIndicator()
-            : errorLoading != null
-                ? ErrorText(errorLoading, l10n.errorLoading)
-                : images.isEmpty
-                    ? Text(l10n.noImageToReview)
-                    : Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                showImageViewerPager(
-                                  context,
-                                  SingleImageProvider(image!.image),
-                                  closeButtonTooltip: l10n.close,
-                                  doubleTapZoomable: true,
-                                );
-                              },
-                              child: image,
+      body: SafeArea(
+        child: Center(
+          child: loading
+              ? const CircularProgressIndicator()
+              : errorLoading != null
+                  ? ErrorText(errorLoading, l10n.errorLoading)
+                  : images.isEmpty
+                      ? Text(l10n.noImageToReview)
+                      : Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showImageViewerPager(
+                                    context,
+                                    SingleImageProvider(image!.image),
+                                    closeButtonTooltip: l10n.close,
+                                    doubleTapZoomable: true,
+                                  );
+                                },
+                                child: image,
+                              ),
                             ),
-                          ),
-                          ErrorText(
-                            errorReviewing,
-                            l10n.errorReviewing,
-                            topPadding: 16,
-                            horizontalPadding: 16,
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    sendVerdict(ReviewVerdict.ok);
-                                  },
-                                  child: Text(
-                                    l10n.verdictOk,
-                                    textAlign: TextAlign.center,
+                            ErrorText(
+                              errorReviewing,
+                              l10n.errorReviewing,
+                              topPadding: 16,
+                              horizontalPadding: 16,
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.ok);
+                                    },
+                                    child: Text(
+                                      l10n.verdictOk,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    sendVerdict(ReviewVerdict.skip);
-                                  },
-                                  child: Text(
-                                    l10n.verdictSkip,
-                                    textAlign: TextAlign.center,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.skip);
+                                    },
+                                    child: Text(
+                                      l10n.verdictSkip,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    sendVerdict(ReviewVerdict.delete);
-                                  },
-                                  child: Text(
-                                    l10n.verdictDelete,
-                                    textAlign: TextAlign.center,
+                                const SizedBox(width: 16),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.delete);
+                                    },
+                                    child: Text(
+                                      l10n.verdictDelete,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    sendVerdict(ReviewVerdict.deleteReport);
-                                  },
-                                  child: Text(
-                                    l10n.verdictDeleteReport,
-                                    textAlign: TextAlign.center,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      sendVerdict(ReviewVerdict.deleteReport);
+                                    },
+                                    child: Text(
+                                      l10n.verdictDeleteReport,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
+                                const SizedBox(width: 16),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+        ),
       ),
     );
   }
