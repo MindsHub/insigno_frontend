@@ -167,10 +167,6 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
         get<VerifyTimeProvider>().update();
         Navigator.pop(context);
       }
-    }, onError: (e) {
-      setState(() {
-        errorReviewing = e.toString();
-      });
     });
   }
 }

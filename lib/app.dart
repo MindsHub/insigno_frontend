@@ -20,8 +20,9 @@ import 'package:latlong2/latlong.dart';
 
 class InsignoApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
 
-  const InsignoApp(this.navigatorKey, {super.key});
+  const InsignoApp(this.navigatorKey, this.scaffoldMessengerKey, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +36,8 @@ class InsignoApp extends StatelessWidget {
     );
 
     return MaterialApp(
+      locale: const Locale('it'),
+      scaffoldMessengerKey: scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       title: "Insigno",

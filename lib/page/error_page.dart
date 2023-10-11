@@ -17,7 +17,7 @@ class ErrorPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.errorOccurred),
+        title: Text(l10n.ohNoError),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
