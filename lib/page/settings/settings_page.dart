@@ -1,17 +1,38 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/networking/authentication.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/page/settings/about_card_widget.dart';
 import 'package:insigno_frontend/page/settings/server_host_widget.dart';
+import 'package:insigno_frontend/page/settings/switch_widget.dart';
+import 'package:insigno_frontend/provider/verify_time_provider.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   static const routeName = "/settingsPage";
 
-  const SettingsPage({Key? key}) : super(key: key);
+  SettingsPage({Key? key}) : super(key: key);
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
+    final isLoggedIn = watchStream(
+                (Authentication authentication) => authentication.getIsLoggedInStream(),
+                get<Authentication>().isLoggedIn())
+            .data ??
+        get<Authentication>().isLoggedIn();
+
+    final verifyTime = watchStream((VerifyTimeProvider provider) => provider.getVerifyTimeStream(),
+                get<VerifyTimeProvider>().getVerifyTime())
+            .data ??
+        get<VerifyTimeProvider>().getVerifyTime();
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
@@ -34,6 +55,18 @@ class SettingsPage extends StatelessWidget {
                 svgAssetPath: "assets/icons/mindshub_logo.svg",
                 urlString: "https://mindshub.it",
               ),
+              if (isLoggedIn) const SizedBox(height: 8),
+              if (isLoggedIn)
+                SwitchWidget(
+                  checked: verifyTime.dateTime != null,
+                  title: l10n.acceptToReviewSwitchTitle,
+                  description: l10n.acceptToReviewSwitchDescription,
+                  onCheckedChanged: (acceptedToReview) {
+                    get<Backend>().setAcceptedToReview(acceptedToReview).then((_) =>
+                        get<VerifyTimeProvider>()
+                            .onAcceptedToReviewSettingChanged(acceptedToReview));
+                  },
+                ),
               const SizedBox(height: 8),
               ServerHostWidget(),
               if (kDebugMode) const SizedBox(height: 8),

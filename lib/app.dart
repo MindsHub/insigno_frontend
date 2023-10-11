@@ -67,7 +67,7 @@ class InsignoApp extends StatelessWidget {
           ErrorPage.routeName: (ctx) => ErrorPage(settings.arguments as FlutterErrorDetails),
           ImageReviewPage.routeName: (ctx) => const ImageReviewPage(),
           ChangePasswordPage.routeName: (ctx) => const ChangePasswordPage(),
-          SettingsPage.routeName: (ctx) => const SettingsPage(),
+          SettingsPage.routeName: (ctx) => SettingsPage(),
           LoginFlowPage.routeName: (ctx) => const LoginFlowPage(),
           ProfilePage.routeName: (ctx) => ProfilePage(),
           ScoreboardPage.routeName: (ctx) => ScoreboardPage(settings.arguments as LatLng),
