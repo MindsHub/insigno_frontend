@@ -7,6 +7,7 @@ import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/page/settings/about_card_widget.dart';
 import 'package:insigno_frontend/page/settings/server_host_widget.dart';
 import 'package:insigno_frontend/page/settings/switch_widget.dart';
+import 'package:insigno_frontend/page/util/accept_to_review_dialog.dart';
 import 'package:insigno_frontend/provider/verify_time_provider.dart';
 
 class SettingsPage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -61,10 +62,16 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
                   checked: verifyTime.dateTime != null,
                   title: l10n.acceptToReviewSwitchTitle,
                   description: l10n.acceptToReviewSwitchDescription,
-                  onCheckedChanged: (acceptedToReview) {
-                    get<Backend>().setAcceptedToReview(acceptedToReview).then((_) =>
-                        get<VerifyTimeProvider>()
-                            .onAcceptedToReviewSettingChanged(acceptedToReview));
+                  onCheckedChanged: (acceptedToReview) async {
+                    if (acceptedToReview) {
+                      var confirmed = await openAcceptToReviewDialog(context);
+                      if (confirmed != true) {
+                        return;
+                      }
+                    }
+
+                    await get<Backend>().setAcceptedToReview(acceptedToReview);
+                    get<VerifyTimeProvider>().onAcceptedToReviewSettingChanged(acceptedToReview);
                   },
                 ),
               const SizedBox(height: 8),
