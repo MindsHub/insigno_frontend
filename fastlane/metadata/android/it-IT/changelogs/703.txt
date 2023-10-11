@@ -1,0 +1,12 @@
+Novità
+• L'interfaccia grafica è stata rivisitata completamente
+• Aggiunta una classifica
+• Aggiunto un processo di verifica delle immagini
+• È possibile rifiutare di verificare le immagini
+
+Miglioramenti
+• La finestra per filtrare i marcatori è ora più compatta
+• Aggiunta un'animazione carina quando si guadagnano punti
+
+Correzioni
+• Risolto il rallentamento con molti marcatori sulla mappa

@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.0+30
+version: 1.4.0+70
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -25,7 +25,7 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`. TODO choose versions
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -41,27 +41,30 @@ dependencies:
   injectable: ^2.1.0
 
   # ui
-  flutter_map: ^4.0.0
+  flutter_map: ^5.0.0
   dynamic_color: ^1.6.3
   easy_image_viewer: ^1.2.0
   flutter_svg: ^2.0.5
+  flutter_svg_provider: ^1.0.6
 
   # core functionality
-  geolocator: ^9.0.2 # used to load location
-  image_picker: ^0.8.7+4 # used only on Android and iOS to take pictures with the camera
-  latlong2: ^0.8.1
+  geolocator: ^10.0.1 # used to load location
+  image_picker: ^1.0.4 # used only on Android and iOS to take pictures with the camera
+  latlong2: ^0.9.0
 
   # utils (os_detect may be useful, but is not needed atm)
   shared_preferences: ^2.1.0
-  http: ^0.13.6
+  http: ^1.1.0
   http_parser: ^4.0.2
-  collection: ^1.17.0
+  collection: ^1.17.1
   url_launcher: ^6.1.10
   os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
-  package_info_plus: ^3.1.2
+  package_info_plus: ^4.1.0
+  async: ^2.11.0
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
+    # path: ../flutter-geolocator/geolocator_android
     git:
       url: https://github.com/Stypox/flutter-geolocator.git
       path: geolocator_android

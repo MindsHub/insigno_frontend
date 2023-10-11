@@ -4,6 +4,7 @@ import "package:http_parser/http_parser.dart";
 import "package:injectable/injectable.dart";
 import "package:insigno_frontend/networking/authentication.dart";
 import "package:insigno_frontend/networking/data/authenticated_user.dart";
+import "package:insigno_frontend/networking/data/image_verification.dart";
 import "package:insigno_frontend/networking/data/marker.dart";
 import "package:insigno_frontend/networking/data/marker_image.dart";
 import "package:insigno_frontend/networking/data/pill.dart";
@@ -50,7 +51,7 @@ class Backend {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
       _auth.removeStoredCookie();
     }
-    return response.throwErrors().mapParseJson();
+    return (await response.throwErrors()).mapParseJson();
   }
 
   Future<http.StreamedResponse> _postAuthenticated(String path,
@@ -77,10 +78,9 @@ class Backend {
     final response = await _client.send(request);
     if (response.statusCode == 401) {
       // the authentication token is not valid anymore, so remove it and ask the user to re-login
-      _auth.removeStoredCookie();
+      //_auth.removeStoredCookie();
     }
-    response.throwErrors();
-    return response;
+    return await response.throwErrors();
   }
 
   Future<dynamic> _postJsonAuthenticated(String path,
@@ -166,5 +166,56 @@ class Backend {
 
   Future<void> review(int imageId, ReviewVerdict verdict) {
     return _postAuthenticated("/map/image/review/$imageId", fields: {"verdict": verdict.verdict});
+  }
+
+  Future<VerifyTime> getNextVerifyTime() async {
+    try {
+      final utcDateTime = await _getJsonAuthenticated("/verify/get_next_verify_time");
+      return VerifyTime.date(DateTime.parse(utcDateTime));
+    } on UnauthorizedException catch (e) {
+      if (e.statusCode != 403) {
+        rethrow;
+      }
+      switch (e.response) {
+        case "accepted_to_review_pending":
+          return VerifyTime.notAcceptedYet(true);
+        case "accepted_to_review_refused":
+          return VerifyTime.notAcceptedYet(false);
+        default:
+          rethrow;
+      }
+    }
+  }
+
+  Future<void> setAcceptedToReview(bool acceptedToReview) {
+    return _postAuthenticated("/verify/set_accepted_to_review",
+        fields: {"accepted_to_review": acceptedToReview.toString()});
+  }
+
+  Future<List<ImageVerification>> getVerifySession() {
+    return _getJsonAuthenticated("/verify/get_session").map(sessionFromJson);
+  }
+
+  // returns the awarded points iff the session has ended
+  Future<double?> setVerifyVerdict(int imageId, bool verdict) {
+    return _postJsonAuthenticated("/verify/set_verdict", fields: {
+      "image_id": imageId.toString(),
+      "verdict": verdict.toString(),
+    }).map((p0) => p0 as double?);
+  }
+
+  Future<List<User>> getGlobalScoreboard() {
+    return _getJson("/scoreboard/global") //
+        .map((users) => users.map<User>(userFromJson).toList());
+  }
+
+  Future<List<User>> getGeographicalScoreboard(
+      double latitude, double longitude, double radius) {
+    return _getJson("/scoreboard/geographical", params: {
+      "y": latitude.toString(),
+      "x": longitude.toString(),
+      "srid": "4326", // gps
+      "radius": radius.toString(),
+    }).map((users) => users.map<User>(userFromJson).toList());
   }
 }

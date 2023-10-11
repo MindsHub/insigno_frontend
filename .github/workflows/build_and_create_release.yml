@@ -102,8 +102,18 @@ jobs:
         with:
           name: apks
           path: apks
+      - name: Make sure not to overwrite the APKs of a release that was already released
+        id: get_release
+        uses: joutvhu/get-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create draft release
         id: create_release
+        # if the release exists and is a draft, or the release does not exists,
+        # proceed with uploading/overwriting artifacts
+        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}

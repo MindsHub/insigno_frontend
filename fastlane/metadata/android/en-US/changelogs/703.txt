@@ -1,0 +1,12 @@
+New
+• The graphical interface was overhauled completely
+• Add scoreboard
+• Add image verification process
+• Allow refusing to verify images
+
+Improved
+• Make marker filters dialog more compact
+• Nice animation when obtaining points
+
+Fixed
+• Fix lag with many markers on map

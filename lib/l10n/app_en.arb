@@ -2,7 +2,7 @@
   "map": "Map",
   "user": "User",
   "loginToInsigno": "Login to Insigno!",
-  "name": "Name",
+  "name": "Nickname",
   "password": "Password",
   "wrongUserOrPassword": "Wrong user or password: {error}",
   "@wrongUserOrPassword": {
@@ -102,7 +102,7 @@
   "reportAsInappropriate": "Report as inappropriate",
   "insertEcologyPill": "Insert an ecology pill",
   "insertPill": "Insert a pill",
-  "source": "Source (web address)",
+  "source": "Source (optional, web address)",
   "infoText": "Informational text",
   "insertPossiblySource": "Insert the source, if applicable",
   "insertValidUrl": "Insert a valid web address",
@@ -166,8 +166,10 @@
   "email": "Email",
   "insertEmail": "Insert an email",
   "insertValidEmail": "Insert a valid email",
-  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link that was just sent to the email you provided, and only then you will be able to login from here",
-  "errorOccurred": "Oh no, error!",
+  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link we just sent to the email you provided, then login from here",
+  "ohNoError": "Oh no, error!",
+  "errorOccurred": "An error occurred",
+  "reportError": "Report",
   "copy": "Copy",
   "settings": "Settings",
   "insignoDescription": "Insigno lets you report and collect garbage, earning points while doing so! Insigno is free software, click to view code and report problems.",
@@ -179,8 +181,9 @@
   "use": "Use",
   "edit": "Edit",
   "onlyHttpsAccepted": "Only HTTPS URLs are accepted",
-  "reviewImages": "Review images",
+  "reviewImages": "Review images as admin",
   "verdictOk": "Ok!",
+  "verdictBad": "Bad",
   "verdictDelete": "Delete",
   "verdictDeleteReport": "Report and delete",
   "verdictSkip": "Skip",
@@ -190,6 +193,68 @@
     "placeholders": {
       "error": {
         "type": "String"
+      }
+    }
+  },
+  "forgotPassword": "Forgot password?",
+  "changePassword": "Change password",
+  "passwordChangeFailed": "Changing the password failed: {error}",
+  "@passwordChangeFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here",
+  "newPassword": "New password",
+  "weWillSendEmail": "We will send you an email with the instructions to proceed",
+  "verifyImages": "Review images",
+  "verifyImagesIn": "Come back to review in {time}!",
+  "@verifyImagesIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "scoreboard": "Scoreboard",
+  "global": "Global",
+  "km1": "1km",
+  "km10": "10km",
+  "km100": "100km",
+  "additional_points": "+{points}",
+  "@additional_points": {
+    "placeholders": {
+      "points": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "yes": "Yes",
+  "no": "No",
+  "acceptToReviewDialogTitle": "Do you want to participate in reviewing images?",
+  "acceptToReviewDialogText": "Reviewing images posted by other users allows you to earn some points periodically. However you might be exposed to unmoderated images with sensitive content. Therefore by tapping on \"{yes}\" you declare that YOU ARE ADULT and that YOU ARE AWARE OF THE RISKS.",
+  "@acceptToReviewDialogText": {
+    "placeholders": {
+      "yes": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptToReviewSwitchTitle": "Participate in reviewing images",
+  "acceptToReviewSwitchDescription": "Reviewing images posted by other users allows you to earn some points periodically, however you might be exposed to unmoderated images with sensitive content",
+  "partialOutOfTotal": "{partial}/{total}",
+  "@partialOutOfTotal": {
+    "placeholders": {
+      "partial": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
       }
     }
   }

@@ -1,0 +1,5 @@
+New
+• The graphical interface was overhauled completely
+
+Improved
+• Rendering trash markers on the map is now a lot faster, resolving lag issues in marker-dense areas

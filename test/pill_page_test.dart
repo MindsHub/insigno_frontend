@@ -5,11 +5,9 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:insigno_frontend/home/pill_page.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
+import 'package:insigno_frontend/page/pill_page.dart';
 
 void main() {
   testWidgets("Pill page test", (WidgetTester tester) async {

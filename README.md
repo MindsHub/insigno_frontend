@@ -22,10 +22,10 @@ flutter pub run build_runner build
 flutter pub run build_runner watch
 ```
 
-## Naming
+## TODOs
 
-TODO
-
+- [x] Optimize performance of map when there are many markers to display
+- [ ] Improve error handling
 
 ## Flutter getting started
 

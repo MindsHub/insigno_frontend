@@ -7,7 +7,7 @@ import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/error.dart';
 import 'package:insigno_frontend/networking/server_host_handler.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
-import 'package:insigno_frontend/user/auth_user_provider.dart';
+import 'package:insigno_frontend/provider/auth_user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @lazySingleton
@@ -56,7 +56,7 @@ class Authentication {
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
     }
-    response.throwErrors();
+    await response.throwErrors();
 
     final authCookie = response.headers["set-cookie"]?.split("; ")[0];
     if (authCookie == null) {
@@ -77,7 +77,19 @@ class Authentication {
     if (response.statusCode == 401) {
       throw UnauthorizedException(401, response.body);
     }
-    response.throwErrors();
+    await response.throwErrors();
+  }
+
+  Future<void> changePassword(String email, String password) async {
+    final response = await _client.post(
+      _serverHostHandler.getUri("/change_password"),
+      body: {"email": email, "password": password},
+    );
+
+    if (response.statusCode == 401) {
+      throw UnauthorizedException(401, response.body);
+    }
+    await response.throwErrors();
   }
 
   /// also invalidates the loaded user (if any) of [AuthUserProvider]
