@@ -207,17 +207,6 @@
   "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here",
   "newPassword": "New password",
   "weWillSendEmail": "We will send you an email with the instructions to proceed",
-  "iAmAdult": "I am an adult",
-  "iAmUnderage": "I am underage",
-  "areYouUnderage": "Are you underage?",
-  "adultDialogText": "By tapping on \"{iAmAdult}\" you declare that you are adult. Don't worry, you can use Insigno even as an underage, though you won't be asked to review others' images.",
-  "@adultDialogText": {
-    "placeholders": {
-      "iAmAdult": {
-        "type": "String"
-      }
-    }
-  },
   "verifyImages": "Review images",
   "verifyImagesIn": "Come back to review in {time}!",
   "@verifyImagesIn": {
