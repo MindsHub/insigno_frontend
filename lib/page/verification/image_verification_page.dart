@@ -5,7 +5,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/marker/image_list_widget.dart';
-import 'package:insigno_frontend/page/user/auth_user_provider.dart';
+import 'package:insigno_frontend/provider/auth_user_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 

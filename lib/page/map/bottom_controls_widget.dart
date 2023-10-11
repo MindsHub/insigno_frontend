@@ -7,7 +7,7 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
-import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/map/verify_message_box.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';

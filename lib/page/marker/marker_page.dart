@@ -5,7 +5,7 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
-import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/marker/add_images_widget.dart';
 import 'package:insigno_frontend/page/marker/image_list_widget.dart';
 import 'package:insigno_frontend/page/marker/report_as_inappropriate_dialog.dart';

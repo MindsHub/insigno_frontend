@@ -16,8 +16,8 @@ import 'package:insigno_frontend/networking/authentication.dart' as _i8;
 import 'package:insigno_frontend/networking/backend.dart' as _i9;
 import 'package:insigno_frontend/networking/client.dart' as _i4;
 import 'package:insigno_frontend/networking/server_host_handler.dart' as _i7;
-import 'package:insigno_frontend/page/map/location_provider.dart' as _i5;
-import 'package:insigno_frontend/page/user/auth_user_provider.dart' as _i10;
+import 'package:insigno_frontend/provider/location_provider.dart' as _i5;
+import 'package:insigno_frontend/provider/auth_user_provider.dart' as _i10;
 import 'package:insigno_frontend/pref/preferences.dart' as _i11;
 import 'package:shared_preferences/shared_preferences.dart' as _i6;
 

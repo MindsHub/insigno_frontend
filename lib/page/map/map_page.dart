@@ -11,7 +11,7 @@ import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/page/map/additional_points_widget.dart';
 import 'package:insigno_frontend/page/map/bottom_controls_widget.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
-import 'package:insigno_frontend/page/map/location_provider.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_controls_widget.dart';
 import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/page/map/pill_widget.dart';

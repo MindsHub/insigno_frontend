@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:insigno_frontend/di/setup.dart';
-import 'package:insigno_frontend/page/user/auth_user_provider.dart';
+import 'package:insigno_frontend/provider/auth_user_provider.dart';
 
 // see additional_points_curve.ggb Geogebra file
 class _PositionCurve extends Curve {
