@@ -87,7 +87,7 @@
   "use": "Usa",
   "edit": "Modifica",
   "onlyHttpsAccepted": "Solo URL HTTPS sono accettati",
-  "reviewImages": "Revisiona immagini",
+  "reviewImages": "Revisiona immagini come admin",
   "verdictOk": "A posto!",
   "verdictBad": "Non va bene",
   "verdictDelete": "Elimina",

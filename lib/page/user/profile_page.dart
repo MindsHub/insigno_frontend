@@ -7,9 +7,10 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/authenticated_user.dart';
 import 'package:insigno_frontend/networking/error.dart';
-import 'package:insigno_frontend/provider/auth_user_provider.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
 import 'package:insigno_frontend/page/verification/image_review_page.dart';
+import 'package:insigno_frontend/provider/auth_user_provider.dart';
+import 'package:insigno_frontend/provider/verify_time_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 
 class ProfilePage extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -46,11 +47,17 @@ class _ProfilePageState extends State<ProfilePage>
     final theme = Theme.of(context);
 
     // double.negativeInfinity is used just to signal that the user has not loaded yet
-    final user = watchStream((AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
+    final user = watchStream(
+                (AuthUserProvider userProv) => userProv.getAuthenticatedUserStream(),
                 get<AuthUserProvider>().getAuthenticatedUserOrNull() ??
                     AuthenticatedUser(-1, "", double.negativeInfinity, false, "", null))
             .data ??
         AuthenticatedUser(-1, "", double.negativeInfinity, false, "", null);
+
+    final verifyTime = watchStream((VerifyTimeProvider provider) => provider.getVerifyTimeStream(),
+                get<VerifyTimeProvider>().getVerifyTime())
+            .data ??
+        get<VerifyTimeProvider>().getVerifyTime();
 
     return Scaffold(
       appBar: AppBar(title: Text(user.points == double.negativeInfinity ? l10n.user : user.name)),
@@ -121,8 +128,9 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                     ],
                   ),
-                  if (user.isAdmin) const Divider(height: 32, thickness: 1),
-                  if (user.isAdmin)
+                  if (user.isAdmin && verifyTime.dateTime != null)
+                    const Divider(height: 32, thickness: 1),
+                  if (user.isAdmin && verifyTime.dateTime != null)
                     ElevatedButton(
                       onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
                       child: Text(l10n.reviewImages),
