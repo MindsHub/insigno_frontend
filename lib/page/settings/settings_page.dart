@@ -39,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
       appBar: AppBar(title: Text(l10n.settings)),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(8, 8 + MediaQuery.of(context).padding.top, 8, 8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,

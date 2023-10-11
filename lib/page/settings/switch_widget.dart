@@ -18,7 +18,7 @@ class SwitchWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,9 +30,13 @@ class SwitchWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: theme.textTheme.titleMedium,
+                  style: theme.textTheme.bodyMedium,
                 ),
-                if (description.isNotEmpty) Text(description),
+                if (description.isNotEmpty)
+                  Text(
+                    description,
+                    style: theme.textTheme.bodySmall,
+                  ),
               ],
             ),
           ),
