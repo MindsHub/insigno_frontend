@@ -10,6 +10,7 @@ import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/page/map/verify_message_box.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
+import 'package:insigno_frontend/page/util/accept_to_review_dialog.dart';
 import 'package:insigno_frontend/page/verification/image_verification_page.dart';
 import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/provider/verify_time_provider.dart';
@@ -195,7 +196,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
         Navigator.pushNamed(context, ImageVerificationPage.routeName);
       } else {
         assert(verifyTime.isAcceptingToReviewPending == true);
-        _openAcceptToReviewDialog(AppLocalizations.of(context)!).then((accepted) {
+        openAcceptToReviewDialog(context).then((accepted) {
           if (accepted != null) {
             get<Backend>().setAcceptedToReview(accepted).then((_) {
               if (accepted) {
@@ -208,34 +209,6 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
         });
       }
     });
-  }
-
-  Future<bool?> _openAcceptToReviewDialog(AppLocalizations l10n) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.acceptToReviewDialogTitle),
-          content: SingleChildScrollView(
-            child: Text(l10n.acceptToReviewDialogText(l10n.yes)),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(l10n.yes),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-            TextButton(
-              child: Text(l10n.no),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
