@@ -227,8 +227,8 @@
   "@additional_points": {
     "placeholders": {
       "points": {
-        "type": "num",
-        "format": "compact"
+        "type": "double",
+        "format": "decimalPattern"
       }
     }
   },
@@ -244,5 +244,18 @@
     }
   },
   "acceptToReviewSwitchTitle": "Participate in reviewing images",
-  "acceptToReviewSwitchDescription": "Reviewing images posted by other users allows you to earn some points periodically, however you might be exposed to unmoderated images with sensitive content"
+  "acceptToReviewSwitchDescription": "Reviewing images posted by other users allows you to earn some points periodically, however you might be exposed to unmoderated images with sensitive content",
+  "partialOutOfTotal": "{partial}/{total}",
+  "@partialOutOfTotal": {
+    "placeholders": {
+      "partial": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  }
 }

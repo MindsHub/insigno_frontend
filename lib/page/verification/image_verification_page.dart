@@ -81,10 +81,21 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: Icon(
-              verification.markerType.icon,
-              size: 48,
-              color: verification.markerType.color,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  l10n.partialOutOfTotal(i + 1, theVerifications.length),
+                  style: theme.textTheme.headlineMedium,
+                ),
+                const SizedBox(width: 6),
+                Icon(
+                  verification.markerType.icon,
+                  size: 48,
+                  color: verification.markerType.color,
+                ),
+              ],
             ),
           ),
         ],

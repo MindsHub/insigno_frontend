@@ -123,5 +123,6 @@
     }
   },
   "acceptToReviewSwitchTitle": "Aiuta a verificare immagini",
-  "acceptToReviewSwitchDescription": "Revisionare le immagini caricate da altri utenti può farti guadagnare punti periodicamente, potresti però venire esposto a immagini non verificate con possibilità di contenuti inappropriati"
+  "acceptToReviewSwitchDescription": "Revisionare le immagini caricate da altri utenti può farti guadagnare punti periodicamente, potresti però venire esposto a immagini non verificate con possibilità di contenuti inappropriati",
+  "partialOutOfTotal": "{partial}/{total}"
 }
