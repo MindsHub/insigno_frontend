@@ -7,11 +7,12 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
-import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/map/verify_message_box.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/verification/image_verification_page.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
+import 'package:insigno_frontend/provider/verify_time_provider.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -27,7 +28,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     with GetItStateMixin<BottomControlsWidget>, TickerProviderStateMixin<BottomControlsWidget> {
   ErrorMessage? errorMessage;
   bool isVersionCompatible = true;
-  VerifyTime nextVerifyTime = VerifyTime.notAcceptedYet(false);
+  VerifyTime verifyTime = VerifyTime.notAcceptedYet(false);
 
   late final Timer appOpenedTimer;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
@@ -49,13 +50,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     });
 
     get<LocationProvider>().getLocationStream().forEach((_) => _updateErrorMessage());
-    get<Authentication>().getIsLoggedInStream().forEach((isLoggedIn) {
-      _updateErrorMessage();
-      _updateVerifyMessage(isLoggedIn);
-    });
+    get<Authentication>().getIsLoggedInStream().forEach((_) => _updateErrorMessage());
+    get<VerifyTimeProvider>()
+        .getVerifyTimeStream()
+        .forEach((newVerifyTime) => _updateVerifyMessage(newVerifyTime));
 
     _updateErrorMessage();
-    _updateVerifyMessage(get<Authentication>().isLoggedIn());
+    _updateVerifyMessage(get<VerifyTimeProvider>().getVerifyTime());
   }
 
   @override
@@ -95,7 +96,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
                 key: _listKey,
                 shrinkWrap: true,
                 initialItemCount:
-                    (errorMessage != null ? 1 : 0) + (nextVerifyTime.shouldShowMessage() ? 1 : 0),
+                    (errorMessage != null ? 1 : 0) + (verifyTime.shouldShowMessage() ? 1 : 0),
                 itemBuilder: _buildMessage,
               ),
             ),
@@ -145,22 +146,11 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
     }
   }
 
-  void _updateVerifyMessage(bool isLoggedIn) async {
-    var newVerifyTime = VerifyTime.notAcceptedYet(false);
-    if (isLoggedIn) {
-      var verifyTimeFromNetwork = await get<Backend>()
-          .getNextVerifyTime()
-          // ignore errors
-          .onError((error, stackTrace) => VerifyTime.notAcceptedYet(false));
-      if (get<Authentication>().isLoggedIn()) {
-        newVerifyTime = verifyTimeFromNetwork;
-      }
-    }
-
-    var oldVerifyTime = nextVerifyTime;
+  void _updateVerifyMessage(VerifyTime newVerifyTime) async {
+    var oldVerifyTime = verifyTime;
     if (_listKey.currentState != null &&
         oldVerifyTime.shouldShowMessage() != newVerifyTime.shouldShowMessage()) {
-      nextVerifyTime = newVerifyTime;
+      verifyTime = newVerifyTime;
       if (newVerifyTime.shouldShowMessage()) {
         _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
       } else {
@@ -169,7 +159,7 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       }
     } else {
       setState(() {
-        nextVerifyTime = newVerifyTime;
+        verifyTime = newVerifyTime;
       });
     }
   }
@@ -177,8 +167,8 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
   Widget _buildMessage(BuildContext context, int index, Animation<double> animation) {
     if (errorMessage != null && index == 0) {
       return _buildErrorMessage(context, animation, errorMessage!);
-    } else if (nextVerifyTime.shouldShowMessage()) {
-      return _buildVerifyMessage(context, animation, nextVerifyTime);
+    } else if (verifyTime.shouldShowMessage()) {
+      return _buildVerifyMessage(context, animation, verifyTime);
     } else {
       // should be unreachable
       return const SizedBox.shrink();
@@ -202,18 +192,16 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       BuildContext context, Animation<double> animation, VerifyTime verifyTime) {
     return VerifyMessageBox(animation, verifyTime, () {
       if (verifyTime.dateTime != null) {
-        Navigator.pushNamed(context, ImageVerificationPage.routeName)
-            .then((_) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
+        Navigator.pushNamed(context, ImageVerificationPage.routeName);
       } else {
         assert(verifyTime.isAcceptingToReviewPending == true);
         _openAcceptToReviewDialog(AppLocalizations.of(context)!).then((accepted) {
           if (accepted != null) {
             get<Backend>().setAcceptedToReview(accepted).then((_) {
               if (accepted) {
-                Navigator.pushNamed(context, ImageVerificationPage.routeName)
-                    .then((_) => _updateVerifyMessage(get<Authentication>().isLoggedIn()));
+                Navigator.pushNamed(context, ImageVerificationPage.routeName);
               } else {
-                _updateVerifyMessage(get<Authentication>().isLoggedIn());
+                get<VerifyTimeProvider>().onAcceptedToReviewSettingChanged(false);
               }
             });
           }

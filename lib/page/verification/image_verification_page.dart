@@ -6,6 +6,7 @@ import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/marker/image_list_widget.dart';
 import 'package:insigno_frontend/provider/auth_user_provider.dart';
+import 'package:insigno_frontend/provider/verify_time_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 
@@ -157,6 +158,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
         });
       } else {
         get<AuthUserProvider>().addPoints(awardedPoints);
+        get<VerifyTimeProvider>().update();
         Navigator.pop(context);
       }
     }, onError: (e) {

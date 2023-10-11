@@ -16,9 +16,10 @@ import 'package:insigno_frontend/networking/authentication.dart' as _i8;
 import 'package:insigno_frontend/networking/backend.dart' as _i9;
 import 'package:insigno_frontend/networking/client.dart' as _i4;
 import 'package:insigno_frontend/networking/server_host_handler.dart' as _i7;
+import 'package:insigno_frontend/pref/preferences.dart' as _i12;
+import 'package:insigno_frontend/provider/auth_user_provider.dart' as _i11;
 import 'package:insigno_frontend/provider/location_provider.dart' as _i5;
-import 'package:insigno_frontend/provider/auth_user_provider.dart' as _i10;
-import 'package:insigno_frontend/pref/preferences.dart' as _i11;
+import 'package:insigno_frontend/provider/verify_time_provider.dart' as _i10;
 import 'package:shared_preferences/shared_preferences.dart' as _i6;
 
 extension GetItInjectableX on _i1.GetIt {
@@ -58,8 +59,15 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i8.Authentication>(),
           gh<_i7.ServerHostHandler>(),
         ));
-    gh.lazySingleton<_i10.AuthUserProvider>(
-      () => _i10.AuthUserProvider(gh<_i9.Backend>()),
+    gh.lazySingleton<_i10.VerifyTimeProvider>(
+      () => _i10.VerifyTimeProvider(
+        gh<_i9.Backend>(),
+        gh<_i8.Authentication>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i11.AuthUserProvider>(
+      () => _i11.AuthUserProvider(gh<_i9.Backend>()),
       dispose: (i) => i.dispose(),
     );
     return this;
@@ -68,4 +76,4 @@ extension GetItInjectableX on _i1.GetIt {
 
 class _$ClientModule extends _i4.ClientModule {}
 
-class _$PreferencesModule extends _i11.PreferencesModule {}
+class _$PreferencesModule extends _i12.PreferencesModule {}

@@ -16,6 +16,7 @@ class VerifyTime {
 
   VerifyTime.date(DateTime this.dateTime) : isAcceptingToReviewPending = null;
   VerifyTime.notAcceptedYet(bool this.isAcceptingToReviewPending) : dateTime = null;
+  VerifyTime.empty() : dateTime = null, isAcceptingToReviewPending = false;
 
   bool shouldShowMessage() {
     return dateTime != null || isAcceptingToReviewPending == true;
