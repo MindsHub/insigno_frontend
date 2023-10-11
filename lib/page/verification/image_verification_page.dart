@@ -151,6 +151,12 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
   }
 
   void sendVerdict(int imageId, bool verdict) {
+    if (errorReviewing != null) {
+      setState(() {
+        errorReviewing = null;
+      });
+    }
+
     get<Backend>().setVerifyVerdict(imageId, verdict).then((awardedPoints) {
       if (awardedPoints == null) {
         setState(() {
@@ -162,7 +168,9 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
         Navigator.pop(context);
       }
     }, onError: (e) {
-      errorReviewing = e.toString();
+      setState(() {
+        errorReviewing = e.toString();
+      });
     });
   }
 }
