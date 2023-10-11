@@ -122,47 +122,49 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
 
   void _updateErrorMessage() {
     final prevErrorMessage = errorMessage;
+    ErrorMessage? newErrorMessage;
     if (isVersionCompatible) {
-      errorMessage = getErrorMessage(
+      newErrorMessage = getErrorMessage(
         get<Authentication>().isLoggedIn(),
         get<LocationProvider>().lastLocationInfo(),
       );
 
-      if (appOpenedTimer.isActive && errorMessage == ErrorMessage.locationIsLoading) {
+      if (appOpenedTimer.isActive && newErrorMessage == ErrorMessage.locationIsLoading) {
         // do not show "Location is loading" for the first two seconds, since it might load faster
-        errorMessage = null;
+        newErrorMessage = null;
       }
     } else {
-      errorMessage = ErrorMessage.oldVersion;
+      newErrorMessage = ErrorMessage.oldVersion;
     }
 
-    if (_listKey.currentState != null && errorMessage != prevErrorMessage) {
-      if (errorMessage != null) {
+    if (_listKey.currentState != null && newErrorMessage != prevErrorMessage) {
+      if (newErrorMessage != null) {
         _listKey.currentState!.insertItem(0);
       }
       if (prevErrorMessage != null) {
-        _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
+        _listKey.currentState!.removeItem(newErrorMessage == null ? 0 : 1,
             (context, animation) => _buildErrorMessage(context, animation, prevErrorMessage));
       }
     }
+    setState(() {
+      errorMessage = newErrorMessage;
+    });
   }
 
   void _updateVerifyMessage(VerifyTime newVerifyTime) async {
     var oldVerifyTime = verifyTime;
     if (_listKey.currentState != null &&
         oldVerifyTime.shouldShowMessage() != newVerifyTime.shouldShowMessage()) {
-      verifyTime = newVerifyTime;
       if (newVerifyTime.shouldShowMessage()) {
         _listKey.currentState!.insertItem(errorMessage == null ? 0 : 1);
       } else {
         _listKey.currentState!.removeItem(errorMessage == null ? 0 : 1,
             (context, animation) => _buildVerifyMessage(context, animation, oldVerifyTime));
       }
-    } else {
-      setState(() {
-        verifyTime = newVerifyTime;
-      });
     }
+    setState(() {
+      verifyTime = newVerifyTime;
+    });
   }
 
   Widget _buildMessage(BuildContext context, int index, Animation<double> animation) {
