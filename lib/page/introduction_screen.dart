@@ -14,20 +14,20 @@ class IntroductionScreens extends StatelessWidget {
           PageViewModel(
             title: "",
             body: "",
-            image: buildImage("intro_screen/1.gif"),
+            image: buildImage("assets/intro_screen/1.gif"),
             //getPageDecoration, a method to customise the page style
             decoration: getPageDecoration(),
           ),
           PageViewModel(
             title: "",
             body: "",
-            image: buildImage("intro_screen/2.gif"),
+            image: buildImage("assets/intro_screen/2.gif"),
             decoration: getPageDecoration(),
           ),
           PageViewModel(
             title: "",
             body: "",
-            image: buildImage("intro_screen/3.gif"),
+            image: buildImage("assets/intro_screen/3.gif"),
             decoration: getPageDecoration(),
           ),
         ],
