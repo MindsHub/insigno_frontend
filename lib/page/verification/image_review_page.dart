@@ -79,7 +79,7 @@ class _ImageReviewPageState extends State<ImageReviewPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.reviewImages),
+        title: Text(l10n.reviewImagesAsAdmin),
         actions: images.firstOrNull?.map((i) => [
               Padding(
                 padding: const EdgeInsets.only(right: 6),

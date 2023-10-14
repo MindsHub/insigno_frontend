@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage>
                   if (user.isAdmin && verifyTime.dateTime != null)
                     ElevatedButton(
                       onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
-                      child: Text(l10n.reviewImages),
+                      child: Text(l10n.reviewImagesAsAdmin),
                     ),
                   const Divider(height: 32, thickness: 1),
                   SizeTransition(

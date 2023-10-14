@@ -181,7 +181,7 @@
   "use": "Use",
   "edit": "Edit",
   "onlyHttpsAccepted": "Only HTTPS URLs are accepted",
-  "reviewImages": "Review images as admin",
+  "reviewImagesAsAdmin": "Review images as admin",
   "verdictOk": "Ok!",
   "verdictBad": "Bad",
   "verdictDelete": "Delete",
