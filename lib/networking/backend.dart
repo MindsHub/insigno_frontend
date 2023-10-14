@@ -31,7 +31,12 @@ class Backend {
 
   Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
     return _client //
-        .get(_serverHostHandler.getUri(path, params: params))
+        .get(
+          _serverHostHandler.getUri(path, params: params),
+          // still send the authentication cookie so that the backend can send specialized responses
+          // when logged in
+          headers: _auth.maybeCookie().map((cookie) => {"Cookie": cookie}),
+        )
         .throwErrors()
         .mapParseJson();
   }
@@ -209,8 +214,7 @@ class Backend {
         .map((users) => users.map<User>(userFromJson).toList());
   }
 
-  Future<List<User>> getGeographicalScoreboard(
-      double latitude, double longitude, double radius) {
+  Future<List<User>> getGeographicalScoreboard(double latitude, double longitude, double radius) {
     return _getJson("/scoreboard/geographical", params: {
       "y": latitude.toString(),
       "x": longitude.toString(),
