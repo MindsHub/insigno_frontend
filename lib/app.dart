@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/error_page.dart';
@@ -16,13 +17,23 @@ import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:insigno_frontend/page/verification/image_verification_page.dart';
+import 'package:insigno_frontend/page/introduction_screen.dart';
+import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class InsignoApp extends StatelessWidget {
+class InsignoApp extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
 
   const InsignoApp(this.navigatorKey, this.scaffoldMessengerKey, {super.key});
+
+  @override
+  State<InsignoApp> createState() => _InsignoAppState();
+}
+
+class _InsignoAppState extends State<InsignoApp> {
+  var introductionViewed = getIt<SharedPreferences>().getBool(introductionDone) ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +48,9 @@ class InsignoApp extends StatelessWidget {
 
     return MaterialApp(
       locale: const Locale('it'),
-      scaffoldMessengerKey: scaffoldMessengerKey,
+      scaffoldMessengerKey: widget.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
+      navigatorKey: widget.navigatorKey,
       title: "Insigno",
       theme: ThemeData(
         useMaterial3: true,
@@ -59,7 +70,14 @@ class InsignoApp extends StatelessWidget {
           onTertiaryContainer: darkYellowTheme.onPrimaryContainer,
         ),
       ),
-      home: MapPage(),
+      home: introductionViewed ? MapPage() : IntroductionScreens(
+        onDone: () {
+          getIt<SharedPreferences>().setBool(introductionDone, true);
+          setState(() {
+            introductionViewed = true;
+          });
+        },
+      ),
       onGenerateRoute: (RouteSettings settings) {
         var routes = <String, WidgetBuilder>{
           ReportPage.routeName: (ctx) => ReportPage(),
