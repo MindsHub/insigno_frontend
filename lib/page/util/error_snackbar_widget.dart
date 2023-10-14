@@ -21,6 +21,7 @@ class ErrorSnackbarWidget extends StatelessWidget {
               child: Text(
                 l10n?.errorOccurred ?? "An error occurred",
                 style: TextStyle(color: theme.colorScheme.onErrorContainer),
+                maxLines: 2,
               ),
             ),
           ),
