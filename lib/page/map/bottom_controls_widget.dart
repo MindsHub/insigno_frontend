@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
@@ -191,6 +192,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       message: message.toLocalizedString(l10n),
       containerColor: theme.colorScheme.errorContainer,
       onContainerColor: theme.colorScheme.onErrorContainer,
+      onTap: message == ErrorMessage.loginRequired
+          ? () => Navigator.pushNamed(context, LoginFlowPage.routeName)
+          : message == ErrorMessage.grantLocationPermission
+              ? () => Geolocator.openAppSettings()
+              : message == ErrorMessage.enableLocationServices
+                  ? () => Geolocator.openLocationSettings()
+                  : null,
     );
   }
 
