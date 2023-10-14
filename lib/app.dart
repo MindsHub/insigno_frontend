@@ -47,7 +47,6 @@ class _InsignoAppState extends State<InsignoApp> {
     );
 
     return MaterialApp(
-      locale: const Locale('it'),
       scaffoldMessengerKey: widget.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       navigatorKey: widget.navigatorKey,
