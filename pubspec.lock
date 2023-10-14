@@ -678,6 +678,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  material_symbols_icons:
+    dependency: "direct main"
+    description:
+      name: material_symbols_icons
+      sha256: "1b45a9588c31b0f624745d88a4f1e93f9596f0fe4c7619645fa87e13448e2540"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2671.0"
   meta:
     dependency: transitive
     description:

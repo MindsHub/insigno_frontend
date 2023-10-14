@@ -15,6 +15,7 @@ import 'package:insigno_frontend/page/verification/image_verification_page.dart'
 import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/provider/verify_time_provider.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final VoidCallback onAddWidgetPressed;
@@ -87,7 +88,9 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
                 : () => Navigator.pushNamed(
                     context, isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
             tooltip: isLoggedIn == true ? l10n.user : l10n.login,
-            child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
+            child: isLoggedIn == true
+                ? const Icon(Symbols.person_check)
+                : const Icon(Symbols.person_alert),
           ),
           Expanded(
             child: Padding(
