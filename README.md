@@ -42,7 +42,13 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Screenshots
 
-Alternare tema chiaro e scuro, ripetere in italiano e in inglese
+Cose di cui assicurarsi:
+- alternare tema chiaro e scuro
+- ripetere in italiano e in inglese
+- togliere tutti i metadati con `mogrify -strip ./*.png`
+- comprimere le immagini con `optipng *.png`
+
+Descrizioni degli screenshot:
 - 0.png - SCURO - schermata principale con mappa e pillola decente
 - 1.png - CHIARO - menu che permette di filtrare i materiali
 - 2.png - SCURO - schermata di segnalazione nuovo marker
