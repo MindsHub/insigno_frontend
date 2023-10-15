@@ -168,8 +168,7 @@ class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, Widget
             }),
         children: [
           TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           ),
           MarkerLayer(
               markers: [position?.toLatLng()]
