@@ -30,10 +30,14 @@ class VerifyTimeProvider {
     }
 
     _backendRequestSub?.cancel();
-    _backendRequestSub = CancelableOperation.fromFuture(_backend.getNextVerifyTime().then((value) {
-      _currentVerifyTime = value;
-      _verifyTimeController.add(value);
-    }));
+    _backendRequestSub = CancelableOperation.fromFuture(
+      _backend.getNextVerifyTime().then((value) {
+        _currentVerifyTime = value;
+        _verifyTimeController.add(value);
+      }, onError: (e) {
+        // ignore errors
+      }),
+    );
   }
 
   void update() {
