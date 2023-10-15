@@ -225,7 +225,10 @@ class _MapPageState extends State<MapPage>
         // the marker may have been resolved, or its data might have changed, so update it
         setState(() {
           markers.removeWhere((element) => element.id == m.id);
-          markers.add(value);
+          if (value.resolutionDate == null || lastLoadMarkersIncludeResolved) {
+            // only add it back if it is not resolved or if the user wants to see resolved markers
+            markers.add(value);
+          }
         });
       }
     });
