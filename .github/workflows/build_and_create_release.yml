@@ -40,6 +40,15 @@ jobs:
             sed -i 's/•/-/g' "__changelog_file__";
           else
             echo "Did not find changelog file";
+            ls fastlane
+            echo "Did not find changelog file";
+            ls fastlane/metadata
+            echo "Did not find changelog file";
+            ls fastlane/metadata/android
+            echo "Did not find changelog file";
+            ls fastlane/metadata/android/en-US
+            echo "Did not find changelog file";
+            ls fastlane/metadata/android/en-US/changelogs
             touch "__changelog_file__";
           fi;
           
