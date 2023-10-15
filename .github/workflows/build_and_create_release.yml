@@ -21,7 +21,7 @@ jobs:
           git clone --recurse-submodules "https://github.com/$GITHUB_REPOSITORY.git" "$BUILD_DIR"
           cd "$BUILD_DIR"
           git checkout "$GITHUB_SHA"
-      - name: Extract version, version code and some paths
+      - name: Extract version, version code, changelog and some paths
         run: |
           cd "$BUILD_DIR"
           echo "VERSION=$(sed -nE 's~^version: ?([^\+]+)\+(.*)$~\1~p' pubspec.yaml)" >> "$GITHUB_ENV"
@@ -30,8 +30,7 @@ jobs:
           echo "VERCODE_2=$(( "$VERSION_CODE" * 10 + 2 ))" >> "$GITHUB_ENV"
           echo "VERCODE_3=$(( "$VERSION_CODE" * 10 + 3 ))" >> "$GITHUB_ENV"
 
-          touch __changelog_file__
-          CHANGELOG_FILE="$BUILD_DIR/fastlane/metadata/android/en-US/changelogs/$VERCODE_3.txt"
+          CHANGELOG_FILE="fastlane/metadata/android/en-US/changelogs/$(( "$VERSION_CODE" * 10 + 3 )).txt"
           if [ -f "$CHANGELOG_FILE" ]; then
             cp "$CHANGELOG_FILE" "__changelog_file__";
             sed -i 's/^New$/### New/g' "__changelog_file__";
@@ -39,6 +38,7 @@ jobs:
             sed -i 's/^Fixed$/### Fixed/g' "__changelog_file__";
             sed -i 's/•/-/g' "__changelog_file__";
           else
+            echo "Did not find changelog file";
             touch "__changelog_file__";
           fi;
           
@@ -61,82 +61,83 @@ jobs:
           echo >> "$GITHUB_STEP_SUMMARY"
           echo "Changelog:" >> "$GITHUB_STEP_SUMMARY"
           cat "$BUILD_DIR/__changelog_file__" >> "$GITHUB_STEP_SUMMARY"
-      - name: Setup flutter
-        run: |
-          cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter config --no-analytics
-          submodules/flutter/bin/flutter pub get
-      - name: Build x86_64 APK
-        env:
-          VERSION: ${{ env.VERSION }}
-          VERCODE: ${{ env.VERCODE_1 }}
-        run: |
-          cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-x64
-      - name: Build arm APK
-        env:
-          VERSION: ${{ env.VERSION }}
-          VERCODE: ${{ env.VERCODE_2 }}
-        run: |
-          cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm
-      - name: Build arm64 APK
-        env:
-          VERSION: ${{ env.VERSION }}
-          VERCODE: ${{ env.VERCODE_3 }}
-        run: |
-          cd "$BUILD_DIR"
-          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm64
-      - name: Move APKs to folder for upload
-        env:
-          VERSION: ${{ env.VERSION }}
-          VERCODE_1: ${{ env.VERCODE_1 }}
-          VERCODE_2: ${{ env.VERCODE_2 }}
-          VERCODE_3: ${{ env.VERCODE_3 }}
-        run: |
-          mkdir apks
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
-          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
-      - name: Sign APKs
-        env:
-          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
-          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
-          VERSION: ${{ env.VERSION }}
-          VERCODE_1: ${{ env.VERCODE_1 }}
-          VERCODE_2: ${{ env.VERCODE_2 }}
-          VERCODE_3: ${{ env.VERCODE_3 }}
-          APKSIGNER: ${{ env.APKSIGNER }}
-        run: |
-          openssl base64 -A -d -out keystore.jks <<< "$KEYSTORE_BASE64"
-          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
-          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
-          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: apks
-          path: apks
-      - name: Make sure not to overwrite the APKs of a release that was already released
-        id: get_release
-        uses: joutvhu/get-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create draft release
-        id: create_release
-        # if the release exists and is a draft, or the release does not exists,
-        # proceed with uploading/overwriting artifacts
-        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          name: ${{ env.VERSION }}
-          body_path: ${{ env.BUILD_DIR }}/__changelog_file__
-          draft: true
-          files: |
-            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk
-            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk
-            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk
+#      - name: Setup flutter
+#        run: |
+#          cd "$BUILD_DIR"
+#          submodules/flutter/bin/flutter config --no-analytics
+#          submodules/flutter/bin/flutter pub get
+#      - name: Build x86_64 APK
+#        env:
+#          VERSION: ${{ env.VERSION }}
+#          VERCODE: ${{ env.VERCODE_1 }}
+#        run: |
+#          cd "$BUILD_DIR"
+#          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-x64
+#      - name: Build arm APK
+#        env:
+#          VERSION: ${{ env.VERSION }}
+#          VERCODE: ${{ env.VERCODE_2 }}
+#        run: |
+#          cd "$BUILD_DIR"
+#          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm
+#      - name: Build arm64 APK
+#        env:
+#          VERSION: ${{ env.VERSION }}
+#          VERCODE: ${{ env.VERCODE_3 }}
+#        run: |
+#          cd "$BUILD_DIR"
+#          submodules/flutter/bin/flutter build apk --release --split-per-abi --build-number="$VERCODE" --build-name="$VERSION" --target-platform=android-arm64
+#      - name: Move APKs to folder for upload
+#        env:
+#          VERSION: ${{ env.VERSION }}
+#          VERCODE_1: ${{ env.VERCODE_1 }}
+#          VERCODE_2: ${{ env.VERCODE_2 }}
+#          VERCODE_3: ${{ env.VERCODE_3 }}
+#        run: |
+#          mkdir apks
+#          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-x86_64-release.apk" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
+#          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
+#          mv "$BUILD_DIR/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
+#      - name: Sign APKs
+#        env:
+#          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+#          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+#          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+#          VERSION: ${{ env.VERSION }}
+#          VERCODE_1: ${{ env.VERCODE_1 }}
+#          VERCODE_2: ${{ env.VERCODE_2 }}
+#          VERCODE_3: ${{ env.VERCODE_3 }}
+#          APKSIGNER: ${{ env.APKSIGNER }}
+#        run: |
+#          openssl base64 -A -d -out keystore.jks <<< "$KEYSTORE_BASE64"
+#          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_1.apk"
+#          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_2.apk"
+#          "$APKSIGNER" sign --ks ./keystore.jks --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$KEYSTORE_PASSWORD" "./apks/insigno_${VERSION}_$VERCODE_3.apk"
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: apks
+#          path: apks
+#      - name: Make sure not to overwrite the APKs of a release that was already released
+#        id: get_release
+#        uses: joutvhu/get-release@v1
+#        with:
+#          tag_name: v${{ env.VERSION }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Create draft release
+#        id: create_release
+#        # if the release exists and is a draft, or the release does not exists,
+#        # proceed with uploading/overwriting artifacts
+#        if: ${{ (steps.get_release.outputs.draft == 'true') || (steps.get_release.outputs.draft == '') }}
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: v${{ env.VERSION }}
+#          name: ${{ env.VERSION }}
+#          body_path: ${{ env.BUILD_DIR }}/__changelog_file__
+#          draft: true
+#          files: |
+#            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk
+#            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_2 }}.apk
+#            apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_3 }}.apk
+#
