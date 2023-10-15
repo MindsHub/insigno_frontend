@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
@@ -15,6 +16,7 @@ import 'package:insigno_frontend/page/verification/image_verification_page.dart'
 import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/provider/verify_time_provider.dart';
 import 'package:insigno_frontend/util/error_messages.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class BottomControlsWidget extends StatefulWidget with GetItStatefulWidgetMixin {
   final VoidCallback onAddWidgetPressed;
@@ -50,14 +52,19 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       _updateErrorMessage();
     });
 
+    _updateErrorMessage();
+    _updateVerifyMessage(get<VerifyTimeProvider>().getVerifyTime());
+
     get<LocationProvider>().getLocationStream().forEach((_) => _updateErrorMessage());
     get<Authentication>().getIsLoggedInStream().forEach((_) => _updateErrorMessage());
     get<VerifyTimeProvider>()
         .getVerifyTimeStream()
         .forEach((newVerifyTime) => _updateVerifyMessage(newVerifyTime));
 
-    _updateErrorMessage();
-    _updateVerifyMessage(get<VerifyTimeProvider>().getVerifyTime());
+    // animation tests:
+    //Timer.periodic(Duration(milliseconds: 1), (t) { print("c"); isVersionCompatible = !isVersionCompatible; _updateErrorMessage(); });
+    //Timer.periodic(Duration(milliseconds: 500), (t) { print("a"); get<VerifyTimeProvider>().update(); });
+    //Timer.periodic(Duration(milliseconds: 400), (t) { print("b"); get<VerifyTimeProvider>().onAcceptedToReviewSettingChanged(false); });
   }
 
   @override
@@ -87,7 +94,9 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
                 : () => Navigator.pushNamed(
                     context, isLoggedIn == true ? ProfilePage.routeName : LoginFlowPage.routeName),
             tooltip: isLoggedIn == true ? l10n.user : l10n.login,
-            child: isLoggedIn == true ? const Icon(Icons.person) : const Icon(Icons.login),
+            child: isLoggedIn == true
+                ? const Icon(Symbols.person_check)
+                : const Icon(Symbols.person_alert),
           ),
           Expanded(
             child: Padding(
@@ -188,6 +197,13 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       message: message.toLocalizedString(l10n),
       containerColor: theme.colorScheme.errorContainer,
       onContainerColor: theme.colorScheme.onErrorContainer,
+      onTap: message == ErrorMessage.loginRequired
+          ? () => Navigator.pushNamed(context, LoginFlowPage.routeName)
+          : message == ErrorMessage.grantLocationPermission
+              ? () => Geolocator.openAppSettings()
+              : message == ErrorMessage.enableLocationServices
+                  ? () => Geolocator.openLocationSettings()
+                  : null,
     );
   }
 

@@ -48,9 +48,7 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: TextField(
+        TextField(
             onChanged: (v) {
               setState(() {});
             },
@@ -70,9 +68,8 @@ class _ServerHostWidgetState extends State<ServerHostWidget>
               await useUriString();
             },
           ),
-        ),
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             l10n.hostServerDescription,
             style: theme.textTheme.labelMedium,

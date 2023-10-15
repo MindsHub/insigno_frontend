@@ -30,7 +30,7 @@ for lang in * ; do
                     WIDTH="$(cut -d: -f1 <<<$device)"
                     HEIGHT="$(cut -d: -f2 <<<$device)"
                     NAME="$(cut -d: -f3 <<<$device)"
-                    ffmpeg -i $img -vf \
+                    ffmpeg -i "$img" -vf \
                     "scale=iw*min($WIDTH/iw\,$HEIGHT/ih):ih*min($WIDTH/iw\,$HEIGHT/ih), pad=$WIDTH:$HEIGHT:($WIDTH-iw*min($WIDTH/iw\,$HEIGHT/ih))/2:($HEIGHT-ih*min($WIDTH/iw\,$HEIGHT/ih))/2" \
                     "../../../../screenshots/$lang/${NAME}_$img"
                 done

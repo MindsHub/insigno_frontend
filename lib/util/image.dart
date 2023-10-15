@@ -8,17 +8,19 @@ Image imageFromNetwork({required int imageId, double? height, double? width, Box
     height: height,
     width: width,
     fit: fit,
-    loadingBuilder: (context, child, loadingProgress) {
-      if (loadingProgress == null) {
-        return child;
-      }
-      return Center(
-        child: CircularProgressIndicator(
-          value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-              : null,
-        ),
-      );
-    },
+    loadingBuilder: imageLoadingBuilder,
+  );
+}
+
+Widget imageLoadingBuilder(BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+  if (loadingProgress == null) {
+    return child;
+  }
+  return Center(
+    child: CircularProgressIndicator(
+      value: loadingProgress.expectedTotalBytes != null
+          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+          : null,
+    ),
   );
 }

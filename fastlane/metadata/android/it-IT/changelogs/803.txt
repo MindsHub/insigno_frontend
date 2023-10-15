@@ -1,0 +1,12 @@
+Novità
+• Schermate introduttive al primo avvio dell'app
+• Bottone per eliminare l'account
+• Classifica speciale per Maker Faire Rome
+
+Miglioramenti
+• Cambiate le icone di login e dell'utente
+• I riquadri degli error sono ora cliccabili
+
+Correzioni
+• Sistemata l'animazione di guadagno punti che rimaneva visibile
+• Altri fix minori...

@@ -39,3 +39,20 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Screenshots
+
+Cose di cui assicurarsi:
+- alternare tema chiaro e scuro
+- ripetere in italiano e in inglese
+- togliere tutti i metadati con `mogrify -strip ./*.png`
+- comprimere le immagini con `optipng *.png`
+
+Descrizioni degli screenshot:
+- 0.png - SCURO - schermata principale con mappa e pillola decente
+- 1.png - CHIARO - menu che permette di filtrare i materiali
+- 2.png - SCURO - schermata di segnalazione nuovo marker
+- 3.png - CHIARO - marker screen con un marker diverso da quello appena riportato
+- 4.png - SCURO - profilo non da admin con "suggerisci pillola" aperto
+- 5.png - CHIARO - revisione immagini (non da admin ma normale)
+- 6.png - SCURO - classifica non globale ma entro una distanza così i punteggi sono solo quelli dei marker

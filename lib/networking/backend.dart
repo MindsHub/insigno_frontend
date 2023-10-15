@@ -15,7 +15,9 @@ import "package:insigno_frontend/networking/parsers.dart";
 import "package:insigno_frontend/networking/server_host_handler.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
+import "package:insigno_frontend/util/pair.dart";
 import "package:package_info_plus/package_info_plus.dart";
+import 'package:path/path.dart' as path;
 
 import "data/map_marker.dart";
 import "data/marker_type.dart";
@@ -31,7 +33,12 @@ class Backend {
 
   Future<dynamic> _getJson(String path, {Map<String, dynamic>? params}) {
     return _client //
-        .get(_serverHostHandler.getUri(path, params: params))
+        .get(
+          _serverHostHandler.getUri(path, params: params),
+          // still send the authentication cookie so that the backend can send specialized responses
+          // when logged in
+          headers: _auth.maybeCookie().map((cookie) => {"Cookie": cookie}),
+        )
         .throwErrors()
         .mapParseJson();
   }
@@ -88,6 +95,10 @@ class Backend {
     return _postAuthenticated(path, fields: fields, files: files).mapParseJson();
   }
 
+  Future<void> deleteAccount() {
+    return _postAuthenticated("/delete_account");
+  }
+
   Future<Pill> loadRandomPill() async {
     return _getJson("/pills/random").map(pillFromJson);
   }
@@ -123,7 +134,7 @@ class Backend {
   }
 
   Future<List<int>> getImagesForMarker(int markerId) {
-    return _getJson("/map/image/list/$markerId").map(imageListFromJson);
+    return _getJson("/map/image/list/$markerId").map(intListFromJson);
   }
 
   Future<Marker> getMarker(int markerId) {
@@ -209,13 +220,26 @@ class Backend {
         .map((users) => users.map<User>(userFromJson).toList());
   }
 
-  Future<List<User>> getGeographicalScoreboard(
-      double latitude, double longitude, double radius) {
+  Future<Pair<String?, List<User>>> getSpecialScoreboard() {
+    return _getJson("/scoreboard/special") //
+        .map((special) => Pair(special["name"], special["users"].map<User>(userFromJson).toList()));
+  }
+
+  Future<List<User>> getGeographicalScoreboard(double latitude, double longitude, double radius) {
     return _getJson("/scoreboard/geographical", params: {
       "y": latitude.toString(),
       "x": longitude.toString(),
       "srid": "4326", // gps
       "radius": radius.toString(),
     }).map((users) => users.map<User>(userFromJson).toList());
+  }
+
+  Future<List<String>> getIntroImages() {
+    // the server may return relative URLs, parse those correctly too
+    final currentPath = _serverHostHandler.getUri("").toString();
+    final context = path.Context(style: path.Style.url, current: currentPath);
+    return _getJson("/resource/intro")
+        .map(stringListFromJson)
+        .map((links) => links.map((link) => context.absolute(link)).toList());
   }
 }

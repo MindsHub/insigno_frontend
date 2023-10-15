@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.0+70
+version: 1.4.1+80
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -36,30 +36,32 @@ dependencies:
   intl:
 
   # dependency injection
-  get_it: ^7.5.0
-  get_it_mixin: ^4.0.0
-  injectable: ^2.1.0
+  get_it: ^7.6.4
+  get_it_mixin: ^4.2.2
+  injectable: ^2.3.2
 
   # ui
-  flutter_map: ^5.0.0
-  dynamic_color: ^1.6.3
-  easy_image_viewer: ^1.2.0
-  flutter_svg: ^2.0.5
+  flutter_map: ^6.0.0
+  dynamic_color: ^1.6.7
+  easy_image_viewer: ^1.2.1
+  flutter_svg: ^2.0.7
   flutter_svg_provider: ^1.0.6
+  material_symbols_icons: ^4.2671.0
+  dots_indicator: ^3.0.0
 
   # core functionality
-  geolocator: ^10.0.1 # used to load location
+  geolocator: ^10.1.0 # used to load location
   image_picker: ^1.0.4 # used only on Android and iOS to take pictures with the camera
   latlong2: ^0.9.0
 
   # utils (os_detect may be useful, but is not needed atm)
-  shared_preferences: ^2.1.0
+  shared_preferences: ^2.2.2
   http: ^1.1.0
   http_parser: ^4.0.2
-  collection: ^1.17.1
-  url_launcher: ^6.1.10
+  collection: ^1.17.2
+  url_launcher: ^6.1.14
   os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
-  package_info_plus: ^4.1.0
+  package_info_plus: ^4.2.0
   async: ^2.11.0
 
 dependency_overrides:
@@ -101,9 +103,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons/current_location.svg
-    - assets/icons/insigno_logo.svg
-    - assets/icons/mindshub_logo.svg
+    - assets/icons/
 
   # localization files are regenerated on every hot restart
   generate: true

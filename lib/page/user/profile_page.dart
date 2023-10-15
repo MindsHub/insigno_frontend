@@ -33,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage>
   String? pillSourceError;
   late AnimationController pillAnim;
   bool changePasswordRequestSent = false;
+  bool deleteAccountRequestSent = false;
 
   @override
   void initState() {
@@ -79,6 +80,19 @@ class _ProfilePageState extends State<ProfilePage>
                         const SizedBox(height: 32),
                       ]
                     : <Widget>[]) +
+                (deleteAccountRequestSent
+                    ? <Widget>[
+                        Text(
+                          l10n.confirmAccountDeletion,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 32),
+                      ]
+                    : <Widget>[]) +
                 (user.points == double.negativeInfinity
                     ? <Widget>[
                         const CircularProgressIndicator(),
@@ -101,24 +115,34 @@ class _ProfilePageState extends State<ProfilePage>
                     height: 12,
                     width: double.infinity, // to make the column have maximum width
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
                     children: [
                       TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, ChangePasswordPage.routeName)
-                              .then((changeRequestSent) {
-                            if (changeRequestSent is bool && changeRequestSent) {
-                              setState(() {
-                                changePasswordRequestSent = true;
-                              });
-                            }
-                          });
-                        },
+                        onPressed: () => Navigator.pushNamed(context, ChangePasswordPage.routeName)
+                            .then((changeRequestSent) {
+                          if (changeRequestSent is bool && changeRequestSent) {
+                            setState(() {
+                              changePasswordRequestSent = true;
+                            });
+                          }
+                        }),
                         child: Text(l10n.changePassword),
                       ),
-                      const SizedBox(width: 16),
+                      TextButton(
+                        onPressed: () => openDeleteAccountDialog(l10n, context)
+                            .then((accountDeletionRequested) {
+                          if (accountDeletionRequested == true) {
+                            get<Backend>().deleteAccount();
+                            setState(() {
+                              deleteAccountRequestSent = true;
+                            });
+                          }
+                        }),
+                        child: Text(l10n.deleteAccount),
+                      ),
                       TextButton(
                         onPressed: () {
                           getIt<Authentication>().logout();
@@ -133,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage>
                   if (user.isAdmin && verifyTime.dateTime != null)
                     ElevatedButton(
                       onPressed: () => Navigator.pushNamed(context, ImageReviewPage.routeName),
-                      child: Text(l10n.reviewImages),
+                      child: Text(l10n.reviewImagesAsAdmin),
                     ),
                   const Divider(height: 32, thickness: 1),
                   SizeTransition(
@@ -306,5 +330,31 @@ class _ProfilePageState extends State<ProfilePage>
         pillLoading = false;
       });
     });
+  }
+
+  Future<bool?> openDeleteAccountDialog(AppLocalizations l10n, BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.accountDeletionDialogTitle),
+        content: SingleChildScrollView(
+          child: Text(l10n.accountDeletionDialogText),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(l10n.yes),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
+          TextButton(
+            child: Text(l10n.no),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

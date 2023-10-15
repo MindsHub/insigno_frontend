@@ -72,14 +72,14 @@ class _AdditionalPointsWidgetState extends State<AdditionalPointsWidget>
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 5));
     _positionAnimation = Tween<Offset>(
       begin: const Offset(0.0, -8.0),
-      end: const Offset(0.0, 4.0),
+      end: const Offset(0.0, 8.0),
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: const _PositionCurve(30.0, 15.0, 0.2, 0.8, 8.0 / 12.0),
+      curve: const _PositionCurve(30.0, 10.0, 0.2, 0.8, 8.0 / 16.0),
     ));
     _fadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const _FadeCurve(3.0, 3.0, 0.1, 0.9),
+      curve: const _FadeCurve(3.0, 2.0, 0.1, 0.9),
     );
 
     getIt<AuthUserProvider>() //

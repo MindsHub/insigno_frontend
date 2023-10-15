@@ -89,7 +89,7 @@
   "use": "Usa",
   "edit": "Modifica",
   "onlyHttpsAccepted": "Solo URL HTTPS sono accettati",
-  "reviewImages": "Revisiona immagini come admin",
+  "reviewImagesAsAdmin": "Revisiona immagini come admin",
   "verdictOk": "A posto!",
   "verdictBad": "Non va bene",
   "verdictDelete": "Elimina",
@@ -124,5 +124,13 @@
   },
   "acceptToReviewSwitchTitle": "Aiuta a verificare immagini",
   "acceptToReviewSwitchDescription": "Revisionare le immagini caricate da altri utenti può farti guadagnare punti periodicamente, potresti però venire esposto a immagini non verificate con possibilità di contenuti inappropriati",
-  "partialOutOfTotal": "{partial}/{total}"
+  "partialOutOfTotal": "{partial}/{total}",
+  "noActiveSpecialScoreboard": "Non c'è una classifica speciale attiva al momento. Segui MindsHub sui social media per vedere gli eventi a cui Insigno partecipa!",
+  "replayIntroduction": "Rivedi le schermate di introduzione",
+  "introSkip": "Salta",
+  "confirmAccountDeletion": "Per completare l'eliminazione dell'account, clicca sul link inviato alla tua email",
+  "accountDeletionDialogTitle": "Sei sicuro di voler eliminare l'account?",
+  "accountDeletionDialogText": "Per confermare l'eliminazione del tuo account, clicca sul link che invieremo alla tua email. Ci mancherai!",
+  "deleteAccount": "Elimina l'account",
+  "usePpe": "Usa sempre guanti o dispositivi di protezione individuale appropriati per raccogliere i rifiuti"
 }

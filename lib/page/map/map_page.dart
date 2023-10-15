@@ -11,7 +11,6 @@ import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:insigno_frontend/page/map/additional_points_widget.dart';
 import 'package:insigno_frontend/page/map/bottom_controls_widget.dart';
 import 'package:insigno_frontend/page/map/fast_markers_layer.dart';
-import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/map/map_controls_widget.dart';
 import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
 import 'package:insigno_frontend/page/map/pill_widget.dart';
@@ -19,6 +18,7 @@ import 'package:insigno_frontend/page/map/settings_controls_widget.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,8 +33,7 @@ const LatLng defaultInitialCoordinates = LatLng(45.75548, 11.00323);
 const double defaultInitialZoom = 16.0;
 const double markersZoomThreshold = 14.0;
 
-class _MapPageState extends State<MapPage>
-    with GetItStateMixin<MapPage>, WidgetsBindingObserver {
+class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, WidgetsBindingObserver {
   late final SharedPreferences prefs;
   final Distance distance = const Distance();
   final MapController mapController = MapController();
@@ -54,10 +53,10 @@ class _MapPageState extends State<MapPage>
 
     mapController.mapEventStream
         .where((event) =>
-            event.zoom >= markersZoomThreshold &&
+            event.camera.zoom >= markersZoomThreshold &&
             (lastLoadMarkersPos == null ||
-                distance.distance(lastLoadMarkersPos!, event.center) > 5000))
-        .forEach((event) => loadMarkers(event.center));
+                distance.distance(lastLoadMarkersPos!, event.camera.center) > 5000))
+        .forEach((event) => loadMarkers(event.camera.center));
 
     prefs = get<SharedPreferences>();
     initialCoordinates = LatLng(
@@ -110,9 +109,9 @@ class _MapPageState extends State<MapPage>
 
   Future<void> saveMapPositionToPreferences() async {
     await Future.wait([
-      prefs.setDouble(lastMapLatitude, mapController.center.latitude),
-      prefs.setDouble(lastMapLongitude, mapController.center.longitude),
-      prefs.setDouble(lastMapZoom, mapController.zoom),
+      prefs.setDouble(lastMapLatitude, mapController.camera.center.latitude),
+      prefs.setDouble(lastMapLongitude, mapController.camera.center.longitude),
+      prefs.setDouble(lastMapZoom, mapController.camera.zoom),
     ]);
   }
 
@@ -143,9 +142,12 @@ class _MapPageState extends State<MapPage>
       body: FlutterMap(
         mapController: mapController,
         options: MapOptions(
-            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-            center: initialCoordinates,
-            zoom: initialZoom,
+            interactionOptions: const InteractionOptions(
+              flags: (InteractiveFlag.all | InteractiveFlag.doubleTapDragZoom) &
+                  ~InteractiveFlag.rotate,
+            ),
+            initialCenter: initialCoordinates,
+            initialZoom: initialZoom,
             // OSM supports at most the zoom value 19
             maxZoom: 18.45,
             onTap: (tapPosition, tapLatLng) {
@@ -156,15 +158,30 @@ class _MapPageState extends State<MapPage>
                 return;
               }
 
-              final markerScale = markerScaleFromMapZoom(mapController.zoom);
-              final screenPoint = mapController.latLngToScreenPoint(minMarker.getLatLng());
+              final markerScale = markerScaleFromMapZoom(mapController.camera.zoom);
+              final screenPoint = mapController.camera.latLngToScreenPoint(minMarker.getLatLng());
               final dx = (tapPosition.global.dx - screenPoint.x).abs();
               final dy = (tapPosition.global.dy - screenPoint.y).abs();
               if (max(dx, dy) < markerScale * 0.7) {
                 openMarkerPage(minMarker);
               }
             }),
-        nonRotatedChildren: [
+        children: [
+          TileLayer(
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          ),
+          MarkerLayer(
+              markers: [position?.toLatLng()]
+                  .whereType<LatLng>()
+                  .map((pos) => Marker(
+                        rotate: true,
+                        point: pos,
+                        child: SvgPicture.asset("assets/icons/current_location.svg"),
+                      ))
+                  .toList()),
+          FastMarkersLayer(markers.where((e) =>
+              (markerFilters.includeResolved || !e.isResolved()) &&
+              markerFilters.shownMarkers.contains(e.type))),
           const Align(
             alignment: Alignment.bottomLeft,
             child: Text(
@@ -193,24 +210,6 @@ class _MapPageState extends State<MapPage>
             child: AdditionalPointsWidget(),
           ),
         ],
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          MarkerLayer(
-              markers: [position?.toLatLng()]
-                  .whereType<LatLng>()
-                  .map((pos) => Marker(
-                        rotate: true,
-                        point: pos,
-                        builder: (ctx) => SvgPicture.asset("assets/icons/current_location.svg"),
-                      ))
-                  .toList()),
-          FastMarkersLayer(markers.where((e) =>
-              (markerFilters.includeResolved || !e.isResolved()) &&
-              markerFilters.shownMarkers.contains(e.type))),
-        ],
       ),
     );
   }
@@ -225,7 +224,10 @@ class _MapPageState extends State<MapPage>
         // the marker may have been resolved, or its data might have changed, so update it
         setState(() {
           markers.removeWhere((element) => element.id == m.id);
-          markers.add(value);
+          if (value.resolutionDate == null || lastLoadMarkersIncludeResolved) {
+            // only add it back if it is not resolved or if the user wants to see resolved markers
+            markers.add(value);
+          }
         });
       }
     });
@@ -249,7 +251,7 @@ class _MapPageState extends State<MapPage>
         final needToReload = newFilters.includeResolved && !lastLoadMarkersIncludeResolved;
         setState(() => markerFilters = newFilters);
         if (needToReload) {
-          loadMarkers(mapController.center);
+          loadMarkers(mapController.camera.center);
         }
       }
     });

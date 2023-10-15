@@ -77,7 +77,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.reviewImages),
+        title: Text(l10n.verifyImages),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
