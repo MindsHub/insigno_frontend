@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gif/gif.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
@@ -37,43 +38,45 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
+      backgroundColor: const Color(0xFFC9F687),
       body: IntroductionScreen(
-          pages: [
-            if (imageUrls == null)
-              PageViewModel(
-                title: "",
-                body: "",
-                image: const Center(
-                  child: CircularProgressIndicator(),
+        controlsPadding: EdgeInsets.zero,
+        rawPages: [
+          if (imageUrls == null)
+            const Center(
+              child: CircularProgressIndicator(),
+            )
+          else
+            for (var imageUrl in imageUrls!)
+              Center(
+                child: Gif(
+                  image: NetworkImage(imageUrl),
+                  placeholder: (_) => const CircularProgressIndicator(),
+                  autostart: Autostart.once,
                 ),
-                decoration: getPageDecoration(),
-              )
-            else
-              for (var imageUrl in imageUrls!)
-                PageViewModel(
-                  title: "",
-                  body: "",
-                  image: Center(
-                    child: Gif(
-                      image: NetworkImage(imageUrl),
-                      placeholder: (_) => const CircularProgressIndicator(),
-                      autostart: Autostart.once,
-                    ),
-                  ),
-                  decoration: getPageDecoration(),
-                ),
-          ],
-          onDone: () => widget.onDone(context),
-          //ClampingScrollPhysics prevent the scroll offset from exceeding the bounds of the content.
-          scrollPhysics: const ClampingScrollPhysics(),
-          showDoneButton: true,
-          showNextButton: true,
-          showSkipButton: true,
-          skip: const Text("Salta", style: TextStyle(fontWeight: FontWeight.w600)),
-          next: const Icon(Icons.forward),
-          done: const Text("Finito!", style: TextStyle(fontWeight: FontWeight.w600)),
-          dotsDecorator: getDotsDecorator()),
+              ),
+        ],
+        onSkip: () => widget.onDone(context),
+        onDone: () => widget.onDone(context),
+        //ClampingScrollPhysics prevent the scroll offset from exceeding the bounds of the content.
+        scrollPhysics: const ClampingScrollPhysics(),
+        showDoneButton: true,
+        showNextButton: true,
+        showSkipButton: true,
+        skip: Text(l10n.introSkip),
+        next: const Icon(Icons.forward),
+        done: Text(l10n.introStart),
+        dotsDecorator: const DotsDecorator(
+          spacing: EdgeInsets.symmetric(horizontal: 2),
+          activeSize: Size(12, 5),
+          activeShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+        ),
+      ),
     );
   }
 
@@ -93,18 +96,5 @@ class _IntroductionPageState extends State<IntroductionPage> {
         bodyTextStyle: TextStyle(
           fontSize: 0,
         ));
-  }
-
-  //method to customize the dots style
-  DotsDecorator getDotsDecorator() {
-    return const DotsDecorator(
-      spacing: EdgeInsets.symmetric(horizontal: 2),
-      activeColor: Colors.indigo,
-      color: Colors.grey,
-      activeSize: Size(12, 5),
-      activeShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-      ),
-    );
   }
 }
