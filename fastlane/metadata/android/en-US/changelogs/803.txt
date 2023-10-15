@@ -1,0 +1,12 @@
+New
+• Add introduction screen at first app start
+• Add button to delete account
+• Add special scoreboard
+
+Improved
+• Change login and user icons
+• Make error boxes clickable
+
+Fixed
+• Fix earned points animation remaining on screen
+• Other minor fixes...
