@@ -30,8 +30,7 @@ jobs:
           echo "VERCODE_2=$(( "$VERSION_CODE" * 10 + 2 ))" >> "$GITHUB_ENV"
           echo "VERCODE_3=$(( "$VERSION_CODE" * 10 + 3 ))" >> "$GITHUB_ENV"
 
-          touch __changelog_file__
-          CHANGELOG_FILE="fastlane/metadata/android/en-US/changelogs/$VERCODE_3.txt"
+          CHANGELOG_FILE="fastlane/metadata/android/en-US/changelogs/$(( "$VERSION_CODE" * 10 + 3 )).txt"
           if [ -f "$CHANGELOG_FILE" ]; then
             cp "$CHANGELOG_FILE" "__changelog_file__";
             sed -i 's/^New$/### New/g' "__changelog_file__";
@@ -40,15 +39,6 @@ jobs:
             sed -i 's/•/-/g' "__changelog_file__";
           else
             echo "Did not find changelog file";
-            ls fastlane
-            echo "Did not find changelog file";
-            ls fastlane/metadata
-            echo "Did not find changelog file";
-            ls fastlane/metadata/android
-            echo "Did not find changelog file";
-            ls fastlane/metadata/android/en-US
-            echo "Did not find changelog file";
-            ls fastlane/metadata/android/en-US/changelogs
             touch "__changelog_file__";
           fi;
           
