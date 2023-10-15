@@ -29,6 +29,19 @@ jobs:
           echo "VERCODE_1=$(( "$VERSION_CODE" * 10 + 1 ))" >> "$GITHUB_ENV"
           echo "VERCODE_2=$(( "$VERSION_CODE" * 10 + 2 ))" >> "$GITHUB_ENV"
           echo "VERCODE_3=$(( "$VERSION_CODE" * 10 + 3 ))" >> "$GITHUB_ENV"
+
+          touch __changelog_file__
+          CHANGELOG_FILE="$BUILD_DIR/fastlane/metadata/android/en-US/changelogs/$VERCODE_3.txt"
+          if [ -f "$CHANGELOG_FILE" ]; then
+            cp "$CHANGELOG_FILE" "__changelog_file__";
+            sed -i 's/^New$/### New/g' "__changelog_file__";
+            sed -i 's/^Improved$/### Improved/g' "__changelog_file__";
+            sed -i 's/^Fixed$/### Fixed/g' "__changelog_file__";
+            sed -i 's/•/-/g' "__changelog_file__";
+          else
+            touch "__changelog_file__";
+          fi;
+          
           BUILD_TOOLS_PATH="$("$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed | grep build-tools/ | tail -n 1 | sed -nE 's~^.*(build-tools/[^ \t]+).*$~\1~p')"
           echo "APKSIGNER=$ANDROID_HOME/$BUILD_TOOLS_PATH/apksigner" >> $GITHUB_ENV
       - name: Print some information
@@ -45,6 +58,9 @@ jobs:
           echo "Android home: $ANDROID_HOME" >> "$GITHUB_STEP_SUMMARY"
           echo "Chosen apksigner: $APKSIGNER" >> "$GITHUB_STEP_SUMMARY"
           echo "Available Android build-tools:" $(ls "$ANDROID_HOME/build-tools/" | xargs) >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          echo "Changelog:" >> "$GITHUB_STEP_SUMMARY"
+          cat "$BUILD_DIR/__changelog_file__" >> "$GITHUB_STEP_SUMMARY"
       - name: Setup flutter
         run: |
           cd "$BUILD_DIR"
@@ -118,6 +134,7 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           name: ${{ env.VERSION }}
+          body_path: ${{ env.BUILD_DIR }}/__changelog_file__
           draft: true
           files: |
             apks/insigno_${{ env.VERSION }}_${{ env.VERCODE_1 }}.apk
