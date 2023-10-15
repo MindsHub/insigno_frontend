@@ -95,6 +95,10 @@ class Backend {
     return _postAuthenticated(path, fields: fields, files: files).mapParseJson();
   }
 
+  Future<void> deleteAccount() {
+    return _postAuthenticated("/delete_account");
+  }
+
   Future<Pill> loadRandomPill() async {
     return _getJson("/pills/random").map(pillFromJson);
   }

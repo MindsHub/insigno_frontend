@@ -124,7 +124,6 @@ class _ProfilePageState extends State<ProfilePage>
                         onPressed: () => Navigator.pushNamed(context, ChangePasswordPage.routeName)
                             .then((changeRequestSent) {
                           if (changeRequestSent is bool && changeRequestSent) {
-
                             setState(() {
                               changePasswordRequestSent = true;
                             });
@@ -136,6 +135,7 @@ class _ProfilePageState extends State<ProfilePage>
                         onPressed: () => openDeleteAccountDialog(l10n, context)
                             .then((accountDeletionRequested) {
                           if (accountDeletionRequested == true) {
+                            get<Backend>().deleteAccount();
                             setState(() {
                               deleteAccountRequestSent = true;
                             });
