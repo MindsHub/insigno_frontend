@@ -44,18 +44,25 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AboutCardWidget(
-              description: l10n.insignoDescription,
-              svgAssetPath: "assets/icons/insigno_logo.svg",
-              urlString: "https://github.com/MindsHub/insigno_frontend.git",
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: AboutCardWidget(
+                description: l10n.insignoDescription,
+                svgAssetPath: "assets/icons/insigno_logo.svg",
+                urlString: "https://github.com/MindsHub/insigno_frontend.git",
+              ),
             ),
             const SizedBox(height: 8),
-            AboutCardWidget(
-              description: l10n.mindshubDescription,
-              svgAssetPath: "assets/icons/mindshub_logo.svg",
-              urlString: "https://mindshub.it",
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: AboutCardWidget(
+                description: l10n.mindshubDescription,
+                svgAssetPath: "assets/icons/mindshub_logo.svg",
+                urlString: "https://mindshub.it",
+              ),
             ),
-            if (isLoggedIn) const SizedBox(height: 8),
+            const SizedBox(height: 16),
+            const Divider(height: 1),
             if (isLoggedIn)
               SwitchWidget(
                 checked: verifyTime.dateTime != null,
@@ -73,17 +80,21 @@ class _SettingsPageState extends State<SettingsPage> with GetItStateMixin<Settin
                   get<VerifyTimeProvider>().onAcceptedToReviewSettingChanged(acceptedToReview);
                 },
               ),
-            const SizedBox(height: 8),
             InkWell(
               onTap: () {
                 Navigator.pushNamed(context, IntroductionPage.routeName);
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                padding: const EdgeInsets.all(16),
                 child: Text(l10n.replayIntroduction),
               ),
             ),
-            ServerHostWidget(),
+            const Divider(height: 1),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ServerHostWidget(),
+            ),
             if (kDebugMode) const SizedBox(height: 8),
             if (kDebugMode)
               Row(

@@ -17,32 +17,37 @@ class SwitchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                if (description.isNotEmpty)
+    return InkWell(
+      onTap: () {
+        onCheckedChanged(!checked);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description,
-                    style: theme.textTheme.bodySmall,
+                    title,
+                    style: theme.textTheme.bodyMedium,
                   ),
-              ],
+                  if (description.isNotEmpty)
+                    Text(
+                      description,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Switch(value: checked, onChanged: onCheckedChanged),
-        ],
+            const SizedBox(width: 8),
+            Switch(value: checked, onChanged: onCheckedChanged),
+          ],
+        ),
       ),
     );
   }
