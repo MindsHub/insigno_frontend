@@ -15,6 +15,7 @@ import "package:insigno_frontend/networking/parsers.dart";
 import "package:insigno_frontend/networking/server_host_handler.dart";
 import "package:insigno_frontend/util/future.dart";
 import "package:insigno_frontend/util/nullable.dart";
+import "package:insigno_frontend/util/pair.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
 import "data/map_marker.dart";
@@ -212,6 +213,11 @@ class Backend {
   Future<List<User>> getGlobalScoreboard() {
     return _getJson("/scoreboard/global") //
         .map((users) => users.map<User>(userFromJson).toList());
+  }
+
+  Future<Pair<String?, List<User>>> getSpecialScoreboard() {
+    return _getJson("/scoreboard/special") //
+        .map((special) => Pair(special["name"], special["users"].map<User>(userFromJson).toList()));
   }
 
   Future<List<User>> getGeographicalScoreboard(double latitude, double longitude, double radius) {

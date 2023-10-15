@@ -257,5 +257,6 @@
         "format": "decimalPattern"
       }
     }
-  }
+  },
+  "noActiveSpecialScoreboard": "There is no special scoreboard active at the moment. Follow MindsHub on social media to find out about Insigno events!"
 }
