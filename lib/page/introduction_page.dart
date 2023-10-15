@@ -116,9 +116,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                         }
                       });
                     },
-                    child: urls == null || i < urls.length - 1
-                        ? const Icon(Icons.forward)
-                        : Text(l10n.introStart),
+                    child: Icon(urls == null || i < urls.length - 1 ? Icons.forward : Icons.start),
                   ),
                 ),
               ],
