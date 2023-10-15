@@ -1,9 +1,9 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:gif/gif.dart';
 import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/backend.dart';
+import 'package:insigno_frontend/util/image.dart';
 
 class IntroductionPage extends StatefulWidget {
   static const routeName = '/introductionPage';
@@ -66,14 +66,9 @@ class _IntroductionPageState extends State<IntroductionPage> {
                       onPageChanged: (i) => setState(() => _i = i),
                       children: [
                         for (var imageUrl in imageUrls)
-                          Gif(
+                          Image(
                             image: NetworkImage(imageUrl),
-                            placeholder: (_) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            autostart: Autostart.once,
-                            // no need for cache, we're using the image only once
-                            useCache: false,
+                            loadingBuilder: imageLoadingBuilder,
                           )
                       ],
                     ),
