@@ -8,7 +8,7 @@ enum MarkerType {
   plastic(2, Colors.indigo, Icons.recycling),
   paper(3, Colors.yellow, Icons.newspaper),
   undifferentiated(4, Colors.red, Icons.sync_disabled), // cleaning_services, celebration
-  glass(5, Colors.green, Icons.liquor_outlined),
+  glass(5, Colors.green, Icons.liquor),
   compost(6, Colors.brown, Icons.compost),
   electronics(7, Colors.purple, Icons.fax); // electric_bolt
 
