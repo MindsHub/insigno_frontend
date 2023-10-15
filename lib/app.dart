@@ -4,6 +4,7 @@ import 'package:insigno_frontend/di/setup.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/pill.dart';
 import 'package:insigno_frontend/page/error_page.dart';
+import 'package:insigno_frontend/page/introduction_page.dart';
 import 'package:insigno_frontend/page/map/map_page.dart';
 import 'package:insigno_frontend/page/marker/marker_page.dart';
 import 'package:insigno_frontend/page/marker/report_page.dart';
@@ -12,12 +13,11 @@ import 'package:insigno_frontend/page/pill_page.dart';
 import 'package:insigno_frontend/page/scoreboard/scoreboard_page.dart';
 import 'package:insigno_frontend/page/settings/settings_page.dart';
 import 'package:insigno_frontend/page/user/change_password_page.dart';
-import 'package:insigno_frontend/page/verification/image_review_page.dart';
 import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
+import 'package:insigno_frontend/page/verification/image_review_page.dart';
 import 'package:insigno_frontend/page/verification/image_verification_page.dart';
-import 'package:insigno_frontend/page/introduction_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,14 +69,16 @@ class _InsignoAppState extends State<InsignoApp> {
           onTertiaryContainer: darkYellowTheme.onPrimaryContainer,
         ),
       ),
-      home: introductionViewed ? MapPage() : IntroductionPage(
-        onDone: () {
-          getIt<SharedPreferences>().setBool(introductionDone, true);
-          setState(() {
-            introductionViewed = true;
-          });
-        },
-      ),
+      home: introductionViewed
+          ? MapPage()
+          : IntroductionPage(
+              onDone: (_) {
+                getIt<SharedPreferences>().setBool(introductionDone, true);
+                setState(() {
+                  introductionViewed = true;
+                });
+              },
+            ),
       onGenerateRoute: (RouteSettings settings) {
         var routes = <String, WidgetBuilder>{
           ReportPage.routeName: (ctx) => ReportPage(),
@@ -92,6 +94,8 @@ class _InsignoAppState extends State<InsignoApp> {
           ProfilePage.routeName: (ctx) => ProfilePage(),
           ScoreboardPage.routeName: (ctx) => ScoreboardPage(settings.arguments as LatLng),
           ImageVerificationPage.routeName: (ctx) => ImageVerificationPage(),
+          IntroductionPage.routeName: (ctx) =>
+              IntroductionPage(onDone: (context) => Navigator.pop(context)),
         };
         WidgetBuilder builder = routes[settings.name]!;
         return MaterialPageRoute(builder: (ctx) => builder(ctx));

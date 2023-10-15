@@ -125,5 +125,6 @@
   "acceptToReviewSwitchTitle": "Aiuta a verificare immagini",
   "acceptToReviewSwitchDescription": "Revisionare le immagini caricate da altri utenti può farti guadagnare punti periodicamente, potresti però venire esposto a immagini non verificate con possibilità di contenuti inappropriati",
   "partialOutOfTotal": "{partial}/{total}",
-  "noActiveSpecialScoreboard": "Non c'è una classifica speciale attiva al momento. Segui MindsHub sui social media per vedere gli eventi a cui Insigno partecipa!"
+  "noActiveSpecialScoreboard": "Non c'è una classifica speciale attiva al momento. Segui MindsHub sui social media per vedere gli eventi a cui Insigno partecipa!",
+  "replayIntroduction": "Vedi l'introduzione di nuovo"
 }

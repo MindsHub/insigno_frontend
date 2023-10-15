@@ -3,7 +3,10 @@ import 'package:gif/gif.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class IntroductionPage extends StatelessWidget {
-  final void Function() onDone;
+  static const routeName = '/introductionPage';
+
+  final void Function(BuildContext) onDone;
+
   const IntroductionPage({Key? key, required this.onDone}) : super(key: key);
 
   @override
@@ -31,7 +34,7 @@ class IntroductionPage extends StatelessWidget {
             decoration: getPageDecoration(),
           ),
         ],
-        onDone: onDone,
+        onDone: () => onDone(context),
         //ClampingScrollPhysics prevent the scroll offset from exceeding the bounds of the content.
         scrollPhysics: const ClampingScrollPhysics(),
         showDoneButton: true,
