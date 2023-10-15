@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-class IntroductionScreens extends StatelessWidget {
+class IntroductionPage extends StatelessWidget {
   final void Function() onDone;
-  const IntroductionScreens({Key? key, required this.onDone}) : super(key: key);
+  const IntroductionPage({Key? key, required this.onDone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

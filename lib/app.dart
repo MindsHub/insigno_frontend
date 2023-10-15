@@ -17,7 +17,7 @@ import 'package:insigno_frontend/page/user/login_flow_page.dart';
 import 'package:insigno_frontend/page/user/profile_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:insigno_frontend/page/verification/image_verification_page.dart';
-import 'package:insigno_frontend/page/introduction_screen.dart';
+import 'package:insigno_frontend/page/introduction_page.dart';
 import 'package:insigno_frontend/pref/preferences_keys.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,7 +69,7 @@ class _InsignoAppState extends State<InsignoApp> {
           onTertiaryContainer: darkYellowTheme.onPrimaryContainer,
         ),
       ),
-      home: introductionViewed ? MapPage() : IntroductionScreens(
+      home: introductionViewed ? MapPage() : IntroductionPage(
         onDone: () {
           getIt<SharedPreferences>().setBool(introductionDone, true);
           setState(() {
