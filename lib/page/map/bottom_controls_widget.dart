@@ -52,14 +52,19 @@ class _BottomControlsWidgetState extends State<BottomControlsWidget>
       _updateErrorMessage();
     });
 
+    _updateErrorMessage();
+    _updateVerifyMessage(get<VerifyTimeProvider>().getVerifyTime());
+
     get<LocationProvider>().getLocationStream().forEach((_) => _updateErrorMessage());
     get<Authentication>().getIsLoggedInStream().forEach((_) => _updateErrorMessage());
     get<VerifyTimeProvider>()
         .getVerifyTimeStream()
         .forEach((newVerifyTime) => _updateVerifyMessage(newVerifyTime));
 
-    _updateErrorMessage();
-    _updateVerifyMessage(get<VerifyTimeProvider>().getVerifyTime());
+    // animation tests:
+    //Timer.periodic(Duration(milliseconds: 1), (t) { print("c"); isVersionCompatible = !isVersionCompatible; _updateErrorMessage(); });
+    //Timer.periodic(Duration(milliseconds: 500), (t) { print("a"); get<VerifyTimeProvider>().update(); });
+    //Timer.periodic(Duration(milliseconds: 400), (t) { print("b"); get<VerifyTimeProvider>().onAcceptedToReviewSettingChanged(false); });
   }
 
   @override
