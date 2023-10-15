@@ -47,6 +47,8 @@ dependencies:
   flutter_svg: ^2.0.5
   flutter_svg_provider: ^1.0.6
   material_symbols_icons: ^4.2671.0
+  dots_indicator: ^3.0.0
+  gif: ^2.2.0 # used for controlling playback of gifs
 
   # core functionality
   geolocator: ^10.0.1 # used to load location
@@ -62,8 +64,6 @@ dependencies:
   os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
   package_info_plus: ^4.1.0
   async: ^2.11.0
-  introduction_screen: ^3.1.12 # used for intro gifs
-  gif: ^2.2.0 # used for controlling playback of gifs
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
