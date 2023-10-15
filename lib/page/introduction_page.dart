@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:insigno_frontend/di/setup.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-class IntroductionPage extends StatelessWidget {
+class IntroductionPage extends StatefulWidget {
   static const routeName = '/introductionPage';
 
   final void Function(BuildContext) onDone;
@@ -10,77 +12,87 @@ class IntroductionPage extends StatelessWidget {
   const IntroductionPage({Key? key, required this.onDone}) : super(key: key);
 
   @override
+  State<IntroductionPage> createState() => _IntroductionPageState();
+}
+
+class _IntroductionPageState extends State<IntroductionPage> {
+  List<String>? imageUrls;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getIt<Backend>().getIntroImages().then((value) {
+      if (value.isEmpty) {
+        widget.onDone(context);
+      } else {
+        setState(() {
+          imageUrls = value;
+        });
+      }
+    }, onError: (e) {
+      widget.onDone(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IntroductionScreen(
-        pages: [
-          PageViewModel(
-            title: "",
-            body: "",
-            image: buildImage("assets/intro_screen/1.gif"),
-            //getPageDecoration, a method to customise the page style
-            decoration: getPageDecoration(),
-          ),
-          PageViewModel(
-            title: "",
-            body: "",
-            image: buildImage("assets/intro_screen/2.gif"),
-            decoration: getPageDecoration(),
-          ),
-          PageViewModel(
-            title: "",
-            body: "",
-            image: buildImage("assets/intro_screen/3.gif"),
-            decoration: getPageDecoration(),
-          ),
-        ],
-        onDone: () => onDone(context),
-        //ClampingScrollPhysics prevent the scroll offset from exceeding the bounds of the content.
-        scrollPhysics: const ClampingScrollPhysics(),
-        showDoneButton: true,
-        showNextButton: true,
-        showSkipButton: true,
-        //isBottomSafeArea: true,
-        skip:
-            const Text("Salta", style: TextStyle(fontWeight: FontWeight.w600)),
-        next: const Icon(Icons.forward),
-        done:
-            const Text("Finito!", style: TextStyle(fontWeight: FontWeight.w600)),
-        dotsDecorator: getDotsDecorator()
-      ),
+          pages: [
+            if (imageUrls == null)
+              PageViewModel(
+                title: "",
+                body: "",
+                image: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                decoration: getPageDecoration(),
+              )
+            else
+              for (var imageUrl in imageUrls!)
+                PageViewModel(
+                  title: "",
+                  body: "",
+                  image: Center(
+                    child: Gif(
+                      image: NetworkImage(imageUrl),
+                      placeholder: (_) => const CircularProgressIndicator(),
+                      autostart: Autostart.once,
+                    ),
+                  ),
+                  decoration: getPageDecoration(),
+                ),
+          ],
+          onDone: () => widget.onDone(context),
+          //ClampingScrollPhysics prevent the scroll offset from exceeding the bounds of the content.
+          scrollPhysics: const ClampingScrollPhysics(),
+          showDoneButton: true,
+          showNextButton: true,
+          showSkipButton: true,
+          skip: const Text("Salta", style: TextStyle(fontWeight: FontWeight.w600)),
+          next: const Icon(Icons.forward),
+          done: const Text("Finito!", style: TextStyle(fontWeight: FontWeight.w600)),
+          dotsDecorator: getDotsDecorator()),
     );
   }
 
-  //widget to add the image on screen
-  Widget buildImage(String imagePath) {
-    return Center(
-      child: Gif(
-        image: AssetImage(
-          imagePath
-        ),
-        autostart: Autostart.once,
-      )
-    );
-  }
-
-  //method to customise the page style
   PageDecoration getPageDecoration() {
     return const PageDecoration(
-      imagePadding: EdgeInsets.zero,
-      contentMargin: EdgeInsets.zero,
-      pageMargin: EdgeInsets.zero,
-      titlePadding: EdgeInsets.zero,
-      bodyPadding: EdgeInsets.zero,
-      pageColor: Colors.white,
-      bodyFlex: 0,
-      footerFlex: 0,
-      titleTextStyle: TextStyle(
-        fontSize: 0,
-      ),
-      bodyTextStyle: TextStyle(
-        fontSize: 0,
-      ) 
-    );
+        imagePadding: EdgeInsets.zero,
+        contentMargin: EdgeInsets.zero,
+        pageMargin: EdgeInsets.zero,
+        titlePadding: EdgeInsets.zero,
+        bodyPadding: EdgeInsets.zero,
+        pageColor: Colors.white,
+        bodyFlex: 0,
+        footerFlex: 0,
+        titleTextStyle: TextStyle(
+          fontSize: 0,
+        ),
+        bodyTextStyle: TextStyle(
+          fontSize: 0,
+        ));
   }
 
   //method to customize the dots style

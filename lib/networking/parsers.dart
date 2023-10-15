@@ -20,8 +20,12 @@ AuthenticatedUser authenticatedUserFromJson(dynamic u) {
       u["id"], u["name"], u["points"], u["is_admin"], u["email"], u["accepted_to_review"]);
 }
 
-List<int> imageListFromJson(dynamic l) {
+List<int> intListFromJson(dynamic l) {
   return (l as List<dynamic>).map<int>((i) => i as int).toList();
+}
+
+List<String> stringListFromJson(dynamic l) {
+  return (l as List<dynamic>).map<String>((i) => i as String).toList();
 }
 
 MarkerType markerTypeFromJson(dynamic m) {
@@ -56,7 +60,7 @@ Marker markerFromJson(dynamic m) {
     (resolutionDate as String?).map(DateTime.parse), // might be null
     userFromJson(m["created_by"]),
     (m["solved_by"] as Map<String, dynamic>?).map(userFromJson), // might be null
-    imageListFromJson(m["images_id"]),
+    intListFromJson(m["images_id"]),
     m["can_report"],
   );
 }
@@ -76,6 +80,6 @@ MarkerImage markerImageFromJson(dynamic u) {
 List<ImageVerification> sessionFromJson(dynamic u) {
   return (u as List<dynamic>)
       .map<ImageVerification>((e) => ImageVerification(e["image_id"], e["marker_id"], e["verdict"],
-          markerTypeFromJson(e), imageListFromJson(e["all_marker_images"])))
+          markerTypeFromJson(e), intListFromJson(e["all_marker_images"])))
       .toList();
 }
