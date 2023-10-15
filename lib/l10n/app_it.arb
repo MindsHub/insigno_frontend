@@ -127,5 +127,9 @@
   "partialOutOfTotal": "{partial}/{total}",
   "noActiveSpecialScoreboard": "Non c'è una classifica speciale attiva al momento. Segui MindsHub sui social media per vedere gli eventi a cui Insigno partecipa!",
   "replayIntroduction": "Rivedi le schermate di introduzione",
-  "introSkip": "Salta"
+  "introSkip": "Salta",
+  "confirmAccountDeletion": "Per completare l'eliminazione dell'account, clicca sul link inviato alla tua email",
+  "accountDeletionDialogTitle": "Sei sicuro di voler eliminare l'account?",
+  "accountDeletionDialogText": "Per confermare l'eliminazione del tuo account, clicca sul link che invieremo alla tua email. Ci mancherai!",
+  "deleteAccount": "Elimina l'account"
 }

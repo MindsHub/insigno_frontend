@@ -260,5 +260,9 @@
   },
   "noActiveSpecialScoreboard": "There is no special scoreboard active at the moment. Follow MindsHub on social media to find out about Insigno events!",
   "replayIntroduction": "Replay introduction screens",
-  "introSkip": "Skip"
+  "introSkip": "Skip",
+  "confirmAccountDeletion": "To finish deleting the account, click on the link that was just sent to your email",
+  "accountDeletionDialogTitle": "Are you sure you want to delete your account?",
+  "accountDeletionDialogText": "To confirm deleting your account, click on the link we will send to your email. We will miss you!",
+  "deleteAccount": "Delete account"
 }
