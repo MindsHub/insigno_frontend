@@ -17,8 +17,8 @@ class IntroductionPage extends StatefulWidget {
 }
 
 class _IntroductionPageState extends State<IntroductionPage> {
-  List<String>? imageUrls;
-  int i = 0;
+  List<String>? _imageUrls;
+  int _i = 0;
   final _pageController = PageController();
 
   @override
@@ -30,7 +30,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
         widget.onDone(context);
       } else {
         setState(() {
-          imageUrls = value;
+          _imageUrls = value;
         });
       }
     }, onError: (e) {
@@ -40,15 +40,16 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
   void setPosition(int position) {
     setState(() {
-      i = position;
+      _i = position;
     });
-    _pageController.jumpToPage(i);
+    _pageController.jumpToPage(_i);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final urls = imageUrls;
+    // use this *local* variable to avoid using ! to null check
+    final imageUrls = _imageUrls;
 
     return Scaffold(
       backgroundColor: const Color(0xFFC9F687),
@@ -56,17 +57,17 @@ class _IntroductionPageState extends State<IntroductionPage> {
         child: Column(
           children: [
             Expanded(
-              child: urls == null
-                  ? const CircularProgressIndicator()
+              child: imageUrls == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
                   : PageView(
                       controller: _pageController,
-                      onPageChanged: (position) => setState(() {
-                        i = position;
-                      }),
+                      onPageChanged: (i) => setState(() => _i = i),
                       children: [
-                        for (var url in urls)
+                        for (var imageUrl in imageUrls)
                           Gif(
-                            image: NetworkImage(url),
+                            image: NetworkImage(imageUrl),
                             placeholder: (_) => const Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -89,10 +90,10 @@ class _IntroductionPageState extends State<IntroductionPage> {
                     child: Text(l10n.introSkip),
                   ),
                 ),
-                if (urls != null)
+                if (imageUrls != null)
                   DotsIndicator(
-                    dotsCount: urls.length,
-                    position: i,
+                    dotsCount: imageUrls.length,
+                    position: _i,
                     decorator: const DotsDecorator(
                       spacing: EdgeInsets.symmetric(horizontal: 2),
                       activeSize: Size(12, 5),
@@ -107,16 +108,18 @@ class _IntroductionPageState extends State<IntroductionPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (urls == null) {
+                        if (imageUrls == null) {
                           return;
-                        } else if (i < urls.length - 1) {
-                          setPosition(i + 1);
+                        } else if (_i < imageUrls.length - 1) {
+                          setPosition(_i + 1);
                         } else {
                           widget.onDone(context);
                         }
                       });
                     },
-                    child: Icon(urls == null || i < urls.length - 1 ? Icons.forward : Icons.start),
+                    child: Icon(imageUrls == null || _i < imageUrls.length - 1
+                        ? Icons.forward
+                        : Icons.start),
                   ),
                 ),
               ],
