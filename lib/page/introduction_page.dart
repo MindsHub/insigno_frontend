@@ -20,6 +20,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
   List<String>? _imageUrls;
   int _i = 0;
   final _pageController = PageController();
+  NetworkImage? _image;
 
   @override
   void initState() {
@@ -61,16 +62,19 @@ class _IntroductionPageState extends State<IntroductionPage> {
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : PageView(
+                  : PageView.builder(
                       controller: _pageController,
+                      itemCount: imageUrls.length,
                       onPageChanged: (i) => setState(() => _i = i),
-                      children: [
-                        for (var imageUrl in imageUrls)
-                          Image(
-                            image: NetworkImage(imageUrl),
-                            loadingBuilder: imageLoadingBuilder,
-                          )
-                      ],
+                      itemBuilder: (context, i) {
+                        // remove the previous image from cache to avoid strange gif glitches
+                        _image?.evict();
+                        _image = NetworkImage(imageUrls[i]);
+                        return Image(
+                          image: _image!,
+                          loadingBuilder: imageLoadingBuilder,
+                        );
+                      },
                     ),
             ),
             Row(
