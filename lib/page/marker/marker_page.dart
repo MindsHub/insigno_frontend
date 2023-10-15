@@ -5,13 +5,13 @@ import 'package:insigno_frontend/networking/authentication.dart';
 import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker.dart';
-import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/page/marker/add_images_widget.dart';
 import 'package:insigno_frontend/page/marker/image_list_widget.dart';
 import 'package:insigno_frontend/page/marker/report_as_inappropriate_dialog.dart';
 import 'package:insigno_frontend/page/marker/resolve_page.dart';
 import 'package:insigno_frontend/page/user/user_page.dart';
 import 'package:insigno_frontend/page/util/marker_type_app_bar_title.dart';
+import 'package:insigno_frontend/provider/location_provider.dart';
 import 'package:insigno_frontend/util/error_text.dart';
 import 'package:insigno_frontend/util/image.dart';
 import 'package:insigno_frontend/util/nullable.dart';
@@ -58,6 +58,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     final MapMarker mapMarker = (marker ?? widget.mapMarker);
     final position = watchStream((LocationProvider location) => location.getLocationStream(),
@@ -121,14 +122,23 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                 else if (!nearEnoughToResolve)
                   Text(l10n.getCloserToResolve, textAlign: TextAlign.center),
                 if (marker == null)
-                  const CircularProgressIndicator()
-                else
+                  const CircularProgressIndicator(),
+                if (marker != null)
                   ElevatedButton(
                     onPressed: (marker?.resolutionDate == null && isLoggedIn && nearEnoughToResolve)
                         ? openResolvePage
                         : null,
                     child:
                         Text(marker?.resolutionDate == null ? l10n.resolve : l10n.alreadyResolved),
+                  ),
+                if (marker != null && marker?.resolutionDate == null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+                    child: Text(
+                      l10n.usePpe,
+                      style: theme.textTheme.labelMedium,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 if (marker != null) const SizedBox(height: 8),
                 if (marker != null)
@@ -147,7 +157,7 @@ class _MarkerPageState extends State<MarkerPage> with GetItStateMixin<MarkerPage
                           child: Text(l10n.resolvedBy(marker!.resolvedByUser!.name)),
                         ),
                     ],
-                  )
+                  ),
               ],
             ),
           ),
