@@ -19,6 +19,7 @@ class IntroductionPage extends StatefulWidget {
 class _IntroductionPageState extends State<IntroductionPage> {
   List<String>? imageUrls;
   int i = 0;
+  final _pageController = PageController();
 
   @override
   void initState() {
@@ -37,6 +38,13 @@ class _IntroductionPageState extends State<IntroductionPage> {
     });
   }
 
+  void setPosition(int position) {
+    setState(() {
+      i = position;
+    });
+    _pageController.jumpToPage(i);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -48,15 +56,26 @@ class _IntroductionPageState extends State<IntroductionPage> {
         child: Column(
           children: [
             Expanded(
-              child: Center(
-                child: urls == null
-                    ? const CircularProgressIndicator()
-                    : Gif(
-                        image: NetworkImage(urls[i]),
-                        placeholder: (_) => const CircularProgressIndicator(),
-                        autostart: Autostart.once,
-                      ),
-              ),
+              child: urls == null
+                  ? const CircularProgressIndicator()
+                  : PageView(
+                      controller: _pageController,
+                      onPageChanged: (position) => setState(() {
+                        i = position;
+                      }),
+                      children: [
+                        for (var url in urls)
+                          Gif(
+                            image: NetworkImage(url),
+                            placeholder: (_) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            autostart: Autostart.once,
+                            // no need for cache, we're using the image only once
+                            useCache: false,
+                          )
+                      ],
+                    ),
             ),
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -81,9 +100,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                       ),
                     ),
-                    onTap: (position) => setState(() {
-                      i = position;
-                    }),
+                    onTap: setPosition,
                   ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -93,9 +110,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                         if (urls == null) {
                           return;
                         } else if (i < urls.length - 1) {
-                          setState(() {
-                            i = i + 1;
-                          });
+                          setPosition(i + 1);
                         } else {
                           widget.onDone(context);
                         }
