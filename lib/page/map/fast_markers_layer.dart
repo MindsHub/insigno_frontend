@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/networking/data/marker_type.dart';
 import 'package:latlong2/latlong.dart';
@@ -90,7 +90,7 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
       return const SizedBox.shrink();
     }
 
-    final mapState = FlutterMapState.of(context);
+    final mapState = MapCamera.of(context);
     final markerScale = markerScaleFromMapZoom(mapState.zoom);
 
     return RepaintBoundary(
@@ -103,7 +103,7 @@ class _FastMarkersLayerState extends State<FastMarkersLayer> {
 
 class _FastMarkerPainter extends CustomPainter {
   final ui.Image atlasImage;
-  final FlutterMapState mapState;
+  final MapCamera mapState;
   final Iterable<MapMarker> markers;
   final double scale;
 
@@ -114,8 +114,8 @@ class _FastMarkerPainter extends CustomPainter {
     canvas.drawAtlas(
       atlasImage,
       markers.map((marker) {
-        final pos =
-            mapState.project(LatLng(marker.latitude, marker.longitude)) - mapState.pixelOrigin;
+        final pos = mapState.project(LatLng(marker.latitude, marker.longitude)) -
+            mapState.pixelOrigin.toDoublePoint();
         return RSTransform.fromComponents(
           rotation: 0.0,
           scale: scale / atlasImageSizeDouble / 0.8,
