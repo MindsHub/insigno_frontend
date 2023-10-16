@@ -8,7 +8,7 @@ import 'package:insigno_frontend/page/map/marker_filters_dialog.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapMarkerProvider {
-  static const double markersZoomThreshold = 14.0;
+  static const double markersZoomThreshold = 11.0;
 
   final Backend _backend;
   final Function _onStateChanged;
