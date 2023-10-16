@@ -52,6 +52,15 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
     });
   }
 
+  void submitForm() {
+    setState(() => loginError = null);
+    if (formKey.currentState?.validate() ?? false) {
+      formKey.currentState?.save();
+      TextInput.finishAutofillContext();
+      performLogin();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -90,6 +99,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                     }
                   },
                   onSaved: (value) => email = value,
+                  keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                 ),
@@ -108,6 +118,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                   obscureText: true,
                   autofillHints: const [AutofillHints.password],
                   textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => submitForm(),
                 ),
                 ErrorText(
                   loginError,
@@ -118,14 +129,7 @@ class _LoginWidgetState extends State<LoginWidget> with GetItStateMixin<LoginWid
                 loading
                     ? const CircularProgressIndicator()
                     : FloatingActionButton(
-                        onPressed: () {
-                          setState(() => loginError = null);
-                          if (formKey.currentState?.validate() ?? false) {
-                            formKey.currentState?.save();
-                            TextInput.finishAutofillContext();
-                            performLogin();
-                          }
-                        },
+                        onPressed: submitForm,
                         tooltip: l10n.login,
                         child: const Icon(Icons.login),
                       ),

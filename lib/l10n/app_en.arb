@@ -166,7 +166,7 @@
   "email": "Email",
   "insertEmail": "Insert an email",
   "insertValidEmail": "Insert a valid email",
-  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link we just sent to the email you provided, then login from here",
+  "confirmEmail": "Before being able to use Insigno, you need to confirm your account by clicking on the link we just sent to the email you provided, then login from here. If you didn't receive it, check inside spam.",
   "ohNoError": "Oh no, error!",
   "errorOccurred": "An error occurred",
   "reportError": "Report",
@@ -206,7 +206,7 @@
       }
     }
   },
-  "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here",
+  "confirmPasswordChange": "To make the password change effective, click on the link that was just sent to your email, then login from here. If you didn't receive it, check inside spam.",
   "newPassword": "New password",
   "weWillSendEmail": "We will send you an email with the instructions to proceed",
   "verifyImages": "Review images",
@@ -261,7 +261,7 @@
   "noActiveSpecialScoreboard": "There is no special scoreboard active at the moment. Follow MindsHub on social media to find out about Insigno events!",
   "replayIntroduction": "Replay introduction screens",
   "introSkip": "Skip",
-  "confirmAccountDeletion": "To finish deleting the account, click on the link that was just sent to your email",
+  "confirmAccountDeletion": "To finish deleting the account, click on the link that was just sent to your email. If you didn't receive it, check inside spam.",
   "accountDeletionDialogTitle": "Are you sure you want to delete your account?",
   "accountDeletionDialogText": "To confirm deleting your account, click on the link we will send to your email. We will miss you!",
   "deleteAccount": "Delete account",

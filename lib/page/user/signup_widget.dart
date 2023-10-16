@@ -49,6 +49,15 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
     });
   }
 
+  void submitForm() {
+    setState(() => signupError = null);
+    if (formKey.currentState?.validate() ?? false) {
+      formKey.currentState?.save();
+      TextInput.finishAutofillContext();
+      performSignup();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -68,6 +77,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   decoration: InputDecoration(labelText: l10n.email),
                   validator: (value) => emailValidator(l10n, value),
                   onSaved: (value) => email = value,
+                  keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                 ),
@@ -100,6 +110,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                   obscureText: true,
                   autofillHints: const [AutofillHints.newPassword],
                   textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => submitForm(),
                 ),
                 ErrorText(
                   signupError,
@@ -110,14 +121,7 @@ class _SignupWidgetState extends State<SignupWidget> with GetItStateMixin<Signup
                 loading
                     ? const CircularProgressIndicator()
                     : FloatingActionButton(
-                        onPressed: () {
-                          setState(() => signupError = null);
-                          if (formKey.currentState?.validate() ?? false) {
-                            formKey.currentState?.save();
-                            TextInput.finishAutofillContext();
-                            performSignup();
-                          }
-                        },
+                        onPressed: submitForm,
                         tooltip: l10n.signup,
                         child: const Icon(Icons.login),
                       ),

@@ -1,0 +1,8 @@
+Miglioramenti
+• Viene ora spiegato che le mail possono finire nello spam
+• Vengono caricati i marcatori anche quando la mappa è più rimpicciolita
+
+Correzioni
+• I campi dell'email nel login/registrazione avevano il tipo di tastiera sbagliato
+• Il verdetto di verifica immagini viene ora inviato correttamente
+• I marcatori nascosti ora non possono più essere cliccati

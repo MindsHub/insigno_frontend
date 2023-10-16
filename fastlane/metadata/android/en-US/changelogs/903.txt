@@ -1,0 +1,8 @@
+Improved
+• Explain that emails could end up in spam
+• Load markers even when map is more zoomed out
+
+Fixed
+• Fix login/signup keyboard type for the email field
+• Fix sending opposite verify verdict
+• Fix hidden markers can still be clicked
