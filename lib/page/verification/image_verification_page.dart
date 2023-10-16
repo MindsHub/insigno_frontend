@@ -134,7 +134,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
                 const SizedBox(width: 16),
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => sendVerdict(verification.imageId, true),
+                    onPressed: () => sendVerdict(verification.imageId, false),
                     child: Text(
                       l10n.verdictBad,
                       textAlign: TextAlign.center,
@@ -144,7 +144,7 @@ class _ImageVerificationPageState extends State<ImageVerificationPage>
                 const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => sendVerdict(verification.imageId, false),
+                    onPressed: () => sendVerdict(verification.imageId, true),
                     child: Text(
                       l10n.verdictOk,
                       textAlign: TextAlign.center,
