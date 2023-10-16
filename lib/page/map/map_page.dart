@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:insigno_frontend/networking/backend.dart';
 import 'package:insigno_frontend/networking/data/map_marker.dart';
 import 'package:insigno_frontend/page/map/additional_points_widget.dart';
 import 'package:insigno_frontend/page/map/bottom_controls_widget.dart';
@@ -42,6 +43,7 @@ class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, Widget
     super.initState();
     WidgetsBinding.instance.addObserver(this); // needed to keep track of app lifecycle
 
+    mapMarkerProvider = MapMarkerProvider(get<Backend>(), () => setState(() {}));
     mapMarkerProvider.connectToMapEventStream(mapController.mapEventStream);
 
     prefs = get<SharedPreferences>();
