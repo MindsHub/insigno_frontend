@@ -189,9 +189,7 @@ class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, Widget
     ).then((value) {
       if (value is MapMarker) {
         // the marker may have been resolved, or its data might have changed, so update it
-        setState(() {
-          mapMarkerProvider.addOrReplace(value);
-        });
+        setState(() => mapMarkerProvider.addOrReplace(value));
       }
     });
   }
