@@ -1,0 +1,3 @@
+Fixed
+• Fix crash on initializing location updates on Android 14
+• Update various libraries

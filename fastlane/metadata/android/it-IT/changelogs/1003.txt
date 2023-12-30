@@ -1,0 +1,3 @@
+Correzioni
+• Sistemato un errore nell'inizializzazione del modulo che tiene traccia della posizione su Android 14
+• Aggiornate varie librerie
