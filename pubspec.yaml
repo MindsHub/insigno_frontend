@@ -41,27 +41,27 @@ dependencies:
   injectable: ^2.3.2
 
   # ui
-  flutter_map: ^6.0.0
-  dynamic_color: ^1.6.7
-  easy_image_viewer: ^1.2.1
-  flutter_svg: ^2.0.7
-  flutter_svg_provider: ^1.0.6
-  material_symbols_icons: ^4.2671.0
+  flutter_map: ^6.1.0
+  dynamic_color: ^1.6.9
+  easy_image_viewer: ^1.3.2
+  flutter_svg: ^2.0.9
+  flutter_svg_provider: ^1.0.7
+  material_symbols_icons: ^4.2713.0
   dots_indicator: ^3.0.0
 
   # core functionality
   geolocator: ^10.1.0 # used to load location
-  image_picker: ^1.0.4 # used only on Android and iOS to take pictures with the camera
+  image_picker: ^1.0.5 # used only on Android and iOS to take pictures with the camera
   latlong2: ^0.9.0
 
   # utils (os_detect may be useful, but is not needed atm)
   shared_preferences: ^2.2.2
-  http: ^1.1.0
+  http: ^1.1.2
   http_parser: ^4.0.2
-  collection: ^1.17.2
-  url_launcher: ^6.1.14
+  collection: ^1.18.0
+  url_launcher: ^6.2.2
   os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
-  package_info_plus: ^4.2.0
+  package_info_plus: ^5.0.1
   async: ^2.11.0
 
 dependency_overrides:
