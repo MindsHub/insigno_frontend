@@ -1,0 +1,3 @@
+Fixed
+• Fix uploading images in some cases
+• Update various libraries

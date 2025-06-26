@@ -1,0 +1,3 @@
+Correzioni
+• Sistemato l'upload delle immagini in alcuni casi
+• Aggiornate varie librerie
