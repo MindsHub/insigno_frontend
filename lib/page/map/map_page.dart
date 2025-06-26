@@ -127,9 +127,9 @@ class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, Widget
               }
 
               final markerScale = markerScaleFromMapZoom(mapController.camera.zoom);
-              final screenPoint = mapController.camera.latLngToScreenPoint(minMarker.getLatLng());
-              final dx = (tapPosition.global.dx - screenPoint.x).abs();
-              final dy = (tapPosition.global.dy - screenPoint.y).abs();
+              final screenPoint = mapController.camera.latLngToScreenOffset(minMarker.getLatLng());
+              final dx = (tapPosition.global.dx - screenPoint.dx).abs();
+              final dy = (tapPosition.global.dy - screenPoint.dy).abs();
               if (max(dx, dy) < markerScale * 0.7) {
                 openMarkerPage(minMarker);
               }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/l10n/app_localizations.dart';
 import 'package:insigno_frontend/networking/data/image_verification.dart';
 import 'package:insigno_frontend/page/map/animated_message_box.dart';
 import 'package:insigno_frontend/util/time.dart';

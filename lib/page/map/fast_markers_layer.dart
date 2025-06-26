@@ -114,15 +114,15 @@ class _FastMarkerPainter extends CustomPainter {
     canvas.drawAtlas(
       atlasImage,
       markers.map((marker) {
-        final pos = mapState.project(LatLng(marker.latitude, marker.longitude)) -
-            mapState.pixelOrigin.toDoublePoint();
+        final pos = mapState.projectAtZoom(LatLng(marker.latitude, marker.longitude)) -
+            mapState.pixelOrigin;
         return RSTransform.fromComponents(
           rotation: 0.0,
           scale: scale / atlasImageSizeDouble / 0.8,
           anchorX: atlasImageSizeDouble / 2,
           anchorY: atlasImageSizeDouble / 2,
-          translateX: pos.x,
-          translateY: pos.y,
+          translateX: pos.dx,
+          translateY: pos.dy,
         );
       }).toList(),
       markers.map((marker) {

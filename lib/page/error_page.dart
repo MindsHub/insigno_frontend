@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/l10n/app_localizations.dart';
 
 class ErrorPage extends StatelessWidget {
   static const routeName = '/errorPage';

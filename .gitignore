@@ -4,6 +4,9 @@
 #   the `awesome` package when PUB_CACHE is set, creating problems on F-Droid (see
 #   https://github.com/Milad-Akarie/injectable/issues/342)
 
+lib/l10n/*.dart
+lib/gen/
+
 # Miscellaneous
 *.class
 *.log

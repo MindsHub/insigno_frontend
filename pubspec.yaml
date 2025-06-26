@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.3+100
+version: 1.4.4+110
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -36,33 +36,34 @@ dependencies:
   intl:
 
   # dependency injection
-  get_it: ^7.6.4
+  get_it: ^7.7.0
   get_it_mixin: ^4.2.2
-  injectable: ^2.3.2
+  injectable: ^2.5.0
+  flutter_gen: ^5.10.0
 
   # ui
-  flutter_map: ^7.0.2
-  dynamic_color: ^1.6.9
-  easy_image_viewer: ^1.3.2
-  flutter_svg: ^2.0.9
+  flutter_map: ^8.1.1
+  dynamic_color: ^1.7.0
+  easy_image_viewer: ^1.5.1
+  flutter_svg: ^2.2.0
   flutter_svg_provider: ^1.0.7
-  material_symbols_icons: ^4.2713.0
+  material_symbols_icons: ^4.2815.1
   dots_indicator: ^4.0.1
 
   # core functionality
-  geolocator: ^13.0.2 # used to load location
-  image_picker: ^1.0.5 # used only on Android and iOS to take pictures with the camera
-  latlong2: ^0.9.0
+  geolocator: ^14.0.1 # used to load location
+  image_picker: ^1.1.2 # used only on Android and iOS to take pictures with the camera
+  latlong2: ^0.9.1
 
   # utils (os_detect may be useful, but is not needed atm)
-  shared_preferences: ^2.2.2
-  http: ^1.1.2
-  http_parser: ^4.0.2
-  collection: ^1.18.0
-  url_launcher: ^6.2.2
-  os_detect: ^2.0.1 # used for a debugging hack in location_provider.dart
+  shared_preferences: ^2.5.3
+  http: ^1.4.0
+  http_parser: ^4.1.2
+  collection: ^1.19.1
+  url_launcher: ^6.3.1
+  os_detect: ^2.0.3 # used for a debugging hack in location_provider.dart
   package_info_plus: ^8.3.0
-  async: ^2.11.0
+  async: ^2.13.0
 
 dependency_overrides:
   geolocator_android: # see https://github.com/Baseflow/flutter-geolocator/issues/135#issuecomment-1446941926
@@ -71,6 +72,7 @@ dependency_overrides:
       url: https://github.com/Stypox/flutter-geolocator.git
       path: geolocator_android
       ref: use-all-providers
+  dart_style: 3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +91,7 @@ dev_dependencies:
   # needed for Injectable
   injectable_generator:
   build_runner:
+  flutter_gen_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

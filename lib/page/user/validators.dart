@@ -1,4 +1,4 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/l10n/app_localizations.dart';
 
 // taken from the HTML5 validation spec, except for the + at the end which used to be a *
 final _emailRegex = RegExp(

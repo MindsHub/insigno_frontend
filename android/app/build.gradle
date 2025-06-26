@@ -23,6 +23,8 @@ if (flutterVersionName == null) {
 }
 
 android {
+    namespace "org.mindshub.insigno"
+
     compileSdkVersion 36 //flutter.compileSdkVersion
 
     compileOptions {

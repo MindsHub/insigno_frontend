@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:insigno_frontend/l10n/app_localizations.dart';
 
 Future<bool?> openAcceptToReviewDialog(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
