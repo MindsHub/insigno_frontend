@@ -40,7 +40,7 @@ jobs:
           openssl base64 -A -d -out "$HOME/Library/MobileDevice/Provisioning Profiles/build_pp.mobileprovision" <<< "$MOBILEPROVISION_BASE64"
       - name: Create .plist file using Codemagic tools
         run: |
-          python3 -m pip install codemagic-cli-tools
+          python3 -m pip install --break-system-packages codemagic-cli-tools
           xcode-project use-profiles --project=./ios/Runner.xcodeproj --archive-method=app-store --export-options-plist=export_options.plist --profile="$HOME/Library/MobileDevice/Provisioning Profiles/build_pp.mobileprovision"
       - name: Setup Fastlane
         run: |
