@@ -92,7 +92,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 if (imageUrls != null)
                   DotsIndicator(
                     dotsCount: imageUrls.length,
-                    position: _i,
+                    position: _i.toDouble(),
                     decorator: const DotsDecorator(
                       spacing: EdgeInsets.symmetric(horizontal: 2),
                       activeSize: Size(12, 5),

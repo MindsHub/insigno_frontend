@@ -57,7 +57,7 @@ class _MapControlsWidgetState extends State<MapControlsWidget>
               onPressed: () => Navigator.pushNamed(
                 context,
                 ScoreboardPage.routeName,
-                arguments: position?.toLatLng() ?? widget.mapController.center,
+                arguments: position?.toLatLng() ?? widget.mapController.camera.center,
               ),
               tooltip: l10n.scoreboard,
               mini: true,
