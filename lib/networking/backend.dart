@@ -128,7 +128,9 @@ class Backend {
       http.MultipartFile.fromBytes(
         "image",
         image,
-        contentType: mimeType?.map(MediaType.parse) ?? MediaType("image", ""),
+        // mimeType is not used anymore because it was often null anyway and some values would be
+        // rejected by the backend
+        contentType: MediaType("application", "octet-stream"),
       ),
     ]);
   }
