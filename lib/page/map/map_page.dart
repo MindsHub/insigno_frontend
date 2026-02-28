@@ -137,6 +137,7 @@ class _MapPageState extends State<MapPage> with GetItStateMixin<MapPage>, Widget
         children: [
           TileLayer(
             urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            userAgentPackageName: "org.mindshub.insigno"
           ),
           MarkerLayer(
               markers: [position?.toLatLng()]
