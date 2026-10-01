@@ -84,6 +84,11 @@ jobs:
         run: |
           cd "$BUILD_DIR"
           submodules/flutter/bin/flutter build appbundle --release --build-number="$VERCODE" --build-name="$VERSION"
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: /home/vagrant/build/org.mindshub.insigno/build/app/outputs/bundle/release/app-release.aab
       - name: Copy Fastlane metadata to correct directory
         run: |
           cd "$BUILD_DIR"
